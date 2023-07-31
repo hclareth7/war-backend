@@ -1,6 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
-
+var cors = require('cors')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -11,6 +11,12 @@ var usersRouter = require('./routes/users');
 require('./db/db')
 var app = express();
 
+var corsOptions = {
+  origin: '*', //this needs to be changed on production
+  optionsSuccessStatus: 200 
+}
+
+app.use(cors(corsOptions))
 
 app.use(logger(process.env.APP_LOG_LEVEL));
 app.use(express.json());
