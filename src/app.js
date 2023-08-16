@@ -10,6 +10,7 @@ require('./db/db');
 var User = require('./models/user');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var beneficiaryRouter = require('./routes/beneficiaries');
 
 var app = express();
 
@@ -50,6 +51,8 @@ app.use(async (req, res, next) => {
 
   app.use('/', indexRouter);
   app.use('/users', usersRouter);
+  app.use('/beneficiaries', beneficiaryRouter);
+  
   
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
