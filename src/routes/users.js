@@ -6,6 +6,7 @@ const auth = require('../middlewares/auth');
 //USER
 router.post('/', userController.save);
 router.get("/", auth.allowIfLoggedin, userController.getAll)
+router.get('/:id', auth.allowIfLoggedin, userController.get);
 router.put('/:id', auth.allowIfLoggedin, userController.update);
 router.delete('/:id', auth.allowIfLoggedin, userController.delete);
 

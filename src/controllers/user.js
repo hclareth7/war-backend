@@ -19,7 +19,7 @@ exports.getAll = async (req, res, next) => {
     res.status(200).json({
         data: users
     });
-}
+};
 
 exports.get = async (req, res, next) => {
     try {
@@ -34,7 +34,7 @@ exports.get = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 exports.update = async (req, res, next) => {
     try {
@@ -49,7 +49,7 @@ exports.update = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-}
+};
 
 exports.delete = async (req, res, next) => {
     try {
@@ -62,4 +62,4 @@ exports.delete = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-}
+};
