@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { roles } = require('../config/roles');
 
 
 exports.generateAuthToken = async (req, res, next) => {
@@ -40,25 +39,7 @@ exports.login = async (req, res, next) => {
     };
 };
 
-exports.grantAccess = function (action, resource) {
-    return async (req, res, next) => {
-        try {
-            console.log(action);
-            //console.log(roles.can(req.user.role)['readOwn']())
-            const permission = roles.can(req.user.role);
-            console.log(permission[action]())
-            if (!permission.granted) {
-                return res.status(401).json({
-                    error: "You don't have enough permission to perform this action"
-                });
-            }
-            next()
-        } catch (error) {
-            console.log(error)
-            next(error)
-        }
-    }
-}
+
 
 exports.allowIfLoggedin = async (req, res, next) => {
     try {
@@ -80,8 +61,5 @@ async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword);
 }
 
-async function hashPassword(password) {
-    return await bcrypt.hash(password, 10);
-}
 
 
