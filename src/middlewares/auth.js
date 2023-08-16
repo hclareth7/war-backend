@@ -13,6 +13,27 @@ exports.generateAuthToken = async (req, res, next) => {
 
 };
 
+exports.checkAuthToken = async (req, res, next) => {
+    try {
+        if (req.headers["x-access-token"]) {
+            const accessToken = req.headers["x-access-token"];
+            const { userId, exp } = await jwt.verify(accessToken, process.env.JWT_KEY);
+            // Check if token has expired
+            if (exp < Date.now().valueOf() / 1000) {
+                return res.status(401).json({ error: "JWT token has expired, please login to obtain a new one" });
+            }
+            res.locals.loggedInUser = await User.findById(userId);
+
+            next();
+        } else {
+            console.log("[x-access-token] header not provided")
+            next();
+        }
+    } catch (error) {
+        console.log(error)
+    }
+};
+
 exports.login = async (req, res, next) => {
     try {
 
@@ -38,8 +59,6 @@ exports.login = async (req, res, next) => {
         next(error);
     };
 };
-
-
 
 exports.allowIfLoggedin = async (req, res, next) => {
     try {

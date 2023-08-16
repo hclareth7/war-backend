@@ -1,5 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('../../swagger_output.json')
+const router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -40,5 +42,7 @@ q:::::::qqqqq:::::q u:::::::::::::::uua::::a    a:::::a l::::::l      t::::::ttt
             </html>
 `);
 });
+
+router.get('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 module.exports = router;
