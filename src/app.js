@@ -8,9 +8,12 @@ var logger = require('morgan');
 require('dotenv').config();
 require('./db/db');
 var User = require('./models/user');
+
+//Routes
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var beneficiaryRouter = require('./routes/beneficiaries');
+var beneficiariesRouter = require('./routes/beneficiaries');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -50,8 +53,9 @@ app.use(async (req, res, next) => {
 });
 
   app.use('/', indexRouter);
+  app.use('/auth', authRouter);
   app.use('/users', usersRouter);
-  app.use('/beneficiaries', beneficiaryRouter);
+  app.use('/beneficiaries', beneficiariesRouter);
   
   
 // catch 404 and forward to error handler
