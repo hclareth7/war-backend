@@ -1,8 +1,10 @@
-const Model = require('../models/beneficiary');
+const Model = require('../models/activity');
 
 const modelName = Model.modelName;
+
 exports.save = async (req, res, next) => {
     try {
+        
         const saveModel = new Model(req.body);
         await saveModel.save();
         const data = { 'message': `${modelName} successfully created`, 'data': saveModel };

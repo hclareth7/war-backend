@@ -11,9 +11,10 @@ var User = require('./models/user');
 
 //Routes
 var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var beneficiariesRouter = require('./routes/beneficiaries');
-var authRouter = require('./routes/auth');
+var activitiesRouter = require('./routes/activities');
 
 var app = express();
 
@@ -56,6 +57,7 @@ app.use(async (req, res, next) => {
   app.use('/auth', authRouter);
   app.use('/users', usersRouter);
   app.use('/beneficiaries', beneficiariesRouter);
+  app.use('/activities', activitiesRouter);
   
   
 // catch 404 and forward to error handler
