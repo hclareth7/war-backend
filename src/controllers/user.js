@@ -86,3 +86,7 @@ exports.delete = async (req, res, next) => {
         next(error)
     }
 };
+
+async function hashPassword(password) {
+    return await bcrypt.hash(password, 10);
+}

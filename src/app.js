@@ -2,7 +2,6 @@ const express = require('express');
 
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('../swagger_output.json')
-const bodyParser = require('body-parser');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
