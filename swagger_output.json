@@ -11,7 +11,14 @@
     "http",
     "https"
   ],
-  "securityDefinitions": {},
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "x-access-token",
+      "description": ""
+    }
+  },
   "consumes": [
     "application/json"
   ],
@@ -41,6 +48,9 @@
     },
     "/auth/login": {
       "post": {
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "parameters": [
           {
@@ -68,6 +78,9 @@
     },
     "/users/": {
       "post": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -96,9 +109,17 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -107,11 +128,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/users/{id}": {
-      "put": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -128,9 +157,44 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -147,12 +211,30 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/beneficiaries/": {
       "post": {
+        "tags": [
+          "Beneficiaries"
+        ],
         "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Adding new beneficiary.",
+            "schema": {
+              "$ref": "#/definitions/beneficiary"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -160,9 +242,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "get": {
+        "tags": [
+          "Beneficiaries"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -171,11 +261,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/beneficiaries/{id}": {
       "get": {
+        "tags": [
+          "Beneficiaries"
+        ],
         "description": "",
         "parameters": [
           {
@@ -192,9 +290,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "put": {
+        "tags": [
+          "Beneficiaries"
+        ],
         "description": "",
         "parameters": [
           {
@@ -211,9 +317,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
+        "tags": [
+          "Beneficiaries"
+        ],
         "description": "",
         "parameters": [
           {
@@ -230,12 +344,30 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/activities/": {
       "post": {
+        "tags": [
+          "Activities"
+        ],
         "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Adding new activity.",
+            "schema": {
+              "$ref": "#/definitions/activity"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -243,9 +375,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "get": {
+        "tags": [
+          "Activities"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -254,11 +394,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/activities/{id}": {
       "get": {
+        "tags": [
+          "Activities"
+        ],
         "description": "",
         "parameters": [
           {
@@ -275,9 +423,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "put": {
+        "tags": [
+          "Activities"
+        ],
         "description": "",
         "parameters": [
           {
@@ -294,9 +450,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
+        "tags": [
+          "Activities"
+        ],
         "description": "",
         "parameters": [
           {
@@ -312,6 +476,145 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "beneficiary": {
+      "type": "object",
+      "properties": {
+        "full_name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "identification_type": {
+          "type": "string",
+          "example": "Cedula"
+        },
+        "identification": {
+          "type": "string",
+          "example": "123456789"
+        },
+        "eps": {
+          "type": "string",
+          "example": "615aeb801dc581234567890a"
+        },
+        "sisben_score": {
+          "type": "number",
+          "example": 85
+        },
+        "birthday": {
+          "type": "string",
+          "example": "1990-05-15"
+        },
+        "gender": {
+          "type": "string",
+          "example": "Masculino"
+        },
+        "ethnic_affiliation": {
+          "type": "string",
+          "example": "Indigena"
+        },
+        "marital_status": {
+          "type": "string",
+          "example": "Casado"
+        },
+        "is_disability": {
+          "type": "boolean",
+          "example": true
+        },
+        "type_of_disability": {
+          "type": "string",
+          "example": "Movilidad"
+        },
+        "place_of_birth": {
+          "type": "string",
+          "example": "Bogota"
+        },
+        "region": {
+          "type": "string",
+          "example": "Andina"
+        },
+        "municipality": {
+          "type": "string",
+          "example": "Bogota"
+        },
+        "neighborhood": {
+          "type": "string",
+          "example": "Chapinero"
+        },
+        "address": {
+          "type": "string",
+          "example": "Calle 123, Carrera 45"
+        },
+        "phones": {
+          "type": "array",
+          "example": [
+            "123-456-7890",
+            "987-654-3210"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "responsible_family_member": {
+          "type": "string",
+          "example": "Jane Doe"
+        },
+        "kinship": {
+          "type": "string",
+          "example": "Esposa"
+        }
+      }
+    },
+    "activity": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Community Cleanup"
+        },
+        "description": {
+          "type": "string",
+          "example": "Volunteer event to clean up the local park"
+        },
+        "execution_date": {
+          "type": "string",
+          "example": "2023-08-20T10:00:00Z"
+        },
+        "municipality": {
+          "type": "string",
+          "example": "615aeb801dc581234567890b"
+        },
+        "community": {
+          "type": "string",
+          "example": "615aeb801dc581234567890c"
+        },
+        "participatingAssociations": {
+          "type": "array",
+          "example": [
+            "615aeb801dc581234567890d",
+            "615aeb801dc581234567890e"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "attendees": {
+          "type": "array",
+          "example": [
+            "615aeb801dc581234567890f",
+            "615aeb801dc5812345678910"
+          ],
+          "items": {
+            "type": "string"
           }
         }
       }

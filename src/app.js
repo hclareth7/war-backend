@@ -30,13 +30,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+//Check auth
+app.use(auth.checkAuthToken);
+
 
 // Routes 
 app.use(router)
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 
-app.use(auth.checkAuthToken);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   console.log(req.url)
