@@ -7,7 +7,7 @@ exports.save = async (req, res, next) => {
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
-        }]
+    }]
     #swagger.parameters['obj'] = {
                 in: 'body',
                 description: 'Adding new activity.',
@@ -62,11 +62,11 @@ exports.get = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
+    // #swagger.tags = ['Activities']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
     }]*/
-    // #swagger.tags = ['Activities']
     try {
         const update = req.body;
         const id = req.params.id;
@@ -82,11 +82,11 @@ exports.update = async (req, res, next) => {
 };
 
 exports.delete = async (req, res, next) => {
+    // #swagger.tags = ['Activities']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
     }]*/
-    // #swagger.tags = ['Activities']
     try {
         const id = req.params.id;
         await Model.findByIdAndDelete(id);

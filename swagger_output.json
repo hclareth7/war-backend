@@ -46,12 +46,41 @@
         }
       }
     },
-    "/references/references": {
+    "/references/": {
       "get": {
         "tags": [
-          "Activities"
+          "References"
         ],
         "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/references/{ref}": {
+      "get": {
+        "tags": [
+          "References"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
