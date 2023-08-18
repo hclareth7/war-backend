@@ -1,8 +1,11 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 exports.save = async (req, res, next) => {
+    // #swagger.tags = ['Users']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const { name, email, password, role } = req.body
         const hashedPassword = await hashPassword(password);
@@ -15,6 +18,11 @@ exports.save = async (req, res, next) => {
     }
 };
 exports.getAll = async (req, res, next) => {
+    // #swagger.tags = ['Users']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     const users = await User.find({});
     res.status(200).json({
         data: users
@@ -22,6 +30,11 @@ exports.getAll = async (req, res, next) => {
 };
 
 exports.get = async (req, res, next) => {
+    // #swagger.tags = ['Users']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const id = req.params.id;
         const user = await User.findById(id);
@@ -37,6 +50,11 @@ exports.get = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
+    // #swagger.tags = ['Users']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const update = req.body
         const id = req.params.id;
@@ -52,6 +70,11 @@ exports.update = async (req, res, next) => {
 };
 
 exports.delete = async (req, res, next) => {
+    // #swagger.tags = ['Users']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const id = req.params.id;
         await User.findByIdAndDelete(id);
@@ -63,3 +86,7 @@ exports.delete = async (req, res, next) => {
         next(error)
     }
 };
+
+async function hashPassword(password) {
+    return await bcrypt.hash(password, 10);
+}

@@ -2,6 +2,16 @@ const Model = require('../models/beneficiary');
 
 const modelName = Model.modelName;
 exports.save = async (req, res, next) => {
+    // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Adding new beneficiary.',
+        schema: { $ref: '#/definitions/beneficiary' }
+    } */
     try {
         const saveModel = new Model(req.body);
         await saveModel.save();
@@ -14,6 +24,11 @@ exports.save = async (req, res, next) => {
 };
 
 exports.getAll = async (req, res, next) => {
+    // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const getAllModel = await Model.find({});
         res.status(200).json({
@@ -26,6 +41,11 @@ exports.getAll = async (req, res, next) => {
 };
 
 exports.get = async (req, res, next) => {
+    // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const id = req.params.id;
         const getModel = await Model.findById(id);
@@ -41,6 +61,11 @@ exports.get = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
+    // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const update = req.body;
         const id = req.params.id;
@@ -56,6 +81,11 @@ exports.update = async (req, res, next) => {
 };
 
 exports.delete = async (req, res, next) => {
+    // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
     try {
         const id = req.params.id;
         await Model.findByIdAndDelete(id);

@@ -2,7 +2,6 @@ const express = require('express');
 
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('../swagger_output.json')
-const bodyParser = require('body-parser');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -32,13 +31,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(permissionMiddleware);
 
+//Check auth
+app.use(auth.checkAuthToken);
+
 
 // Routes 
 app.use(router)
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 
-app.use(auth.checkAuthToken);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   console.log(req.url)
