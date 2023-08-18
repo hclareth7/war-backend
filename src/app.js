@@ -9,6 +9,7 @@ const logger = require('morgan');
 require('dotenv').config();
 require('./db/db');
 const auth = require('./middlewares/auth');
+const permissionMiddleware = require('./middlewares/permissions');
 
 //APP
 const app = express();
@@ -29,6 +30,7 @@ app.use(logger(process.env.APP_LOG_LEVEL));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(permissionMiddleware);
 
 
 // Routes 
