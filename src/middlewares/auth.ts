@@ -25,8 +25,9 @@ export const checkAuthToken = async (req, res, next) => {
                 return res.status(401).json({ error: "JWT token has expired, please login to obtain a new one" });
             }
             res.locals.loggedInUser = await User.findById(userId);
-            res.locals.loggedInUser.abilities = await permissionHelper(res.locals.loggedInUser.role);
 
+            res.locals.loggedInUser.abilities = await permissionHelper(res.locals.loggedInUser.role);
+            
             next();
         } else {
             console.log("[x-access-token] header not provided")
@@ -84,7 +85,7 @@ export const allowIfLoggedin = async (req, res, next) => {
 export const grantAccess = function (action, resource) {
     return async (req, res, next) => {
         try {
-            console.log(action);
+            
             //console.log(roles.can(req.user.role)['readOwn']())
             const permission = res.locals.loggedInUser.abilities.can(action, resource);
             if (!permission) {
