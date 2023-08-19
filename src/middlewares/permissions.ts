@@ -17,5 +17,5 @@ async function permissionHelper(role) {
   return build(); // Agrega la Ability al objeto de solicitud
 
 }
-
+ 
 export default permissionHelper;
