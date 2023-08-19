@@ -25,9 +25,8 @@ const userSchema = new mongoose.Schema({
         minLength: 7
     },
     role: {
-        type: String,
-        default: 'admin',
-        enum: ["root", "supervisor", "admin"]
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'RolesAndPermissions'
     },
     accessToken: {
         type: String
