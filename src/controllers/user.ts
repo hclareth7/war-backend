@@ -40,7 +40,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('role');
         if (!user) {
             return next(new Error('User does not exist'));
         }
@@ -48,7 +48,7 @@ export const get = async (req, res, next) => {
             data: user
         });
     } catch (error) {
-        next(error);
+       console.log(error)
     }
 };
 
