@@ -1,15 +1,16 @@
 import express from 'express';
-import * as rolesController from '../controllers/roles';
+import * as controller from '../controllers/roles';
 import * as auth from '../middlewares/auth';
 
 const router = express.Router();
 
 //ROLES
-router.post('/', auth.allowIfLoggedin, rolesController.save);
-router.get("/", auth.allowIfLoggedin, rolesController.getAll)
-router.get('/:id', auth.allowIfLoggedin, rolesController.get);
-router.put('/:id', auth.allowIfLoggedin, rolesController.update);
-router.delete('/:id', auth.allowIfLoggedin, rolesController.deleteItem);
+const resourceName = 'role';
+router.post('/', auth.allowIfLoggedin, auth.grantAccess('create', resourceName), controller.save);
+router.get("/", auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getAll)
+router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.get);
+router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName),controller.update);
+router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItem);
 
 
 export default router

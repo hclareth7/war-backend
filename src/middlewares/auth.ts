@@ -57,7 +57,7 @@ export const login = async (req, res, next) => {
         res.locals.loggedInUser.abilities = await permissionHelper(user.role);
 
         res.status(200).json({
-            user: { email: user.email, role: user.role, token: accessToken, abilities: req.abilities.A },
+            user: { email: user.email, role: user.role, token: accessToken, abilities: res.locals.loggedInUser.abilities.A },
         });
     } catch (error) {
         console.log(error);
@@ -70,7 +70,7 @@ export const allowIfLoggedin = async (req, res, next) => {
         const user = res.locals.loggedInUser;
         if (!user)
             return res.status(401).json({
-                error: "You need to be logged in to access this route"
+                error: "You need to be logged in to access this route and needs abilities"
             });
         req.user = user;
 
@@ -78,6 +78,25 @@ export const allowIfLoggedin = async (req, res, next) => {
 
     } catch (error) {
         next(error);
+    }
+}
+
+export const grantAccess = function (action, resource) {
+    return async (req, res, next) => {
+        try {
+            console.log(action);
+            //console.log(roles.can(req.user.role)['readOwn']())
+            const permission = res.locals.loggedInUser.abilities.can(action, resource);
+            if (!permission) {
+                return res.status(401).json({
+                    error: "You don't have enough permission to perform this action"
+                });
+            }
+            next()
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
     }
 }
 

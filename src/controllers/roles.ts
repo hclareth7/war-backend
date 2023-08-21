@@ -2,6 +2,13 @@
 import RolesAndPermissions from '../models/permissions';
 
 export const save = async (req, res, next) => {
+
+    // #swagger.tags = ['Roles']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
   try {
     const { role, permissions } = req.body;
     const newRoleAndPermissions = new RolesAndPermissions({ role, permissions });
@@ -14,6 +21,12 @@ export const save = async (req, res, next) => {
 };
 
 export const getAll = async (req, res, next) => {
+    // #swagger.tags = ['Roles']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
     const roles = await RolesAndPermissions.find({});
     res.status(200).json({
         data: roles
@@ -21,6 +34,12 @@ export const getAll = async (req, res, next) => {
 };
 
 export const get = async (req, res, next) => {
+    // #swagger.tags = ['Roles']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
     try {
         const id = req.params.id;
         const role = await RolesAndPermissions.findById(id);
@@ -36,6 +55,12 @@ export const get = async (req, res, next) => {
 };
 
 export const update = async (req, res, next) => {
+    // #swagger.tags = ['Roles']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
     try {
         const update = req.body
         const id = req.params.id;
@@ -51,6 +76,12 @@ export const update = async (req, res, next) => {
 };
 
 export const deleteItem = async (req, res, next) => {
+    // #swagger.tags = ['Roles']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
     try {
         const id = req.params.id;
         await RolesAndPermissions.findByIdAndDelete(id);

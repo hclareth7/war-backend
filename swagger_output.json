@@ -148,6 +148,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "security": [
@@ -527,6 +530,9 @@
     },
     "/roles/": {
       "post": {
+        "tags": [
+          "Roles"
+        ],
         "description": "",
         "parameters": [
           {
@@ -552,9 +558,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "get": {
+        "tags": [
+          "Roles"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -563,11 +577,19 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/roles/{id}": {
       "get": {
+        "tags": [
+          "Roles"
+        ],
         "description": "",
         "parameters": [
           {
@@ -584,9 +606,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "put": {
+        "tags": [
+          "Roles"
+        ],
         "description": "",
         "parameters": [
           {
@@ -603,9 +633,17 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
+        "tags": [
+          "Roles"
+        ],
         "description": "",
         "parameters": [
           {
@@ -622,7 +660,12 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     }
   },
