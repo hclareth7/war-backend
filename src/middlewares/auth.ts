@@ -25,6 +25,7 @@ export const checkAuthToken = async (req, res, next) => {
                 return res.status(401).json({ error: "JWT token has expired, please login to obtain a new one" });
             }
             res.locals.loggedInUser = await User.findById(userId);
+            res.locals.loggedInUser.abilities = await permissionHelper(res.locals.loggedInUser.role);
 
             next();
         } else {
@@ -52,12 +53,11 @@ export const login = async (req, res, next) => {
         }
         const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_KEY);
         await User.findByIdAndUpdate(user._id, { accessToken });
-
-        const abilities = await permissionHelper(user.role);
-        req.abitilies = abilities;
+        res.locals.loggedInUser = user;
+        res.locals.loggedInUser.abilities = await permissionHelper(user.role);
 
         res.status(200).json({
-            user: { email: user.email, role: user.role, token: accessToken },
+            user: { email: user.email, role: user.role, token: accessToken, abilities: req.abilities.A },
         });
     } catch (error) {
         console.log(error);

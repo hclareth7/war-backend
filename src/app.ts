@@ -7,7 +7,6 @@ import logger from 'morgan';
 import * as dotenv from 'dotenv';
 import './db/db';
 import * as auth from './middlewares/auth';
-import permissionMiddleware from './middlewares/permissions';
 import router from './routes/router';
 
 dotenv.config();
@@ -28,7 +27,6 @@ app.use(logger(process.env.APP_LOG_LEVEL as string));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(permissionMiddleware);
 
 //Check auth
 app.use(auth.checkAuthToken);
