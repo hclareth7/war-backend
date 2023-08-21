@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import validator from 'validator';
 
 const lifeWellnessCenterSchema = new mongoose.Schema({
 
@@ -27,7 +28,7 @@ const lifeWellnessCenterSchema = new mongoose.Schema({
         lowercase: true,
         validate: value => {
             if (!validator.isEmail(value)) {
-                throw new Error({ error: 'Invalid Email address' })
+                throw new Error('Invalid Email address')
             }
         }
     },
@@ -36,4 +37,4 @@ const lifeWellnessCenterSchema = new mongoose.Schema({
 
 const LifeWellnessCenter = mongoose.model('LifeWellnessCenter', lifeWellnessCenterSchema);
 
-module.exports = LifeWellnessCenter;
+export default LifeWellnessCenter;

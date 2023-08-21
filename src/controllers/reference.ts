@@ -1,13 +1,13 @@
-const ModelAssociation = require('../models/references/association');
-const ModelCommunity = require('../models/references/community');
-const ModelEps = require('../models/references/eps');
-const ModelLifeWellnessCenter = require('../models/references/life_wellness_center');
-const ModelMunicipality = require('../models/references/municipality');
-const ModelNeighborhood = require('../models/references/neighborhood');
+import ModelAssociation from '../models/references/association';
+import ModelCommunity from '../models/references/community';
+import ModelEps from '../models/references/eps';
+import ModelLifeWellnessCenter from '../models/references/life_wellness_center';
+import ModelMunicipality from '../models/references/municipality';
+import ModelNeighborhood from '../models/references/neighborhood';
 
 //const modelName = Model.modelName;
 
-exports.getAll = async (req, res, next) => {
+export const getAll = async (req, res, next) => {
     // #swagger.tags = ['References']
     /*    
     #swagger.security = [{
@@ -35,7 +35,7 @@ exports.getAll = async (req, res, next) => {
     }
 };
 
-exports.getByRefName = async (req, res, next) => {
+export const getByRefName = async (req, res, next) => {
     // #swagger.tags = ['References']
     /*    
     #swagger.security = [{
@@ -56,12 +56,12 @@ exports.getByRefName = async (req, res, next) => {
 async function getReferenceByName(target) {
 
     const options = {
-        associations: async () => data = await ModelAssociation.find({}),
-        communities: async () => data = await ModelCommunity.find({}),
-        eps: async () => data = await ModelEps.find({}),
-        life_wellness_centers: async () => data = await ModelLifeWellnessCenter.find({}),
-        municipalities: async () => data = await ModelMunicipality.find({}),
-        neighborhoods: async () => data = await ModelNeighborhood.find({}),
+        associations: async () =>  await ModelAssociation.find({}),
+        communities: async () => await ModelCommunity.find({}),
+        eps: async () => await ModelEps.find({}),
+        life_wellness_centers: async () => await ModelLifeWellnessCenter.find({}),
+        municipalities: async () => await ModelMunicipality.find({}),
+        neighborhoods: async () => await ModelNeighborhood.find({}),
         default: "no data"
     }
     return options.hasOwnProperty(target) ? await options[target]() : options['default']

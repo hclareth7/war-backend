@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const associationSchema = new mongoose.Schema({
     name: {
@@ -22,4 +22,4 @@ const associationSchema = new mongoose.Schema({
 
 const Association = mongoose.model('Association', associationSchema);
 
-module.exports = Association;
+export default Association;

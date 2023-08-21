@@ -1,6 +1,5 @@
-const express = require('express');
-const swaggerUi = require('swagger-ui-express')
-const swaggerFile = require('../../swagger_output.json')
+import express from 'express';
+
 const router = express.Router();
 
 /* GET home page. */
@@ -43,6 +42,4 @@ q:::::::qqqqq:::::q u:::::::::::::::uua::::a    a:::::a l::::::l      t::::::ttt
 `);
 });
 
-router.get('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-module.exports = router;
+export default router;

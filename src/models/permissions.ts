@@ -1,4 +1,4 @@
-  const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const rolesAndPermissionsSchema = new mongoose.Schema({
   role: String,
@@ -10,4 +10,4 @@ const rolesAndPermissionsSchema = new mongoose.Schema({
 
 const RolesAndPermissions = mongoose.model('RolesAndPermissions', rolesAndPermissionsSchema);
 
-module.exports = RolesAndPermissions;
+export default RolesAndPermissions;

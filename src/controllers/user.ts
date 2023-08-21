@@ -1,6 +1,7 @@
-const User = require('../models/user');
+import User from '../models/user';
+import bcrypt from 'bcrypt';
 
-exports.save = async (req, res, next) => {
+export const save = async (req, res, next) => {
     // #swagger.tags = ['Users']
     /*    
     #swagger.security = [{
@@ -17,7 +18,7 @@ exports.save = async (req, res, next) => {
         next(error)
     }
 };
-exports.getAll = async (req, res, next) => {
+export const getAll = async (req, res, next) => {
     // #swagger.tags = ['Users']
     /*    
     #swagger.security = [{
@@ -29,7 +30,7 @@ exports.getAll = async (req, res, next) => {
     });
 };
 
-exports.get = async (req, res, next) => {
+export const get = async (req, res, next) => {
     // #swagger.tags = ['Users']
     /*    
     #swagger.security = [{
@@ -49,7 +50,7 @@ exports.get = async (req, res, next) => {
     }
 };
 
-exports.update = async (req, res, next) => {
+export const update = async (req, res, next) => {
     // #swagger.tags = ['Users']
     /*    
     #swagger.security = [{
@@ -69,7 +70,7 @@ exports.update = async (req, res, next) => {
     }
 };
 
-exports.delete = async (req, res, next) => {
+export const deleteItem = async (req, res, next) => {
     // #swagger.tags = ['Users']
     /*    
     #swagger.security = [{

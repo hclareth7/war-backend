@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
+import * as controller from '../controllers/reference';
+import * as auth from '../middlewares/auth';
+
 const router = express.Router();
-const controller = require('../controllers/reference');
-const auth = require('../middlewares/auth');
 
 //AUTH
 router.get('/', auth.allowIfLoggedin, controller.getAll);
 router.get('/:ref', auth.allowIfLoggedin, controller.getByRefName);
 
-module.exports = router;
+export default router;

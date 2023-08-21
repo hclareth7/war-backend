@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const municipalitySchema = new mongoose.Schema({
   name: {
@@ -10,4 +10,4 @@ const municipalitySchema = new mongoose.Schema({
 
 const Municipality = mongoose.model('Municipality', municipalitySchema);
 
-module.exports = Municipality;
+export default Municipality;

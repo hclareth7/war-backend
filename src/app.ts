@@ -1,20 +1,19 @@
-const express = require('express');
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerFile from '../swagger_output.json';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import * as dotenv from 'dotenv';
+import './db/db';
+import * as auth from './middlewares/auth';
+import permissionMiddleware from './middlewares/permissions';
+import router from './routes/router';
 
-const swaggerUi = require('swagger-ui-express')
-const swaggerFile = require('../swagger_output.json')
-const cors = require('cors')
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-require('dotenv').config();
-require('./db/db');
-const auth = require('./middlewares/auth');
-const permissionMiddleware = require('./middlewares/permissions');
-
+dotenv.config();
 //APP
 const app = express();
 
-// Routes 
-const router = require('./routes/router')
 
 
 //CORS
@@ -25,7 +24,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-app.use(logger(process.env.APP_LOG_LEVEL));
+app.use(logger(process.env.APP_LOG_LEVEL as string));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -47,4 +46,4 @@ app.use(function (req, res, next) {
   res.status(404).send("404 NOT FOUND!!")
 });
 
-module.exports = app;
+export default app;

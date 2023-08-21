@@ -1,16 +1,17 @@
-const Model = require('../models/beneficiary');
+import Model from '../models/activity';
 
 const modelName = Model.modelName;
-exports.save = async (req, res, next) => {
-    // #swagger.tags = ['Beneficiaries']
+
+export const save = async (req, res, next) => {
+    // #swagger.tags = ['Activities']
     /*    
     #swagger.security = [{
-        "apiKeyAuth": []
+               "apiKeyAuth": []
     }]
     #swagger.parameters['obj'] = {
-        in: 'body',
-        description: 'Adding new beneficiary.',
-        schema: { $ref: '#/definitions/beneficiary' }
+                in: 'body',
+                description: 'Adding new activity.',
+                schema: { $ref: '#/definitions/activity' }
     } */
     try {
         const saveModel = new Model(req.body);
@@ -23,8 +24,8 @@ exports.save = async (req, res, next) => {
     }
 };
 
-exports.getAll = async (req, res, next) => {
-    // #swagger.tags = ['Beneficiaries']
+export const getAll = async (req, res, next) => {
+    // #swagger.tags = ['Activities']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -40,8 +41,8 @@ exports.getAll = async (req, res, next) => {
     }
 };
 
-exports.get = async (req, res, next) => {
-    // #swagger.tags = ['Beneficiaries']
+export const get = async (req, res, next) => {
+    // #swagger.tags = ['Activities']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -60,8 +61,8 @@ exports.get = async (req, res, next) => {
     }
 };
 
-exports.update = async (req, res, next) => {
-    // #swagger.tags = ['Beneficiaries']
+export const update = async (req, res, next) => {
+    // #swagger.tags = ['Activities']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -80,8 +81,8 @@ exports.update = async (req, res, next) => {
     }
 };
 
-exports.delete = async (req, res, next) => {
-    // #swagger.tags = ['Beneficiaries']
+export const deleteItem = async (req, res, next) => {
+    // #swagger.tags = ['Activities']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -97,3 +98,4 @@ exports.delete = async (req, res, next) => {
         next(error);
     }
 };
+

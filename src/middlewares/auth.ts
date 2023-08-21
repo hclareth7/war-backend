@@ -1,9 +1,10 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/user';
+import permissionHelper from './permissions';
 
-
-exports.generateAuthToken = async (req, res, next) => {
+/*
+export const generateAuthToken = async (req, res, next) => {
     // Generate an auth token for the user
     const token = jwt.sign({ _id: User._id }, process.env.JWT_KEY);
     User.token = token;
@@ -12,8 +13,9 @@ exports.generateAuthToken = async (req, res, next) => {
     return token;
 
 };
+*/
 
-exports.checkAuthToken = async (req, res, next) => {
+export const checkAuthToken = async (req, res, next) => {
     try {
         if (req.headers["x-access-token"]) {
             const accessToken = req.headers["x-access-token"];
@@ -30,11 +32,11 @@ exports.checkAuthToken = async (req, res, next) => {
             next();
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 };
 
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
     // #swagger.tags = ['Auth']
     try {
         const { email, password } = req.body;
@@ -51,16 +53,19 @@ exports.login = async (req, res, next) => {
         const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_KEY);
         await User.findByIdAndUpdate(user._id, { accessToken });
 
+        const abilities = await permissionHelper(user.role);
+        req.abitilies = abilities;
+
         res.status(200).json({
-            user: { email: user.email, role: user.role, token: accessToken }
+            user: { email: user.email, role: user.role, token: accessToken },
         });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         next(error);
     };
 };
 
-exports.allowIfLoggedin = async (req, res, next) => {
+export const allowIfLoggedin = async (req, res, next) => {
     try {
         const user = res.locals.loggedInUser;
         if (!user)

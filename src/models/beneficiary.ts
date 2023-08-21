@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const validator = require('validator')
+import mongoose from 'mongoose';
+import validator from 'validator';
 
 const beneficiarySchema = new mongoose.Schema({
 
@@ -49,6 +49,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     type_of_disability: {
         type: String,
+        /*
         validate: {
             validator: function (value) {
                 const predefinedValues = ['Movilidad', 'Auditiva', 'Visual', 'Gusto', 'Olfato', 'Tacto', 'Sistémica', 'Múltiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Voz y habla', 'Piel', 'Enanismo', 'N/A']; // Valores predefinidos en el enum
@@ -56,6 +57,7 @@ const beneficiarySchema = new mongoose.Schema({
             },
             message: props => `${props.value} is not a valid value or is_disability is false`
         }
+        */
     },
     place_of_birth: {
         type: String
@@ -85,4 +87,4 @@ const beneficiarySchema = new mongoose.Schema({
 
 const Beneficiary = mongoose.model('Beneficiary', beneficiarySchema);
 
-module.exports = Beneficiary;   
+export default Beneficiary;   

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const neighborhoodSchema = new mongoose.Schema({
     name: {
@@ -10,4 +10,4 @@ const neighborhoodSchema = new mongoose.Schema({
 
 const Neighborhood = mongoose.model('Neighborhood', neighborhoodSchema);
 
-module.exports = Neighborhood;
+export default Neighborhood;

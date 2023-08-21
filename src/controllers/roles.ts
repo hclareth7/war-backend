@@ -1,26 +1,26 @@
 // rolesAndPermissionsController.js
-const RolesAndPermissions = require('../models/permissions');
+import RolesAndPermissions from '../models/permissions';
 
-exports.save = async (req, res) => {
+export const save = async (req, res, next) => {
   try {
     const { role, permissions } = req.body;
     const newRoleAndPermissions = new RolesAndPermissions({ role, permissions });
     await newRoleAndPermissions.save();
     res.json({ message: 'Role and permissions created successfully.' });
 } catch (error) {
-    console.log(error)
+    console.log(error);
     next(error)
 }
 };
 
-exports.getAll = async (req, res, next) => {
+export const getAll = async (req, res, next) => {
     const roles = await RolesAndPermissions.find({});
     res.status(200).json({
         data: roles
     });
 };
 
-exports.get = async (req, res, next) => {
+export const get = async (req, res, next) => {
     try {
         const id = req.params.id;
         const role = await RolesAndPermissions.findById(id);
@@ -35,7 +35,7 @@ exports.get = async (req, res, next) => {
     }
 };
 
-exports.update = async (req, res, next) => {
+export const update = async (req, res, next) => {
     try {
         const update = req.body
         const id = req.params.id;
@@ -50,7 +50,7 @@ exports.update = async (req, res, next) => {
     }
 };
 
-exports.delete = async (req, res, next) => {
+export const deleteItem = async (req, res, next) => {
     try {
         const id = req.params.id;
         await RolesAndPermissions.findByIdAndDelete(id);

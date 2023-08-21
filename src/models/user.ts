@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const validator = require('validator')
+import mongoose from 'mongoose';
+import validator from 'validator';
 
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
         lowercase: true,
         validate: value => {
             if (!validator.isEmail(value)) {
-                throw new Error({ error: 'Invalid Email address' })
+                throw new Error('Invalid Email address')
             }
         }
     },
@@ -36,4 +36,4 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+export default User;

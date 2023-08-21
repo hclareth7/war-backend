@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const validator = require('validator')
+import mongoose from 'mongoose';
 
 const epsSchema = new mongoose.Schema({
     name: {
@@ -13,4 +12,4 @@ const epsSchema = new mongoose.Schema({
 
 const Eps = mongoose.model('Eps', epsSchema);
 
-module.exports = Eps;   
+export default Eps;   
