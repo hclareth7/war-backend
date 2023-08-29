@@ -1,33 +1,33 @@
 import express from 'express';
 import PDFDocument from 'pdfkit-table';
+import * as config from '../config/config'
 
-const router = express.Router();
+import * as fs from 'fs';
 
 /* GET home page. */
-export const createPDf = async function (req, res, next) {
-  const fs = require("fs");
+export const createPDf = async function (filterCondition, data, response , options = {companyName: config.CONFIGS.company.name , image: config.CONFIGS.company.logoUrl, title: config.CONFIGS.pdfTitle}) {
    // Datos de ejemplo (puedes obtener estos datos desde una base de datos)
-   const attendanceData = [
-    // ... más datos ...
-  ];
+   
 
   // Company Name
-  const companyName = 'CONSORCIO PARA LA ATENCION INTEGRAL Y PSICOSOCIAL DEL ADULTO MAYOR';
+  const companyName = options.companyName;
   // path image 
-  const pathImage = ''
+  const pathImage = options.image;
   // Title document
-  const titleDocument = 'Lista de Valores de Fisioterapia'
+  const titleDocument = options.title;
   // start date
-  const starDate = '2023-08-01'
+  const starDate = filterCondition.start;
   // end Date
-  const endDate = '2023-08-31'
+  const endDate = filterCondition.end;
   // Encabezados de la tabla
-  const tableHeaders = ['Nombre', 'Cedula', 'Asociación', 'Taller', 'Fecha'];
+  const tableHeaders = filterHeader(data.headers);
+
+  const dataDocument = data.data;
 
   const doc = new PDFDocument({ margin: 30, size: 'A4' });
-  doc.pipe(fs.createWriteStream("./attendance_list.pdf"));
+  doc.pipe(fs.createWriteStream(`./${titleDocument}.pdf`));
 
-  doc.image(pathImage, 60,30,{width: 100 })
+  //doc.image(pathImage, 60,30,{width: 100 })
  
   doc.font('Helvetica').fontSize(13).text(companyName, 150, 60,{
     width: 310, 
@@ -41,7 +41,7 @@ export const createPDf = async function (req, res, next) {
     const additionalData = [
       { title: 'Desde:', value: starDate },
       { title: 'Hasta:', value: endDate },
-      { title: 'Total:', value: `${attendanceData.length}` },
+      { title: 'Total:', value: `${dataDocument.length}` },
     ];
   
   const pageWidth = doc.page.width;
@@ -56,11 +56,13 @@ export const createPDf = async function (req, res, next) {
       doc.font('Helvetica').fontSize(12).text(data.value, xPos+50, yPos+ 20, { width: textWidth});
     });
   
+	
+
   const table = { 
     title: '',
     headers: tableHeaders,
-    datas: [ /* complex data */ ],
-    rows: attendanceData,
+    datas: dataDocument,
+    rows: [],
   };
 
   
@@ -77,8 +79,13 @@ export const createPDf = async function (req, res, next) {
     prepareRow: (row, i) => doc.font('Helvetica').fontSize(10),
   });
 
-  doc.pipe(res);
+  
   doc.end();
 };
+
+const filterHeader = (headers)=>{
+	return headers.filter(header => header!=="createAt")
+
+}
 
 

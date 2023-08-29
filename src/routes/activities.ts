@@ -11,5 +11,6 @@ router.get("/", auth.allowIfLoggedin, auth.grantAccess('read', resourceName), co
 router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.get);
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName),controller.update);
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItem);
+router.post("/pdf", controller.generatePdf);
 
 export default router;

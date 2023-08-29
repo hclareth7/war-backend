@@ -1,4 +1,5 @@
 import Model from '../models/activity';
+import * as pdf from '../services/pdfcreator';
 
 const modelName = Model.modelName;
 
@@ -98,4 +99,31 @@ export const deleteItem = async (req, res, next) => {
         next(error);
     }
 };
+
+["dfas", "adsfasdf", "dfasdfasdf"]
+
+export const generatePdf = async (req, res, next) => {
+    
+    try{
+        const {query, starDate, endDate} = req.body;
+        const activities = await Model.find({});
+        //const activities = [["juan", "perez"], ["mario", "dias"]];
+        //const header = ["nombre", "apellido"];
+        const headers = Object.keys(Model.schema.paths);
+        
+        const data = {
+            headers: headers,
+            data: activities
+        }
+        const filterCondition = { start: starDate, end: endDate};
+        pdf.createPDf(filterCondition,data, res);
+        
+        res.status(200).json({
+            message: `successfully`
+        });
+
+    }catch(error){
+        console.log(error);
+    }
+}
 
