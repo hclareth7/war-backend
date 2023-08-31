@@ -1,5 +1,5 @@
 import express from 'express';
-import PDFDocument from 'pdfkit-table';
+import PDFDocument from 'pdfkit';
 import * as config from '../config/config'
 
 import * as fs from 'fs';

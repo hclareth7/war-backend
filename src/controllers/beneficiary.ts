@@ -1,4 +1,5 @@
 import Model from '../models/beneficiary';
+import * as service from '../services/s3Upload'
 
 const modelName = Model.modelName;
 
@@ -96,5 +97,37 @@ export const deleteItem = async (req, res, next) => {
         });
     } catch (error) {
         next(error);
+    }
+};
+
+export const updatePhoto = async (req, res, next) => {
+    // #swagger.tags = ['Beneficiary']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
+    try {
+
+        const file = req.file;
+        const identifier = JSON.parse(req.body.beneficiary_id);
+        const getModel = await Model.findById(identifier.beneficiary_id);
+        if (!getModel) {
+            return next(new Error(`${modelName} does not exist`));
+        }
+        if (!file) {
+            return res.status(400).send('No file uploaded.');
+        }
+        const image_url = await service.uploadS3(file, `${identifier.beneficiary_id}.${file.originalname.match(/\.(.*?)$/)?.[1]}`);
+        const update = { photo_url: image_url };
+        await Model.findByIdAndUpdate({ _id: identifier.beneficiary_id }, update);
+        const beneficiary = await Model.findById({ _id: identifier.beneficiary_id });
+        res.status(200).json({
+            data: beneficiary,
+            message: 'Beneficiary has been updated'
+        });
+
+    } catch (error) {
+        console.log(error)
+        next(error)
     }
 };

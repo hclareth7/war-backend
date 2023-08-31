@@ -1,5 +1,7 @@
 import User from '../models/user';
 import bcrypt from 'bcrypt';
+import * as service from '../services/s3Upload'
+
 export const save = async (req, res, next) => {
     // #swagger.tags = ['Users']
     /*    
@@ -24,8 +26,8 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
 
-    
-      
+
+
     const users = await User.find().populate('role');
     res.status(200).json({
         data: users
@@ -48,7 +50,7 @@ export const get = async (req, res, next) => {
             data: user
         });
     } catch (error) {
-       console.log(error)
+        console.log(error)
     }
 };
 
