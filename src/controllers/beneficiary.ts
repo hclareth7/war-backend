@@ -15,7 +15,15 @@ export const save = async (req, res, next) => {
         schema: { $ref: '#/definitions/beneficiary' }
     } */
     try {
-        const saveModel = new Model(req.body);
+        const foto = req.file;
+
+        const body = JSON.parse(req.body.data);
+        const saveModel = new Model(body);
+        if (foto) {
+            const image_url = await service.uploadS3(foto, `${saveModel._id}.${foto.originalname.match(/\.(.*?)$/)?.[1]}`);
+            saveModel.photo_url = image_url;
+        }
+
         await saveModel.save();
         const data = { 'message': `${modelName} successfully created`, 'data': saveModel };
         res.json(data);
