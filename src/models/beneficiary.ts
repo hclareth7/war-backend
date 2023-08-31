@@ -3,7 +3,20 @@ import validator from 'validator';
 
 const beneficiarySchema = new mongoose.Schema({
 
-    full_name: {
+    first_name: {
+        type: String,
+        required: true
+    },
+
+    second_name: {
+        type: String,
+        required: true
+    },
+    first_last_name: {
+        type: String,
+        required: true
+    },
+    second_last_name: {
         type: String,
         required: true
     },
@@ -66,6 +79,21 @@ const beneficiarySchema = new mongoose.Schema({
         type: String
     },
     municipality: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Municipality',
+        require: true
+    },
+    community: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Community',
+        require: true
+    },
+    association: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'association',
+        require: true
+    },
+    photo_url: {
         type: String
     },
     neighborhood: {
