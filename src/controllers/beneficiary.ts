@@ -14,10 +14,12 @@ export const save = async (req, res, next) => {
         description: 'Adding new beneficiary.',
         schema: { $ref: '#/definitions/beneficiary' }
     } */
+    
     try {
         const foto = req.file;
-
+        
         const body = JSON.parse(req.body.data);
+        
         const saveModel = new Model(body);
         if (foto) {
             const image_url = await service.uploadS3(foto, `${saveModel._id}.${foto.originalname.match(/\.(.*?)$/)?.[1]}`);
@@ -40,7 +42,7 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({});
+        const getAllModel = await Model.find({}).populate('eps').populate('association');
         res.status(200).json({
             data: getAllModel
         });

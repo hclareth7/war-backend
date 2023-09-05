@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-
+import * as config from '../config/config';
 // Configure AWS S3 compatibility
 const awsConfig = {
   region: process.env.S3_COUD_REGION,
@@ -22,21 +21,13 @@ export const uploadS3 = async (file, identifier) => {
       Key: `${identifier}`,
       Body: file.buffer,
     };
-    const getParams = {
-
-      Bucket: process.env.BUCKET_NAME,
-      Key: `${identifier}`,
-      Expires: 3600,
-
-    }
-
+    
     const command = new PutObjectCommand(params);
 
     await s3.send(command)
 
-    const commandGet = new GetObjectCommand(getParams);
-    //const response = await s3.send(commandGet);
-    const url = await getSignedUrl(s3, commandGet);
+    
+    const url = `${config.CONFIGS.s3BaseUrl}/${identifier}`;
 
     console.log('File uploaded successfully');
     return url;

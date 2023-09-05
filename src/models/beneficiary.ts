@@ -90,7 +90,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     association: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'association',
+        ref: 'Association',
         require: true
     },
     photo_url: {
