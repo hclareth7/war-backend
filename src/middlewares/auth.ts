@@ -42,7 +42,7 @@ export const login = async (req, res, next) => {
     // #swagger.tags = ['Auth']
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).populate('role');
 
         if (!user) {
             return next(new Error('Email does not exist'));
@@ -56,9 +56,10 @@ export const login = async (req, res, next) => {
         await User.findByIdAndUpdate(user._id, { accessToken });
         res.locals.loggedInUser = user;
         res.locals.loggedInUser.abilities = await permissionHelper(user.role);
+        console.log(user.role)
 
         res.status(200).json({
-            user: { email: user.email, role: user.role, token: accessToken, abilities: res.locals.loggedInUser.abilities.A },
+            user: { name: user.name, email: user.email, role: user.role, token: accessToken, abilities: res.locals.loggedInUser.abilities.A },
         });
     } catch (error) {
         console.log(error);
