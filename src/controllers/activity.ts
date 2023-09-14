@@ -49,7 +49,9 @@ export const serch=async (req,res,next)=>{
                 {name:{$regex:new RegExp(value, "i")}},
             ]
         });
-        allActivitiesFound.length >0 ? res.status(200).json({data: allActivitiesFound}) : getAll(req,res,next);
+        res.status(200).json({
+            data: allActivitiesFound
+        });
     }catch(error){
         next(error);
     }

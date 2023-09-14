@@ -42,7 +42,7 @@ export const serch=async ( req,res,next)=>{
                 {email:{$regex: new RegExp(value, "i")}},
             ]
         });
-        allUsersFound.length >0 ? res.status(200).json({data: allUsersFound}) : getAll(req,res,next);
+        res.status(200).json({data: allUsersFound});
     }catch(error){
         next(error);
     }

@@ -47,7 +47,7 @@ export const serch=async (req,res,next)=>{
                     { second_last_name : {$regex: new RegExp(value, "i")} } ,
                 ] 
             });
-            allBeneficiariesFound.length >0 ? res.status(200).json({ data: allBeneficiariesFound }) : getAll(req,res,next);
+            res.status(200).json({ data: allBeneficiariesFound });
     } catch (error) {
         next(error);
     }
