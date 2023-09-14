@@ -15,10 +15,18 @@ export const save = async (req, res, next) => {
     await newRoleAndPermissions.save();
     res.json({ message: 'Role and permissions created successfully.' });
 } catch (error) {
-    console.log(error);
     next(error)
 }
 };
+export const serch=async (req,res,next)=>{
+    try {
+        const value=req.query.queryString;
+        const allRolsFound = await RolesAndPermissions.find({ $or:[{ role : {$regex: new RegExp(value, "i")} } ] });
+        allRolsFound.length >0 ? res.status(200).json({ data: allRolsFound }) : getAll(req,res,next);
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const getAll = async (req, res, next) => {
     // #swagger.tags = ['Roles']

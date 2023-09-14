@@ -33,6 +33,20 @@ export const getAll = async (req, res, next) => {
         data: users
     });
 };
+export const serch=async ( req,res,next)=>{
+    try{
+        const value=req.query.queryString;
+        const allUsersFound=await User.find({
+            $or:[
+                {name:{$regex: new RegExp(value, "i")}},
+                {email:{$regex: new RegExp(value, "i")}},
+            ]
+        });
+        allUsersFound.length >0 ? res.status(200).json({data: allUsersFound}) : getAll(req,res,next);
+    }catch(error){
+        next(error);
+    }
+}
 
 export const get = async (req, res, next) => {
     // #swagger.tags = ['Users']

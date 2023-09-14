@@ -34,6 +34,24 @@ export const save = async (req, res, next) => {
         next(error);
     }
 };
+export const serch=async (req,res,next)=>{
+    try {
+        const value=req.query.queryString;
+        const allBeneficiariesFound = await Model.find(
+            { $or:
+                [
+                    { first_name : {$regex: new RegExp(value, "i")} } ,
+                    { second_name : {$regex: new RegExp(value, "i")} } ,
+                    { identification : {$regex: new RegExp(value, "i")} } ,
+                    { first_last_name : {$regex: new RegExp(value, "i")} } ,
+                    { second_last_name : {$regex: new RegExp(value, "i")} } ,
+                ] 
+            });
+            allBeneficiariesFound.length >0 ? res.status(200).json({ data: allBeneficiariesFound }) : getAll(req,res,next);
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const getAll = async (req, res, next) => {
     // #swagger.tags = ['Beneficiaries']

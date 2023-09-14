@@ -41,6 +41,19 @@ export const getAll = async (req, res, next) => {
         next(error);
     }
 };
+export const serch=async (req,res,next)=>{
+    try{
+        const value=req.query.queryString;
+        const allActivitiesFound=await Model.find({
+            $or:[
+                {name:{$regex:new RegExp(value, "i")}},
+            ]
+        });
+        allActivitiesFound.length >0 ? res.status(200).json({data: allActivitiesFound}) : getAll(req,res,next);
+    }catch(error){
+        next(error);
+    }
+}
 
 export const get = async (req, res, next) => {
     // #swagger.tags = ['Activities']
