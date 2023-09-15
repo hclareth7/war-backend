@@ -48,14 +48,15 @@ export const getAll = async (req, res, next) => {
         const page = req.query.page
         const perPage = req.query.perPage
         let searchOptions = {};
+
         if (req.query.queryString) {
             searchOptions = {
                 queryString: req.query.queryString,
                 searchableFields: config.CONFIGS.searchableFields.beneficiary
             };
-        }
+        };
 
-        const getAllModel = await mutil.getPaginatedDocument(Beneficiary, ['eps', 'association'], page, perPage, searchOptions)
+        const getAllModel = await mutil.getTunnedDocument(Beneficiary, ['eps', 'association'], page, perPage, searchOptions)
         res.status(200).json({
             data: getAllModel.docs
         });

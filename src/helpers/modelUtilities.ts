@@ -1,9 +1,11 @@
 
-export const getPaginatedDocument = async (model, populate, page, perPage, searchOptions: any = {}) => {
+export const getTunnedDocument = async (model, populate, page, perPage, searchOptions: any = {}) => {
   try {
-
-    let conditions = searchOptions?.queryString ? getSearchOptions(searchOptions?.queryString) : {};
-
+    let conditions = {};
+    if (searchOptions?.queryString) {
+      getSearchOptions(searchOptions?.queryString);
+      page = 0;
+    }
     const options = getPaginationOptions(populate, page, perPage);
 
     const result = await model.paginate(conditions, options);
