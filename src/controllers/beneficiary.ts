@@ -55,7 +55,6 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.beneficiary
             };
         };
-
         const getAllModel = await mutil.getTunnedDocument(Beneficiary, ['eps', 'association'], page, perPage, searchOptions)
         res.status(200).json({
             data: getAllModel.docs

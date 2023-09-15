@@ -3,15 +3,15 @@ export const getTunnedDocument = async (model, populate, page, perPage, searchOp
   try {
     let conditions = {};
     if (searchOptions?.queryString) {
-      getSearchOptions(searchOptions?.queryString);
+      conditions = getSearchOptions(searchOptions?.queryString);
       page = 0;
     }
     const options = getPaginationOptions(populate, page, perPage);
-
     const result = await model.paginate(conditions, options);
 
     return result;
   } catch (err) {
+    console.log(err)
     throw err;
   }
 }
