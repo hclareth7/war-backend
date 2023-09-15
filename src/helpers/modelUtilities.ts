@@ -3,7 +3,7 @@ export const getTunnedDocument = async (model, populate, page, perPage, searchOp
   try {
     let conditions = {};
     if (searchOptions?.queryString) {
-      conditions = getSearchOptions(searchOptions?.queryString);
+      getSearchOptions(searchOptions?.queryString);
       page = 0;
     }
     const options = getPaginationOptions(populate, page, perPage);
