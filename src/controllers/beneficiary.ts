@@ -1,7 +1,8 @@
 import Beneficiary from '../models/beneficiary';
 import Model from '../models/beneficiary';
-import * as service from '../services/s3Upload'
-const { paginateModel} = require( '../middlewares/pagination')
+import * as service from '../services/s3Upload';
+import * as mutil from '../helpers/modelUtilities';
+import * as config from '../config/config';
 
 const modelName = Model.modelName;
 
@@ -16,12 +17,12 @@ export const save = async (req, res, next) => {
         description: 'Adding new beneficiary.',
         schema: { $ref: '#/definitions/beneficiary' }
     } */
-    
+
     try {
         const foto = req.file;
-        
+
         const body = JSON.parse(req.body.data);
-        
+
         const saveModel = new Model(body);
         if (foto) {
             const image_url = await service.uploadS3(foto, `${saveModel._id}.${foto.originalname.match(/\.(.*?)$/)?.[1]}`);
@@ -45,9 +46,16 @@ export const getAll = async (req, res, next) => {
     }]*/
     try {
         const page = req.query.page
-        const perPage  = req.query.perPage
-        //const getAllModel = await Model.find({}).populate('eps').populate('association');
-        const getAllModel = await paginateModel(Beneficiary, ['eps','association' ], page, perPage)
+        const perPage = req.query.perPage
+        let searchOptions = {};
+        if (req.query.queryString) {
+            searchOptions = {
+                queryString: req.query.queryString,
+                searchableFields: config.CONFIGS.searchableFields.beneficiary
+            };
+        }
+
+        const getAllModel = await mutil.getPaginatedDocument(Beneficiary, ['eps', 'association'], page, perPage, searchOptions)
         res.status(200).json({
             data: getAllModel.docs
         });

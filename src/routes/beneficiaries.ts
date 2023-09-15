@@ -10,7 +10,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.post('/', upload.single('file'),auth.allowIfLoggedin, auth.grantAccess('create', resourceName), controller.save);
-router.get("/", auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getAll)
+router.get("/:queryString", auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getAll)
 router.post('/photo', upload.single('file'), auth.allowIfLoggedin, auth.grantAccess('update', resourceName), controller.updatePhoto);
 router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.get);
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName), controller.update);
