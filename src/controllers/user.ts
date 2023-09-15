@@ -1,7 +1,8 @@
 import User from '../models/user';
 import bcrypt from 'bcrypt';
-import * as service from '../services/s3Upload'
-const { paginateModel} = require( '../middlewares/pagination')
+import * as config from '../config/config';
+import * as mutil from '../helpers/modelUtilities';
+
 
 export const save = async (req, res, next) => {
     // #swagger.tags = ['Users']
@@ -27,9 +28,17 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
 
-   const page = req.query.page
-   const perPage  = req.query.perPage
-   const user = await paginateModel(User, "role", page, perPage)
+    const page = req.query.page
+    const perPage = req.query.perPage
+    let searchOptions = {};
+
+    if (req.query.queryString) {
+        searchOptions = {
+            queryString: req.query.queryString,
+            searchableFields: config.CONFIGS.searchableFields.beneficiary
+        };
+    };
+   const user = await mutil.getTunnedDocument(User, "role", page, perPage, searchOptions)
     res.status(200).json({
         data: user.docs,
         currentPage: user.page,
