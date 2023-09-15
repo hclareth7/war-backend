@@ -1,6 +1,7 @@
 import User from '../models/user';
 import bcrypt from 'bcrypt';
 import * as service from '../services/s3Upload'
+const { paginateModel} = require( '../middlewares/pagination')
 
 export const save = async (req, res, next) => {
     // #swagger.tags = ['Users']
@@ -26,11 +27,15 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
 
-
-
-    const users = await User.find().populate('role');
+   const page = req.query.page
+   const perPage  = req.query.perPage
+   const user = await paginateModel(User, "role", page, perPage)
     res.status(200).json({
-        data: users
+        data: user.docs,
+        currentPage: user.page,
+        itemsPerPage: user.limit,
+        totalItems: user.total,
+        totalPages: user.pages,
     });
 };
 

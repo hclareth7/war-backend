@@ -1,5 +1,7 @@
+import Beneficiary from '../models/beneficiary';
 import Model from '../models/beneficiary';
 import * as service from '../services/s3Upload'
+const { paginateModel} = require( '../middlewares/pagination')
 
 const modelName = Model.modelName;
 
@@ -42,9 +44,12 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate('eps').populate('association');
+        const page = req.query.page
+        const perPage  = req.query.perPage
+        //const getAllModel = await Model.find({}).populate('eps').populate('association');
+        const getAllModel = await paginateModel(Beneficiary, ['eps','association' ], page, perPage)
         res.status(200).json({
-            data: getAllModel
+            data: getAllModel.docs
         });
     } catch (error) {
         console.log(error);
