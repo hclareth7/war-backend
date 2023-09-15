@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
-import permissionHelper from './permissions';
+import permissionHelper from '../helpers/permissions';
 
 /*
 export const generateAuthToken = async (req, res, next) => {
