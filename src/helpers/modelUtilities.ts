@@ -3,7 +3,7 @@ export const getTunnedDocument = async (model, populate, page, perPage, searchOp
   try {
     let conditions = {};
     if (searchOptions?.queryString) {
-      getSearchOptions(searchOptions?.queryString);
+      conditions = getSearchOptions(searchOptions);
       page = 0;
     }
     const options = getPaginationOptions(populate, page, perPage);
@@ -16,10 +16,10 @@ export const getTunnedDocument = async (model, populate, page, perPage, searchOp
   }
 }
 
-const getSearchOptions = async (searchOptions) => {
+const getSearchOptions = (searchOptions) => {
   const arrayRegex: any = [];
   searchOptions.searchableFields.forEach(field => {
-    const object: any = { field: { $regex: new RegExp(searchOptions.queryString, "i") } }
+    const object: any = { [field]: { $regex: new RegExp(searchOptions.queryString, "i") } }
     arrayRegex.push(object);
   });
   const searchOptionsRegex = { $or: arrayRegex }

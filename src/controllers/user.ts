@@ -35,10 +35,10 @@ export const getAll = async (req, res, next) => {
     if (req.query.queryString) {
         searchOptions = {
             queryString: req.query.queryString,
-            searchableFields: config.CONFIGS.searchableFields.beneficiary
+            searchableFields: config.CONFIGS.searchableFields.user
         };
     };
-   const user = await mutil.getTunnedDocument(User, "role", page, perPage, searchOptions)
+    const user = await mutil.getTunnedDocument(User, ["role"], page, perPage, searchOptions)
     res.status(200).json({
         data: user.docs,
         currentPage: user.page,
