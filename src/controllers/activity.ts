@@ -32,7 +32,7 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({});
+        const getAllModel = await Model.find({}).populate('attendees');
         res.status(200).json({
             data: getAllModel
         });
@@ -50,7 +50,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id);
+        const getModel = await Model.findById(id).populate('attendees');
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }
@@ -103,26 +103,26 @@ export const deleteItem = async (req, res, next) => {
 ["dfas", "adsfasdf", "dfasdfasdf"]
 
 export const generatePdf = async (req, res, next) => {
-    
-    try{
-        const {query, starDate, endDate} = req.body;
+
+    try {
+        const { query, starDate, endDate } = req.body;
         const activities = await Model.find({});
         //const activities = [["juan", "perez"], ["mario", "dias"]];
         //const header = ["nombre", "apellido"];
         const headers = Object.keys(Model.schema.paths);
-        
+
         const data = {
             headers: headers,
             data: activities
         }
-        const filterCondition = { start: starDate, end: endDate};
-        pdf.createPDf(filterCondition,data, res);
-        
+        const filterCondition = { start: starDate, end: endDate };
+        pdf.createPDf(filterCondition, data, res);
+
         res.status(200).json({
             message: `successfully`
         });
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 }
