@@ -35,9 +35,7 @@ const beneficiarySchema = new mongoose.Schema({
         required: true
     },
     sisben_score: {
-        type: Number,
-        min: 0,
-        max: 100,
+        type: String,
         required: true,
     },
     birthday: {
