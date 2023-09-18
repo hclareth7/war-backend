@@ -6,6 +6,8 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package*.json ./
 
+RUN npm install -g typescript
+
 RUN npm ci
 
 COPY . .
