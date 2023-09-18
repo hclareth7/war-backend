@@ -61,6 +61,16 @@ const beneficiarySchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    health_regimen:{
+        type: String,
+        enum :['Subsidiado', 'Contributivo', 'Cotizante','Cotizante Beneficiario']
+    },
+    residence_department:{
+        type: String,
+    },
+    sisben_department:{
+        type:String
+    },
     type_of_disability: {
         type: String,
         /*
