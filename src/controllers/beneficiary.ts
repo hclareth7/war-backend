@@ -37,6 +37,28 @@ export const save = async (req, res, next) => {
         next(error);
     }
 };
+export const filter = async (req,res,next)=>{
+  // options = [
+  //   { "filterType": "dateRange", "startDate": "09-08-2023", "endDate": "09-12-2023", "field": "birthday" },
+  //   { "filterType": "dateSpecific", "value": "09-08-2023", "field": "birthday" },
+  //   { "filterType": "number", "value": "10", "operator": ">", "field": "score_sisben" },
+  //   { "filterType": "string", "value": "pablo", "field": "first_name" },
+  // ]
+    try {
+        const options:[]=req.body.options;
+        if(options.length ===0 ){
+            return res.status(404).json({
+                data:[]
+            });
+        }
+        const modelFilterResult =await  mutil.getFilteredDocument(Model,options);
+        return res.status(200).json({
+            data: modelFilterResult
+        })
+    } catch (error) {
+        next(error)
+    }
+}
 
 export const getAll = async (req, res, next) => {
     // #swagger.tags = ['Beneficiaries']
