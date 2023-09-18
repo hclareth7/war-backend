@@ -86,13 +86,11 @@ const validateOptionsFilter=(options)=>{
     for (let j = 0; j < keysOption.length; j++) {
       const key:any = keysOption[j];
       if(option[key]===null || option[key]===undefined || option[key]===" " || option[key]===""){
-        return true;
+        return false;
       }
-      
     }
-    
   }
-  return false;
+  return true;
 }
 
 const handlerFilter=(options)=>{
@@ -100,28 +98,22 @@ const handlerFilter=(options)=>{
   
   for (let i = 0; i < options.length; i++) {
     const option:any = options[i];
-
-    switch (option.filterType) {
-      case config.CONFIGS.filterType[0]://dateRange
-        conditions.push(filterByDateRange(option.field,option.startDate,option.endDate));
-        break;
-      case config.CONFIGS.filterType[1]://dateSpecific
-        conditions.push(filterBySpecificDate(option.field,option.date));
-        break;
-      case config.CONFIGS.filterType[2]://number
-        conditions.push(filterByNumber(option.field,option.operator,option.value));
-        break;
-      case config.CONFIGS.filterType[3]://string
-        conditions.push(filterByString(option.field,option.value));
-        break;
+    const filterFunctions = {
+      [config.CONFIGS.filterType[0]]: () => conditions.push(filterByDateRange(option.field, option.startDate, option.endDate)),
+      [config.CONFIGS.filterType[1]]: () => conditions.push(filterBySpecificDate(option.field, option.date)),
+      [config.CONFIGS.filterType[2]]: () => conditions.push(filterByNumber(option.field, option.operator, option.value)),
+      [config.CONFIGS.filterType[3]]: () => conditions.push(filterByString(option.field, option.value)),
+    };
+    if(filterFunctions[option.filterType]){
+      filterFunctions[option.filterType]();
     }
   }
   return conditions;
 }
 
 export const getFilteredDocument=async (modelo, options) =>{
-  const isNullValuesOption:boolean = validateOptionsFilter(options);
-  if(isNullValuesOption===false){
+  const isValid:boolean = validateOptionsFilter(options);
+  if(isValid){
     const conditions=handlerFilter(options);
     const data=await modelo.find({$and:conditions});
     return data;
