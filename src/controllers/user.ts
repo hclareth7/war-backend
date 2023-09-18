@@ -39,13 +39,7 @@ export const getAll = async (req, res, next) => {
         };
     };
     const user = await mutil.getTunnedDocument(User, ["role"], page, perPage, searchOptions)
-    res.status(200).json({
-        data: user.docs,
-        currentPage: user.page,
-        itemsPerPage: user.limit,
-        totalItems: user.total,
-        totalPages: user.pages,
-    });
+    res.status(200).json(user);
 };
 
 export const get = async (req, res, next) => {

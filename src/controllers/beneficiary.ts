@@ -78,11 +78,8 @@ export const getAll = async (req, res, next) => {
             };
         };
         const getAllModel = await mutil.getTunnedDocument(Beneficiary, ['eps', 'association'], page, perPage, searchOptions)
-        res.status(200).json({
-            data: getAllModel.docs
-        });
+        res.status(200).json(getAllModel);
     } catch (error) {
-        console.log(error);
         next(error);
     }
 };
