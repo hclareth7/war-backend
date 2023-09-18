@@ -7,5 +7,7 @@ export const CONFIGS = {
     searchableFields: {
         beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
         user: ['name', 'email']
-    }
+    },
+    filterType:["dateRange","dateSpecific","number","string"],
+    numberTypeFilterOperators:[">","<","="]
 };
