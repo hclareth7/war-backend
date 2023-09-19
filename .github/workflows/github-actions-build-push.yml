@@ -35,7 +35,7 @@ jobs:
       name: Remove qualty_api container
       with:
         host: 193.203.167.80
-        username: ${{ secrets.USERNAME }}
+        username: ${{ secrets.DEPLOY_USERNAME }}
         key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
         script: docker rm -f qualty_api
         
