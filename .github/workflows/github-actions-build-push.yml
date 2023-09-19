@@ -1,4 +1,4 @@
-name: ci-deployement
+name: ci-deployement-API
 on:
   push:
     branches:
@@ -46,5 +46,5 @@ jobs:
         ssh_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
         ssh_user: ${{ secrets.DEPLOY_USERNAME }}
         compose_file: docker-compose.yaml
+        service: api
         pull: true
-        
