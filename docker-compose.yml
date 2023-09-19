@@ -1,0 +1,26 @@
+version: '2'
+services:
+  api:
+    image: hclareth7/qualty-backend:latest
+    networks:
+      qualty:
+        ipv4_address: 10.0.0.10
+    volumes:
+      - /etc/war-backend/config:/usr/src/app/.env
+    ports:
+      - "3000:3000"
+# networks:
+#   qualty:
+#     ipam:
+#       driver: bridge
+#       config:
+#         - subnet: "10.0.0.0/16"
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     DATABASE_URL: postgres://todoapp@postgres/todos
+  # postgres:
+  #   image: postgres:9.6.2-alpine
+  #   environment:
+  #     POSTGRES_USER: todoapp
+  #     POSTGRES_DB: todos
