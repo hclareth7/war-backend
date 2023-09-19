@@ -1,4 +1,4 @@
-name: ci-building docker image
+name: ci-deployement
 on:
   push:
     branches:
