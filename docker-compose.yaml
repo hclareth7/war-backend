@@ -1,7 +1,7 @@
 version: '2'
 services:
   api:
-    container_name: qualty_backend
+    container_name: qualty_api
     image: hclareth7/qualty-backend:latest
     networks:
       qualty:
@@ -10,18 +10,9 @@ services:
       - /etc/war-backend/config:/usr/src/app/.env
     ports:
       - "3000:3000"
-# networks:
-#   qualty:
-#     ipam:
-#       driver: bridge
-#       config:
-#         - subnet: "10.0.0.0/16"
-#   depends_on:
-#     - postgres
-#   environment:
-#     DATABASE_URL: postgres://todoapp@postgres/todos
-# postgres:
-#   image: postgres:9.6.2-alpine
-#   environment:
-#     POSTGRES_USER: todoapp
-#     POSTGRES_DB: todos
+networks:
+  qualty:
+    ipam:
+      driver: default
+      config:
+         - subnet: "10.0.0.0/16"
