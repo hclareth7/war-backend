@@ -1,10 +1,8 @@
 name: ci-building docker image
-
 on:
   push:
     branches:
       - 'main'
-
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -27,3 +25,18 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/qualty-backend:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: astappiev/docker-compose-remote-action@master
+      name: Docker-Compose Remote Deployment
+      with:
+        ssh_host: 193.203.167.80
+        ssh_user: ${{ secrets.DEPLOY_USERNAME }}
+        ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        ssh_host_public_key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
+        docker_compose_prefix: qualty
+        container_registry_username: ${{ secrets.DOCKERHUB_USERNAME }}
+        container_registry_password: ${{ secrets.DOCKERHUB_TOKEN }}

@@ -1,6 +1,7 @@
 version: '2'
 services:
   api:
+    container_name: qualty_backend
     image: hclareth7/qualty-backend:latest
     networks:
       qualty:
@@ -15,12 +16,12 @@ services:
 #       driver: bridge
 #       config:
 #         - subnet: "10.0.0.0/16"
-  #   depends_on:
-  #     - postgres
-  #   environment:
-  #     DATABASE_URL: postgres://todoapp@postgres/todos
-  # postgres:
-  #   image: postgres:9.6.2-alpine
-  #   environment:
-  #     POSTGRES_USER: todoapp
-  #     POSTGRES_DB: todos
+#   depends_on:
+#     - postgres
+#   environment:
+#     DATABASE_URL: postgres://todoapp@postgres/todos
+# postgres:
+#   image: postgres:9.6.2-alpine
+#   environment:
+#     POSTGRES_USER: todoapp
+#     POSTGRES_DB: todos
