@@ -31,7 +31,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+    - uses: appleboy/ssh-action@v1.0.0
+      name: Remove qualty_api container
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: docker rm -f qualty_api
+        
     - uses: chaplyk/docker-compose-remote-action@v1.1
       name: Docker compose up Remote Deployment
       with:
