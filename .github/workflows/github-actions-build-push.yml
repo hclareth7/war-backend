@@ -31,14 +31,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: chaplyk/docker-compose-remote-action@v1.1
-      name: Docker compose down Remote Deployment
+    - uses: alex-ac/github-action-ssh-docker-compose@master
+      name: Docker-Stack Remote Deployment
       with:
         ssh_host: 193.203.167.80
-        ssh_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
         ssh_user: ${{ secrets.DEPLOY_USERNAME }}
-        compose_file: docker-compose.yaml
-        args: down
+        docker_compose_down: 'true'
     
     - uses: chaplyk/docker-compose-remote-action@v1.1
       name: Docker compose up Remote Deployment
@@ -48,5 +47,4 @@ jobs:
         ssh_user: ${{ secrets.DEPLOY_USERNAME }}
         compose_file: docker-compose.yaml
         pull: true
-        args: up -d
       
