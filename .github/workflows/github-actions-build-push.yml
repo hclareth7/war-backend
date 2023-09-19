@@ -4,7 +4,7 @@ on:
     branches:
       - 'main'
 jobs:
-  docker:
+  pushing:
     runs-on: ubuntu-latest
     steps:
       -
@@ -27,6 +27,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/qualty-backend:latest
 
   deploy:
+    needs: pushing
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
