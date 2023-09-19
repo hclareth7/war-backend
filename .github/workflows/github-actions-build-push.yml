@@ -31,13 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: astappiev/docker-compose-remote-action@master
-      name: Docker-Compose Remote Deployment
+    - uses: alex-ac/github-action-ssh-docker-compose@master
+      name: Docker-Stack Remote Deployment
       with:
         ssh_host: 193.203.167.80
-        ssh_user: ${{ secrets.DEPLOY_USERNAME }}
         ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-        ssh_host_public_key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
+        ssh_user: ${{ secrets.DEPLOY_USERNAME }}
         docker_compose_prefix: qualty
-        container_registry_username: ${{ secrets.DOCKERHUB_USERNAME }}
-        container_registry_password: ${{ secrets.DOCKERHUB_TOKEN }}
+        use_stack: 'true'
+      
