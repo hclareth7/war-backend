@@ -47,5 +47,4 @@ jobs:
         ssh_user: ${{ secrets.DEPLOY_USERNAME }}
         compose_file: docker-compose.yaml
         pull: true
-        force_recreate: true
-      
+        
