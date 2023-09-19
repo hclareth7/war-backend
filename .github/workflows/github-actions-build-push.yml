@@ -32,12 +32,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: chaplyk/docker-compose-remote-action@v1.1
-      name: Docker-Stack Remote Deployment
+      name: Docker compose down Remote Deployment
+      with:
+        ssh_host: 193.203.167.80
+        ssh_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        ssh_user: ${{ secrets.DEPLOY_USERNAME }}
+        compose_file: docker-compose.yaml
+        args: down
+    
+    - uses: chaplyk/docker-compose-remote-action@v1.1
+      name: Docker compose up Remote Deployment
       with:
         ssh_host: 193.203.167.80
         ssh_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
         ssh_user: ${{ secrets.DEPLOY_USERNAME }}
         compose_file: docker-compose.yaml
         pull: true
-        build: true
+        args: up -d
       
