@@ -12,6 +12,10 @@ const activitySchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department',
+    },
     municipality: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Municipality',

@@ -35,7 +35,7 @@ const beneficiarySchema = new mongoose.Schema({
         required: true
     },
     sisben_score: {
-        type:String,
+        type: String,
         required: true,
     },
     birthday: {
@@ -47,10 +47,10 @@ const beneficiarySchema = new mongoose.Schema({
         enum: ['Masculino', 'Femenino'],
         required: true
     },
-    sex:{
-        type:String,
-        enum:['Hombre','Mujer','Otro'],
-        required:true
+    sex: {
+        type: String,
+        enum: ['Hombre', 'Mujer', 'Otro'],
+        required: true
     },
     ethnic_affiliation: {
         type: String,
@@ -64,41 +64,43 @@ const beneficiarySchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    health_regimen:{
+    health_regimen: {
         type: String,
-        enum :['Subsidiado', 'Contributivo', 'Cotizante','Cotizante Beneficiario']
+        enum: ['Subsidiado', 'Contributivo', 'Cotizante', 'Cotizante Beneficiario']
     },
-    residence_department:{
+    residence_department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department',
+    },
+    sisben_department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department',
+    },
+    civil_status: {
         type: String,
+        enum: ['Soltero', 'Casado', 'Divorciado', 'Viudo', 'Union libre', 'Separado']
     },
-    sisben_department:{
-        type:String
+    ethnicity: {
+        type: String,
+        enum: ['Indígena', 'Afro', 'Raizal', 'Palenquero', 'Ninguno'],
     },
-    civil_status:{
-        type:String,
-        enum:['Soltero', 'Casado', 'Divorciado', 'Viudo', 'Union libre' , 'Separado']
+    disability: {
+        type: String,
+        enum: ['Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
+        required: true
     },
-    ethnicity:{
-        type:String,
-        enum:['Indígena','Afro','Raizal','Palenquero','Ninguno'],
+    ocupation: {
+        type: String,
+        enum: ['Empleo formal', 'Empleo informal', 'Desempleado', 'Pensionado', 'Hogar', 'Campesino'],
+        required: true
     },
-    disability:{
-        type:String,
-        enum:['Auditiva','Visual','Del gusto','Olfato','Tacto','Multiple','Mental-Cognitiva','Mental-Psicosocial','Otra'],
-        required:true
+    education_level: {
+        type: String,
+        enum: ['Primaria', 'Secundaria', 'Técnica', 'Universitaria', 'Sin escolaridad', 'Otra'],
     },
-    ocupation:{
-        type:String,
-        enum:['Empleo formal','Empleo informal','Desempleado','Pensionado','Hogar','Campesino'],
-        required:true
-    },
-    education_level:{
-        type:String,
-        enum:['Primaria','Secundaria', 'Técnica','Universitaria','Sin escolaridad','Otra'],
-    },
-    is_victim_armed_conflict:{
-        type:String,
-        default:"No"
+    is_victim_armed_conflict: {
+        type: String,
+        default: "No"
     },
     type_of_disability: {
         type: String,
@@ -132,6 +134,10 @@ const beneficiarySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',
         require: true
+    },
+    activity: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Activity'
     },
     photo_url: {
         type: String
