@@ -69,12 +69,10 @@ const beneficiarySchema = new mongoose.Schema({
         enum: ['Subsidiado', 'Contributivo', 'Cotizante', 'Cotizante Beneficiario']
     },
     residence_department: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Department',
+        type: String
     },
     sisben_department: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Department',
+        type: String
     },
     civil_status: {
         type: String,
@@ -117,13 +115,8 @@ const beneficiarySchema = new mongoose.Schema({
     place_of_birth: {
         type: String
     },
-    region: {
-        type: String
-    },
     municipality: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Municipality',
-        require: true
+        type: String
     },
     community: {
         type: mongoose.Schema.Types.ObjectId,

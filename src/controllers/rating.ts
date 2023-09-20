@@ -4,15 +4,15 @@ import * as pdf from '../services/pdfcreator';
 const modelName = Model.modelName;
 
 export const save = async (req, res, next) => {
-    // #swagger.tags = ['Workshop']
+    // #swagger.tags = ['Rating']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
     }]
     #swagger.parameters['obj'] = {
                 in: 'body',
-                description: 'Adding new workshop.',
-                schema: { $ref: '#/definitions/workshop' }
+                description: 'Adding new rating.',
+                schema: { $ref: '#/definitions/rating' }
     } */
     try {
         const saveModel = new Model(req.body);
@@ -26,7 +26,7 @@ export const save = async (req, res, next) => {
 };
 
 export const getAll = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Rating']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -43,7 +43,7 @@ export const getAll = async (req, res, next) => {
 };
 
 export const get = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Rating']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -63,7 +63,7 @@ export const get = async (req, res, next) => {
 };
 
 export const update = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Rating']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -85,7 +85,7 @@ export const update = async (req, res, next) => {
 };
 
 export const deleteItem = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Rating']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
