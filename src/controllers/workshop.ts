@@ -26,7 +26,7 @@ export const save = async (req, res, next) => {
 };
 
 export const getAll = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Workshop']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -43,7 +43,7 @@ export const getAll = async (req, res, next) => {
 };
 
 export const get = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Workshop']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -63,7 +63,7 @@ export const get = async (req, res, next) => {
 };
 
 export const update = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Workshop']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
@@ -85,7 +85,7 @@ export const update = async (req, res, next) => {
 };
 
 export const deleteItem = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Workshop']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []

@@ -832,7 +832,7 @@
       },
       "get": {
         "tags": [
-          "Activities"
+          "Workshop"
         ],
         "description": "",
         "responses": {
@@ -853,7 +853,7 @@
     "/workshops/{id}": {
       "get": {
         "tags": [
-          "Activities"
+          "Workshop"
         ],
         "description": "",
         "parameters": [
@@ -880,7 +880,7 @@
       },
       "put": {
         "tags": [
-          "Activities"
+          "Workshop"
         ],
         "description": "",
         "parameters": [
@@ -907,7 +907,7 @@
       },
       "delete": {
         "tags": [
-          "Activities"
+          "Workshop"
         ],
         "description": "",
         "parameters": [
