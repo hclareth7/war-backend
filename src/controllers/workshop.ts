@@ -1,18 +1,18 @@
-import Model from '../models/activity';
+import Model from '../models/workshop';
 import * as pdf from '../services/pdfcreator';
 
 const modelName = Model.modelName;
 
 export const save = async (req, res, next) => {
-    // #swagger.tags = ['Activities']
+    // #swagger.tags = ['Workshop']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
     }]
     #swagger.parameters['obj'] = {
                 in: 'body',
-                description: 'Adding new activity.',
-                schema: { $ref: '#/definitions/activity' }
+                description: 'Adding new workshop.',
+                schema: { $ref: '#/definitions/workshop' }
     } */
     try {
         const saveModel = new Model(req.body);
@@ -32,7 +32,7 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate(['participatingAssociations']);
+        const getAllModel = await Model.find({}).populate(['activity', 'attendees']);
         res.status(200).json({
             data: getAllModel
         });
@@ -50,7 +50,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id).populate('attendees');
+        const getModel = await Model.findById(id).populate(['activity', 'attendees']);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }
@@ -72,7 +72,7 @@ export const update = async (req, res, next) => {
         let update = req.body;
         const id = req.params.id;
         const actualModel = await Model.findById(id);
-        update = { ...update, participatingAssociations: new Set([...update.participatingAssociations, ...(actualModel?.participatingAssociations as any)]) }
+        update = { ...update, attendees: new Set([...update.attendees, ...(actualModel?.attendees as any)]) }
         await Model.findByIdAndUpdate(id, update);
         const updatedModel = await Model.findById(id);
         res.status(200).json({

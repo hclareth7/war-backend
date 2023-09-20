@@ -20,9 +20,7 @@ export const save = async (req, res, next) => {
 
     try {
         const foto = req.file;
-
         const body = JSON.parse(req.body.data);
-
         const saveModel = new Model(body);
         if (foto) {
             const image_url = await service.uploadS3(foto, `${saveModel._id}.${foto.originalname.match(/\.(.*?)$/)?.[1]}`);
