@@ -34,7 +34,7 @@ jobs:
     - uses: appleboy/ssh-action@v1.0.0
       name: Remove qualty_api container
       with:
-        host: 193.203.167.80
+        host: ${{ secrets.PUBLIC_IP }}
         username: ${{ secrets.DEPLOY_USERNAME }}
         key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
         script: docker rm -f qualty_api
@@ -42,7 +42,7 @@ jobs:
     - uses: chaplyk/docker-compose-remote-action@v1.1
       name: Docker compose up Remote Deployment
       with:
-        ssh_host: 193.203.167.80
+        ssh_host: ${{ secrets.PUBLIC_IP }}
         ssh_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
         ssh_user: ${{ secrets.DEPLOY_USERNAME }}
         compose_file: docker-compose.yaml
