@@ -6,7 +6,8 @@ export const CONFIGS = {
     s3BaseUrl: `${process.env.S3_CLOUD_ENDPOINT}/swift/v1/1e325b6357b7498d909f5f789f02df29/${process.env.BUCKET_NAME}`,
     searchableFields: {
         beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
-        user: ['name', 'email']
+        user: ['name', 'email'],
+        association: ['community', 'name', 'department', 'municipality']
     },
     filterType:["dateRange","dateSpecific","number","string"],
     numberTypeFilterOperators:[">","<","="]

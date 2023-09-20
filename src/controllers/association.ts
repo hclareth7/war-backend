@@ -1,5 +1,7 @@
 import Model from '../models/references/association';
 import * as pdf from '../services/pdfcreator';
+import * as mutil from '../helpers/modelUtilities';
+import * as config from '../config/config';
 
 const modelName = Model.modelName;
 
@@ -32,7 +34,18 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate(['community']);
+
+        const page = req.query.page
+        const perPage = req.query.perPage
+        let searchOptions = {};
+
+        if (req.query.queryString) {
+            searchOptions = {
+                queryString: req.query.queryString,
+                searchableFields: config.CONFIGS.searchableFields.association
+            };
+        };
+        const getAllModel = await mutil.getTunnedDocument(Model, ['community'], page, perPage, searchOptions)
         res.status(200).json({
             data: getAllModel
         });
