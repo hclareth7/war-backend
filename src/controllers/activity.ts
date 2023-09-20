@@ -32,7 +32,7 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate('attendees');
+        const getAllModel = await Model.find({}).populate(['participatingAssociations']);
         res.status(200).json({
             data: getAllModel
         });
