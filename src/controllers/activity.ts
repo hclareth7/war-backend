@@ -50,7 +50,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id).populate('attendees');
+        const getModel = await Model.findById(id).populate(['participatingAssociations']);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }

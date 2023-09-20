@@ -35,7 +35,7 @@ export const getAll = async (req, res, next) => {
     }
 };
 
-export const getByRefName = async (req, res, next) => {
+export const getByRefNamesss = async (req, res, next) => {
     // #swagger.tags = ['References']
     /*    
     #swagger.security = [{
@@ -52,17 +52,42 @@ export const getByRefName = async (req, res, next) => {
         next(error);
     }
 };
+export const getByRefName = async (req, res, next) => {
+    // #swagger.tags = ['References']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
+    try {
+        const target = req.params.ref;
 
-async function getReferenceByName(target) {
+        let data = {};
+        console.log(req.query)
+        if (req.query) {
+            const queryParams = req.query;
+            console.log(queryParams)
+            data = await getReferenceByName(target, queryParams);
+        } else {
+            data = await getReferenceByName(target);
+        }
+        res.status(200).json({
+            data
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+async function getReferenceByName(target, query = {}) {
 
     const options = {
-        associations: async () =>  await ModelAssociation.find({}),
-        communities: async () => await ModelCommunity.find({}),
-        eps: async () => await ModelEps.find({}),
-        life_wellness_centers: async () => await ModelLifeWellnessCenter.find({}),
-        municipalities: async () => await ModelMunicipality.find({}),
-        neighborhoods: async () => await ModelNeighborhood.find({}),
-        default: "no data"
+        associations: async () => await ModelAssociation.find(query),
+        communities: async () => await ModelCommunity.find(query),
+        eps: async () => await ModelEps.find(query),
+        life_wellness_centers: async () => await ModelLifeWellnessCenter.find(query),
+        municipalities: async () => await ModelMunicipality.find(query),
+        neighborhoods: async () => await ModelNeighborhood.find(query),
+        default: false
     }
     return options.hasOwnProperty(target) ? await options[target]() : options['default']
 }

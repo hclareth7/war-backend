@@ -60,9 +60,10 @@ const doc = {
             "kinship": "Padre"
         },
         activity: {
-            "name": "Community Cleanup",
-            "description": "A day of cleaning up the local park.",
-            "execution_date": "2023-10-15T09:00:00Z",
+            "name": "Community Festival",
+            "description": "A fun-filled festival for the local community.",
+            "execution_date": "2023-11-20T15:00:00Z",
+            "estimate_attendance": 200,
             "participatingAssociations": [
                 "615cd24b8e60a0a123456789", // Replace with a valid ObjectId referencing an Association
                 "615cd24b8e60a0a223456789" // Replace with another valid ObjectId referencing an Association

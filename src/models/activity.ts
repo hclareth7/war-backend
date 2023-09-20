@@ -12,6 +12,9 @@ const activitySchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    estimate_attendance:{
+        type: Number
+    },
     participatingAssociations: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',

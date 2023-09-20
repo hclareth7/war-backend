@@ -1490,15 +1490,19 @@
       "properties": {
         "name": {
           "type": "string",
-          "example": "Community Cleanup"
+          "example": "Community Festival"
         },
         "description": {
           "type": "string",
-          "example": "A day of cleaning up the local park."
+          "example": "A fun-filled festival for the local community."
         },
         "execution_date": {
           "type": "string",
-          "example": "2023-10-15T09:00:00Z"
+          "example": "2023-11-20T15:00:00Z"
+        },
+        "estimate_attendance": {
+          "type": "number",
+          "example": 200
         },
         "participatingAssociations": {
           "type": "array",

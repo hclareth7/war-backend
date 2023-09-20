@@ -9,6 +9,9 @@ const communitySchema = new mongoose.Schema({
     municipality: {
         type: String
     },
+    municipality_id: {
+        type: String 
+    },
 });
 
 const Community = mongoose.model('Community', communitySchema);
