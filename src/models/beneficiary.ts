@@ -35,9 +35,7 @@ const beneficiarySchema = new mongoose.Schema({
         required: true
     },
     sisben_score: {
-        type: Number,
-        min: 0,
-        max: 100,
+        type:String,
         required: true,
     },
     birthday: {
@@ -48,6 +46,11 @@ const beneficiarySchema = new mongoose.Schema({
         type: String,
         enum: ['Masculino', 'Femenino'],
         required: true
+    },
+    sex:{
+        type:String,
+        enum:['Hombre','Mujer','Otro'],
+        required:true
     },
     ethnic_affiliation: {
         type: String,
@@ -70,6 +73,32 @@ const beneficiarySchema = new mongoose.Schema({
     },
     sisben_department:{
         type:String
+    },
+    civil_status:{
+        type:String,
+        enum:['Soltero', 'Casado', 'Divorciado', 'Viudo', 'Union libre' , 'Separado']
+    },
+    ethnicity:{
+        type:String,
+        enum:['Indígena','Afro','Raizal','Palenquero','Ninguno'],
+    },
+    disability:{
+        type:String,
+        enum:['Auditiva','Visual','Del gusto','Olfato','Tacto','Multiple','Mental-Cognitiva','Mental-Psicosocial','Otra'],
+        required:true
+    },
+    ocupation:{
+        type:String,
+        enum:['Empleo formal','Empleo informal','Desempleado','Pensionado','Hogar','Campesino'],
+        required:true
+    },
+    education_level:{
+        type:String,
+        enum:['Primaria','Secundaria', 'Técnica','Universitaria','Sin escolaridad','Otra'],
+    },
+    is_victim_armed_conflict:{
+        type:String,
+        default:"No"
     },
     type_of_disability: {
         type: String,
