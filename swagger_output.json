@@ -1125,6 +1125,169 @@
           }
         }
       }
+    },
+    "/associations/": {
+      "post": {
+        "tags": [
+          "Workshop"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Adding new workshop.",
+            "schema": {
+              "$ref": "#/definitions/workshop"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Workshop"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/associations/{id}": {
+      "get": {
+        "tags": [
+          "Workshop"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Workshop"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Workshop"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/associations/pdf": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "example": "any"
+                },
+                "starDate": {
+                  "example": "any"
+                },
+                "endDate": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1358,6 +1521,53 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "association": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Community Welfare Association"
+        },
+        "type": {
+          "type": "string",
+          "example": "Centro de vida"
+        },
+        "address": {
+          "type": "string",
+          "example": "123 Main Street"
+        },
+        "coordinator_name": {
+          "type": "string",
+          "example": "Yon Guic"
+        },
+        "phones": {
+          "type": "array",
+          "example": [
+            "123-456-7890",
+            "987-654-3210"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "department": {
+          "type": "string",
+          "example": "Cundinamarca"
+        },
+        "municipality": {
+          "type": "string",
+          "example": "Bogotá"
+        },
+        "community": {
+          "type": "string",
+          "example": "615cd24b8e60a0a123456789"
+        },
+        "membersCount": {
+          "type": "number",
+          "example": 50
         }
       }
     }

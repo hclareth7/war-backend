@@ -71,10 +71,10 @@ export const update = async (req, res, next) => {
     try {
         let update = req.body;
         const id = req.params.id;
-        const actualModel = await Model.findById(id);
-        update = { ...update, participatingAssociations: new Set([...update.participatingAssociations, ...(actualModel?.participatingAssociations as any)]) }
-        await Model.findByIdAndUpdate(id, update);
-        const updatedModel = await Model.findById(id);
+        const updatedModel = await Model.findByIdAndUpdate(id, update);
+        if (!updatedModel) {
+            return res.status(404).json({ error: `${modelName} not found` });
+        }
         res.status(200).json({
             data: updatedModel,
             message: `${modelName} has been updated`
