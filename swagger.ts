@@ -87,6 +87,17 @@ const doc = {
                 "615cd24b8e60a0a323456789",
                 "615cd24b8e60a0a423456789"
             ]
+        },
+        association: {
+            "name": "Community Welfare Association",
+            "type": "Centro de vida",
+            "address": "123 Main Street",
+            "coordinator_name": "Yon Guic",
+            "phones": ["123-456-7890", "987-654-3210"],
+            "department": "Cundinamarca",
+            "municipality": "Bogotá",
+            "community": "615cd24b8e60a0a123456789", // Replace with a valid ObjectId referencing a Community
+            "membersCount": 50
         }
     }
 };

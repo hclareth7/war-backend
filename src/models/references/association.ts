@@ -5,13 +5,19 @@ const associationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        enum: ['Centro de vida', 'Centro de bienestar', 'Municipio y Asociación'],
+        required: true
+    },
     address: String,
-    representative: String,
-    coordinator: String,
+    coordinator_name: String,
     phones: [String],
-    neighborhood: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Neighborhood',
+    department: {
+        type: String
+    },
+    municipality: {
+        type: String
     },
     community: {
         type: mongoose.Schema.Types.ObjectId,

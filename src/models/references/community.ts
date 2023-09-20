@@ -5,7 +5,10 @@ const communitySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: String
+    description: String,
+    municipality: {
+        type: String
+    },
 });
 
 const Community = mongoose.model('Community', communitySchema);
