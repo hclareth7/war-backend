@@ -42,6 +42,12 @@ export const filter = async (req,res,next)=>{
   //   { "filterType": "number", "value": "10", "operator": ">", "field": "score_sisben" },
   //   { "filterType": "string", "value": "pablo", "field": "first_name" },
   // ]
+
+   // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]*/
     try {
         const options:[]=req.body.options;
         if(options.length ===0 ){

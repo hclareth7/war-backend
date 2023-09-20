@@ -348,6 +348,9 @@
     },
     "/beneficiaries/filter": {
       "post": {
+        "tags": [
+          "Beneficiaries"
+        ],
         "description": "",
         "parameters": [
           {
@@ -373,7 +376,12 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/beneficiaries/photo": {
@@ -632,6 +640,9 @@
     },
     "/activities/pdf": {
       "post": {
+        "tags": [
+          "Activities"
+        ],
         "description": "",
         "parameters": [
           {
@@ -657,7 +668,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/roles/": {
@@ -935,6 +951,9 @@
     },
     "/workshops/pdf": {
       "post": {
+        "tags": [
+          "Workshop"
+        ],
         "description": "",
         "parameters": [
           {
@@ -960,7 +979,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/ratings/": {
@@ -1098,6 +1122,9 @@
     },
     "/ratings/pdf": {
       "post": {
+        "tags": [
+          "Rating"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1123,22 +1150,27 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/associations/": {
       "post": {
         "tags": [
-          "Workshop"
+          "Association"
         ],
         "description": "",
         "parameters": [
           {
             "name": "obj",
             "in": "body",
-            "description": "Adding new workshop.",
+            "description": "Adding new association.",
             "schema": {
-              "$ref": "#/definitions/workshop"
+              "$ref": "#/definitions/association"
             }
           }
         ],
@@ -1158,7 +1190,7 @@
       },
       "get": {
         "tags": [
-          "Workshop"
+          "Association"
         ],
         "description": "",
         "responses": {
@@ -1179,7 +1211,7 @@
     "/associations/{id}": {
       "get": {
         "tags": [
-          "Workshop"
+          "Association"
         ],
         "description": "",
         "parameters": [
@@ -1206,7 +1238,7 @@
       },
       "put": {
         "tags": [
-          "Workshop"
+          "Association"
         ],
         "description": "",
         "parameters": [
@@ -1223,6 +1255,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -1233,7 +1268,7 @@
       },
       "delete": {
         "tags": [
-          "Workshop"
+          "Association"
         ],
         "description": "",
         "parameters": [
@@ -1261,6 +1296,9 @@
     },
     "/associations/pdf": {
       "post": {
+        "tags": [
+          "Rating"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1286,7 +1324,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     }
   },

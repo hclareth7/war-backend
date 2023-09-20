@@ -103,7 +103,11 @@ export const deleteItem = async (req, res, next) => {
 };
 
 export const generatePdf = async (req, res, next) => {
-
+    // #swagger.tags = ['Workshop']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]*/
     try {
         const { query, starDate, endDate } = req.body;
         const activities = await Model.find({});
