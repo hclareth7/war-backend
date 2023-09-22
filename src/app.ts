@@ -13,8 +13,6 @@ dotenv.config();
 //APP
 const app = express();
 
-
-
 //CORS
 const corsOptions = {
   origin: process.env.APP_ALLOWED_ORIGINS, //this needs to be changed on production
@@ -33,7 +31,7 @@ app.use(auth.checkAuthToken);
 
 
 // Routes 
-app.use(router)
+app.use(router);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 

@@ -1,6 +1,6 @@
 import Beneficiary from '../models/beneficiary';
 import Model from '../models/beneficiary';
-import * as service from '../services/s3Upload';
+import * as service from '../services/localUpload';
 import * as mutil from '../helpers/modelUtilities';
 import * as config from '../config/config';
 
@@ -19,14 +19,8 @@ export const save = async (req, res, next) => {
     } */
 
     try {
-        const foto = req.file;
         const body = JSON.parse(req.body.data);
         const saveModel = new Model(body);
-        if (foto) {
-            const image_url = await service.uploadS3(foto, `${saveModel._id}.${foto.originalname.match(/\.(.*?)$/)?.[1]}`);
-            saveModel.photo_url = image_url;
-        }
-
         await saveModel.save();
         const data = { 'message': `${modelName} successfully created`, 'data': saveModel };
         res.json(data);
@@ -35,27 +29,27 @@ export const save = async (req, res, next) => {
         next(error);
     }
 };
-export const filter = async (req,res,next)=>{
-  // options = [
-  //   { "filterType": "dateRange", "startDate": "09-08-2023", "endDate": "09-12-2023", "field": "birthday" },
-  //   { "filterType": "dateSpecific", "value": "09-08-2023", "field": "birthday" },
-  //   { "filterType": "number", "value": "10", "operator": ">", "field": "score_sisben" },
-  //   { "filterType": "string", "value": "pablo", "field": "first_name" },
-  // ]
+export const filter = async (req, res, next) => {
+    // options = [
+    //   { "filterType": "dateRange", "startDate": "09-08-2023", "endDate": "09-12-2023", "field": "birthday" },
+    //   { "filterType": "dateSpecific", "value": "09-08-2023", "field": "birthday" },
+    //   { "filterType": "number", "value": "10", "operator": ">", "field": "score_sisben" },
+    //   { "filterType": "string", "value": "pablo", "field": "first_name" },
+    // ]
 
-   // #swagger.tags = ['Beneficiaries']
+    // #swagger.tags = ['Beneficiaries']
     /*    
     #swagger.security = [{
         "apiKeyAuth": []
     }]*/
     try {
-        const options:[]=req.body.options;
-        if(options.length ===0 ){
+        const options: [] = req.body.options;
+        if (options.length === 0) {
             return res.status(404).json({
-                data:[]
+                data: []
             });
         }
-        const modelFilterResult =await  mutil.getFilteredDocument(Model,options);
+        const modelFilterResult = await mutil.getFilteredDocument(Model, options);
         return res.status(200).json({
             data: modelFilterResult
         })
@@ -146,30 +140,17 @@ export const deleteItem = async (req, res, next) => {
     }
 };
 
-export const updatePhoto = async (req, res, next) => {
+export const uploadResource = async (req, res, next) => {
     // #swagger.tags = ['Beneficiary']
     /*    
     #swagger.security = [{
                "apiKeyAuth": []
     }]*/
     try {
-
-        const file = req.file;
-        const identifier = JSON.parse(req.body.beneficiary_id);
-        const getModel = await Model.findById(identifier.beneficiary_id);
-        if (!getModel) {
-            return next(new Error(`${modelName} does not exist`));
-        }
-        if (!file) {
-            return res.status(400).send('No file uploaded.');
-        }
-        const image_url = await service.uploadS3(file, `${identifier.beneficiary_id}.${file.originalname.match(/\.(.*?)$/)?.[1]}`);
-        const update = { photo_url: image_url };
-        await Model.findByIdAndUpdate({ _id: identifier.beneficiary_id }, update);
-        const beneficiary = await Model.findById({ _id: identifier.beneficiary_id });
+        //const file = req.file;
+        //console.log(file)
         res.status(200).json({
-            data: beneficiary,
-            message: 'Beneficiary has been updated'
+            data: service.getImageUrl(req)
         });
 
     } catch (error) {

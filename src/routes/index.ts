@@ -1,5 +1,4 @@
 import express from 'express';
-
 const router = express.Router();
 
 /* GET home page. */
@@ -41,5 +40,7 @@ q:::::::qqqqq:::::q u:::::::::::::::uua::::a    a:::::a l::::::l      t::::::ttt
             </html>
 `);
 });
+
+router.use('/repository/images', express.static(`${process.env.LS_STATIC_PATH}`));
 
 export default router;
