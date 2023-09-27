@@ -102,6 +102,21 @@ export const deleteItem = async (req, res, next) => {
     }
 };
 
+export const generateFilePdf=(req,res,next)=>{
+    try {
+        const contentFile=req.body;
+        pdf.generateFilePdf(null,res,
+            contentFile.headerPdf,
+            contentFile.titleAditional,
+            contentFile.contentBeforeBodyPdf,
+            contentFile.bodyTablePdf,
+            contentFile.contentFooter,
+        )
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const generatePdf = async (req, res, next) => {
     // #swagger.tags = ['Workshop']
     /*    
