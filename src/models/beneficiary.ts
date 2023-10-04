@@ -149,6 +149,15 @@ const beneficiarySchema = new mongoose.Schema({
     },
     kinship: {
         type: String
+    },
+    sisben_url: {
+        type: String
+    },
+    fosyga_url: {
+        type: String
+    },
+    registraduria_url: {
+        type: String
     }
 }, { timestamps: true });
 

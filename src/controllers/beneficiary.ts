@@ -27,6 +27,8 @@ export const save = async (req, res, next) => {
             saveModel.photo_url = image_url;
         }
 
+        
+
         await saveModel.save();
         const data = { 'message': `${modelName} successfully created`, 'data': saveModel };
         res.json(data);
@@ -96,6 +98,8 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
+        console.log(id);
+        
         const getModel = await Model.findById(id);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
@@ -175,5 +179,31 @@ export const updatePhoto = async (req, res, next) => {
     } catch (error) {
         console.log(error)
         next(error)
+    }
+};
+
+export const updateResources= async (req, res, next) => {
+    // #swagger.tags = ['Beneficiary']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
+    try{
+        //console.log(req.files);
+        //const id = req.params.id;
+        /*const saveModel = await Model.findById(req.params.id);
+        if (!saveModel) {
+            return next(new Error(`${modelName} does not exist`));
+        }*/
+
+        
+    console.log(req.files);
+    res.status(200).json({
+        message: 'Beneficiary has been updated'
+    });
+
+    }catch(error){
+        console.log(error);
+        
     }
 };
