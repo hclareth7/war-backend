@@ -1,17 +1,13 @@
 import mongoose from 'mongoose';
 
 const ratingSchema = new mongoose.Schema({
-    name: {
+    rating_type: {
         type: String,
-        required: true,
+        enum: ['Fisioterapia', 'otros'],
+        required: true
     },
-    execution_date: {
-        type: Date,
-        required: true,
-    },
-    activity: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Activity',
+    observations: {
+        type: String
     },
     attendees: [{
         type: mongoose.Schema.Types.ObjectId,
