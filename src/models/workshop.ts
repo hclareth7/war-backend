@@ -17,6 +17,10 @@ const workshopSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Beneficiary',
     }],
+    author:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }
 }, { timestamps: true });
 
 const Workshop = mongoose.model('Workshop', workshopSchema);

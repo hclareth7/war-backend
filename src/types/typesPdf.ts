@@ -6,7 +6,7 @@ export interface typeHeader{
 
 export interface typeContentBeforeBody{
     headers?:string[] | null,
-    values?:string[] | null,
+    values?:any[] | null,
 }
 
 export interface typeTable{
