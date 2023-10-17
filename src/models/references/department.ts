@@ -7,7 +7,8 @@ const departmentSchema = new mongoose.Schema({
     },
     description: String
 });
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+departmentSchema.plugin(mongoosePaginate)
 const Department = mongoose.model('Department', departmentSchema);
 
 export default Department;

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const associationSchema = new mongoose.Schema({
     name: {
@@ -25,7 +26,7 @@ const associationSchema = new mongoose.Schema({
     },
     membersCount: Number
 });
-
+associationSchema.plugin(mongoosePaginate)
 const Association = mongoose.model('Association', associationSchema);
 
 export default Association;

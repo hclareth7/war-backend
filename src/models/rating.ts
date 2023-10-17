@@ -14,7 +14,8 @@ const ratingSchema = new mongoose.Schema({
         ref: 'Beneficiary',
     },
 }, { timestamps: true });
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+ratingSchema.plugin(mongoosePaginate)
 const Rating = mongoose.model('Rating', ratingSchema);
 
 export default Rating;

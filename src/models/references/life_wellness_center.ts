@@ -34,7 +34,8 @@ const lifeWellnessCenterSchema = new mongoose.Schema({
     },
     legalized: Boolean
 });
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+lifeWellnessCenterSchema.plugin(mongoosePaginate)
 const LifeWellnessCenter = mongoose.model('LifeWellnessCenter', lifeWellnessCenterSchema);
 
 export default LifeWellnessCenter;
