@@ -111,6 +111,9 @@ export const generateFilePdf=async (req,res,next)=>{
         const getModel = await Model.findById(idWorkShop).populate(['activity', 'attendees','author']);
         const act=getModel?.activity;
         const dataTablePdf=await jsonDataConvertToArray(getModel?.attendees,configFilePdf.propertiesAttendeesPdf);
+        if(dataTablePdf.length===0){
+            return next(new Error("There are no records"));
+        }
         pdf.generateFilePdf(res,null,
             {
                 logo:configFilePdf.logoPdf,

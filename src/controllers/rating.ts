@@ -17,6 +17,9 @@ export const generateFilePdf=async (req,res,next)=>{
             arrayData.push({...itemModel.attendee._doc,author_name:itemModel?.author?.name});
         });
         const dataRaitingsPdf=await jsonDataConvertToArray(arrayData,configFilePdf.propertiesRatingsPdf);
+        if(dataRaitingsPdf.length===0){
+            return next(new Error("There are no records"));
+        }
         pdf.generateFilePdf(res,null,
             {
                 logo:configFilePdf.logoPdf,
