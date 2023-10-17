@@ -9,10 +9,10 @@ const ratingSchema = new mongoose.Schema({
     observations: {
         type: String
     },
-    attendees: [{
+    attendee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Beneficiary',
-    }],
+    },
 }, { timestamps: true });
 
 const Rating = mongoose.model('Rating', ratingSchema);
