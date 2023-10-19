@@ -9,7 +9,8 @@ const epsSchema = new mongoose.Schema({
         type: String
     }
 }, { timestamps: true });
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+epsSchema.plugin(mongoosePaginate)
 const Eps = mongoose.model('Eps', epsSchema);
 
 export default Eps;   

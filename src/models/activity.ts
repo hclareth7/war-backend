@@ -20,7 +20,8 @@ const activitySchema = new mongoose.Schema({
         ref: 'Association',
     }],
 }, {timestamps: true});
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+activitySchema.plugin(mongoosePaginate)
 const Activity = mongoose.model('Activity', activitySchema);
 
 export default Activity;

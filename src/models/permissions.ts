@@ -7,7 +7,8 @@ const rolesAndPermissionsSchema = new mongoose.Schema({
     actions: [String]
   }],
 });
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+rolesAndPermissionsSchema.plugin(mongoosePaginate)
 const RolesAndPermissions = mongoose.model('RolesAndPermissions', rolesAndPermissionsSchema);
 
 export default RolesAndPermissions;

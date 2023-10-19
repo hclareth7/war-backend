@@ -22,7 +22,8 @@ const workshopSchema = new mongoose.Schema({
         ref: 'User',
     }
 }, { timestamps: true });
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+workshopSchema.plugin(mongoosePaginate)
 const Workshop = mongoose.model('Workshop', workshopSchema);
 
 export default Workshop;
