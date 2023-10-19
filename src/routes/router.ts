@@ -9,6 +9,7 @@ import rolesRouter from './roles';
 import workshopsRouter from './workshops';
 import ratingsRouter from './ratings';
 import associationsRouter from './associations';
+import itemsRouter from './items';
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use('/roles', rolesRouter);
 router.use('/workshops', workshopsRouter);
 router.use('/ratings', ratingsRouter);
 router.use('/associations',associationsRouter);
+router.use('/items',itemsRouter);
 
 export default router;
