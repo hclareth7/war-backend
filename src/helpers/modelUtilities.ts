@@ -1,4 +1,67 @@
 import * as config from '../config/config';
+import ModelMunicipality from '../models/references/municipality'
+import ModelAssociation from '../models/references/association';
+
+const handlerProperties= async (property:string,item:any,array:any[],model:any)=>{
+  if(item[`${property}`]){
+    const id=item[`${property}`];
+    const getModel=await model.findById(id);
+    const name=getModel?.name;
+    array.push(name);
+  }
+  return array;
+}
+
+export const organizeDate=(date:Date |  null | undefined,array:any[] | null)=>{
+  const year = date?.getFullYear();
+  const month = String(date?.getMonth() !=null ? date?.getMonth() + 1:"").padStart(2, '0');
+  const day = String(date?.getDate()).padStart(2, '0');
+  const hours = String(date?.getHours()).padStart(2, '0');
+  const minutes = String(date?.getMinutes()).padStart(2, '0');
+  const seconds = String(date?.getSeconds()).padStart(2, '0');
+
+  let amPmIndicator:string;
+
+  if (parseInt(hours) >= 0 && parseInt(hours) < 12) {
+    amPmIndicator = 'AM';
+  } else {
+    amPmIndicator = 'PM';
+  }
+  let formattedHours = (parseInt(hours)  % 12 === 0) ? 12 : parseInt(hours)  % 12;
+  if(array){
+    array.push(`${year}-${month}-${day} ${formattedHours}:${minutes}:${seconds} ${amPmIndicator}`);
+    return array;
+  }
+  return `${year}-${month}-${day} ${formattedHours}:${minutes}:${seconds} ${amPmIndicator}`;
+}
+
+export const jsonDataConvertToArray=async (arrayJson:any[] | null | undefined,properties:string[]) =>{
+  let arrayParent:any[]=[];
+  if(arrayJson){
+    for (let indexJson = 0; indexJson < arrayJson.length; indexJson++) {
+      const item:any = arrayJson[indexJson];
+      let arrayItem:any[]=[];
+      arrayItem.push(indexJson+1);
+      for (let i = 0; i < properties.length; i++) {
+        const property:string = properties[i];
+        const optionsValidation={
+          "municipality":()=>handlerProperties(property,item,arrayItem,ModelMunicipality),
+          "association":()=>handlerProperties(property,item,arrayItem,ModelAssociation),
+          "first_name":()=> arrayItem.push(`${item[`${property}`]+" "+ item.second_name +" "+ item.first_last_name +" "+ item.second_last_name}`.toUpperCase()),
+          "createdAt":()=> organizeDate(item.createdAt,arrayItem),
+        }
+        if(optionsValidation[`${property}`]){
+          await optionsValidation[`${property}`]();
+        }else{
+          arrayItem.push(item[`${property}`]);
+        }
+      }
+      arrayParent.push(arrayItem);
+      arrayItem=[];
+    }
+  }
+  return arrayParent;
+}
 
 export const getTunnedDocument = async (model, populate, page, perPage, searchOptions: any = {}) => {
   try {
@@ -51,7 +114,18 @@ const filterByString = (field, value) => {
   }
 }
 
-const filterByDateRange = (field, startDate, endDate) => {
+export const filterByDateRangeAndString = (fieldDate:string,startDate:string, endDate:string,fieldString?:string,valueFieldString?:any) => {
+  return {
+      [fieldDate]: {
+        $gte: parseDate(startDate),
+        $lte: parseDate(endDate)
+      },
+      [`${fieldString}`]:fieldString !== null && valueFieldString!==null ? { $regex: new RegExp(valueFieldString, 'i') }:{}
+  }
+  // [fieldString]: { $regex: new RegExp(valueFieldString, 'i') }
+}
+
+export const filterByDateRange = (field, startDate, endDate) => {
   return {
     [field]: {
       $gte: parseDate(startDate),

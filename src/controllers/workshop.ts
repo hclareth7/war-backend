@@ -1,5 +1,7 @@
 import Model from '../models/workshop';
 import * as pdf from '../services/pdfcreator';
+import * as config from '../config/config';
+import { jsonDataConvertToArray, organizeDate } from '../helpers/modelUtilities';
 
 const modelName = Model.modelName;
 
@@ -32,7 +34,7 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate(['activity', 'attendees']);
+        const getAllModel = await Model.find({}).populate(['activity', 'attendees','author']);
         res.status(200).json({
             data: getAllModel
         });
@@ -50,7 +52,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id).populate(['activity', 'attendees']);
+        const getModel = await Model.findById(id).populate(['activity', 'attendees','author']);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }
@@ -102,16 +104,32 @@ export const deleteItem = async (req, res, next) => {
     }
 };
 
-export const generateFilePdf=(req,res,next)=>{
+export const generateFilePdf=async (req,res,next)=>{
     try {
-        const contentFile=req.body;
-        pdf.generateFilePdf(null,res,
-            contentFile.headerPdf,
-            contentFile.titleAditional,
-            contentFile.contentBeforeBodyPdf,
-            contentFile.bodyTablePdf,
-            contentFile.contentFooter,
-        )
+        const idWorkShop=req.params.id;
+        const {configFilePdf}=config.CONFIGS;
+        const getModel = await Model.findById(idWorkShop).populate(['activity', 'attendees','author']);
+        const act=getModel?.activity;
+        const dataTablePdf=await jsonDataConvertToArray(getModel?.attendees,configFilePdf.propertiesAttendeesPdf);
+        if(dataTablePdf.length===0){
+            return next(new Error("There are no records"));
+        }
+        pdf.generateFilePdf(res,null,
+            {
+                logo:configFilePdf.logoPdf,
+                titleMain:`LISTADO DE ASISTENTES AL TALLER ${getModel?.name.toUpperCase()}`
+            },
+            null,
+            {
+                headers:configFilePdf.headersContentBeforeTableAttendees,
+                values:[getModel?.author?.toJSON()["name"],act?.toJSON()["name"],organizeDate(getModel?.toJSON()["execution_date"],null),dataTablePdf.length]
+            },
+            {
+                headersTable:configFilePdf.headersTableAttendees,
+                valuesTable:dataTablePdf
+            },
+            configFilePdf.infoContentFooterPdf
+        );
     } catch (error) {
         next(error);
     }

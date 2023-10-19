@@ -1,7 +1,45 @@
+import { filterByDateRangeAndString, jsonDataConvertToArray } from '../helpers/modelUtilities';
 import Model from '../models/rating';
 import * as pdf from '../services/pdfcreator';
+import * as config from '../config/config';
+
 
 const modelName = Model.modelName;
+
+export const generateFilePdf=async (req,res,next)=>{
+    try{
+        const arrayData:any[]=[];
+        const {startDate,endDate,valueTypeRating}=req.body;
+        const filter=startDate!==undefined && endDate!==undefined ? filterByDateRangeAndString("createdAt",startDate,endDate,"rating_type",valueTypeRating): {"_id": { $eq: req.query.queryString }};
+        const getAllModel=await Model.find(filter).populate(['attendee','author']);
+        const {configFilePdf}=config.CONFIGS;
+        getAllModel.map((itemModel:any)=>{
+            arrayData.push({...itemModel.attendee._doc,author_name:itemModel?.author?.name});
+        });
+        const dataRaitingsPdf=await jsonDataConvertToArray(arrayData,configFilePdf.propertiesRatingsPdf);
+        if(dataRaitingsPdf.length===0){
+            return next(new Error("There are no records"));
+        }
+        pdf.generateFilePdf(res,null,
+            {
+                logo:configFilePdf.logoPdf,
+                titleMain:configFilePdf.titleMainRatingsPdf
+            },
+            `${valueTypeRating !== 'otros' ? 'LISTADO DE VALORACIONES DE '+ valueTypeRating.toUpperCase(): 'LISTADO DE OTROS TIPOS DE VALORACIONES'}`,
+            {
+                headers:startDate && endDate ? configFilePdf.headersContentBeforeTableRetings : [],
+                values:startDate && endDate ? [startDate,endDate,dataRaitingsPdf.length] : []
+            },
+            {
+                headersTable:configFilePdf.headersTableRetings,
+                valuesTable:dataRaitingsPdf
+            },
+            configFilePdf.infoContentFooterPdf
+        );
+    }catch(error){
+        next(error);
+    }
+}
 
 export const save = async (req, res, next) => {
     // #swagger.tags = ['Rating']
@@ -32,7 +70,7 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate(['activity', 'attendee']);
+        const getAllModel = await Model.find({}).populate(['attendee','author']);
         res.status(200).json({
             data: getAllModel
         });
@@ -50,7 +88,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id).populate(['activity', 'attendee']);
+        const getModel = await Model.findById(id).populate(['attendee','author']);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }

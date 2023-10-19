@@ -3,6 +3,7 @@ import * as config from "../config/config";
 
 import * as fs from "fs";
 import { typeContentBeforeBody, typeContentFooter, typeHeader, typeTable } from "../types/typesPdf";
+import { Response } from "express";
 
 /* GET home page. */
 export const createPDf = async function (
@@ -103,12 +104,12 @@ const filterHeader = (headers) => {
 const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>{
   doc.fillOpacity(0.8);
   if(header){
-    header.logo &&  doc.image(header.logo,x,y, {width:50});
+    header.logo &&  doc.image(header.logo,100,y, {width:50});
     header.textSmall &&  doc.fontSize(6).text(header.textSmall,500,10,{width: 100 });
     y+=30;
     if(header.titleMain){
       doc.font('Helvetica').fontSize(10).text(header.titleMain, 175,y,{ align: 'center',width: 290 });
-      y += 50;
+      y += 70;
     }
     x=30;
   }else{
@@ -130,7 +131,7 @@ const addContentBeforeBody=(doc:any,x:number,y:number,headerPdf?:typeHeader | nu
 }
 
 const validateSize=(list:any[])=>{
-  if(list.length <= 5 ){
+  if(list.length <= 3 ){
     return true;
   }
   return false;
@@ -149,23 +150,23 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
       throw new Error("The number of titles and values ​​must be the same");
     }else{
       if(validateSize(headers)){
-        x=80;
+        x=140;
       }else{
         x=40
         aux=1;
       }
       headers.map((title)=>{
         doc.fillColor("blue").fillOpacity(0.5);
-        doc.font('Helvetica-Bold').fontSize(10).text(title,x,y,{width:100});
-        aux > 0 ? [x]=incrementX(x,100) : [x]=incrementX(x,130);
+        doc.font('Helvetica-Bold').fontSize(10).text(title,x,y,{width:250});
+        aux > 0 ? [x]=incrementX(x,140) : [x]=incrementX(x,130);
         doc.fillColor("black").fillOpacity(0.8);
       });
       y+=20;
-      validateSize(values) ? x=80: x=40;
+      validateSize(values) ? x=140: x=40;
       values.map((value)=>{
         doc.fillColor("black").fillOpacity(0.8);
-        doc.font('Helvetica').fontSize(12).text(value,x,y,{width:100});
-        aux > 0 ? [x]=incrementX(x,100) : [x]=incrementX(x,130);
+        doc.font('Helvetica').fontSize(10).text(value,x,y,{width:250});
+        aux > 0 ? [x]=incrementX(x,140) : [x]=incrementX(x,130);
       });
     }
     y+=50;
@@ -176,7 +177,7 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
     validateSize(headers) ? x=85: x=15;
     headers.map((title)=>{
       doc.fillColor("blue").fillOpacity(0.5);
-      doc.font('Helvetica-Bold').fontSize(12).text(title,x,y);
+      doc.font('Helvetica-Bold').fontSize(12).text(title,x,y,{width:300});
       aux > 0 ? [x]=incrementX(x,100) : x+=200;
       doc.fillColor("black").fillOpacity(0.8);
     });
@@ -189,7 +190,7 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
     validateSize(values) ? x=85: x=40 ; aux=1;
     values.map((value)=>{
       doc.fillColor("black").fillOpacity(0.8);
-      doc.font('Helvetica').fontSize(12).text(value,x,y);
+      doc.font('Helvetica').fontSize(12).text(value,x,y,{width:300});
       aux > 0 ? [x]=incrementX(x,100) : x+=200;
     });
     y+=40;
@@ -201,9 +202,14 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
 }
 
 const addHeadersTable=(doc:any,x:number,y:number,headers?:string[] | null)=>{
-  headers?.map((header)=>{
-    doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y);
-    x+=85;
+  headers?.map((header,index)=>{
+    if(index===1){
+      x=65;
+      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width:80});
+    }else{
+      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width:85});
+    }
+    x+=97;
   });
   x=30;
 
@@ -214,17 +220,23 @@ const addContentBody=(doc:any,x:number,y:number,headerPdf?:typeHeader | null,con
   if(bodyTable){
     const {headersTable,valuesTable}=bodyTable;
     if(headersTable && valuesTable){
-      if(headersTable.length > valuesTable[0].length || valuesTable[0].length < headersTable.length){
-        throw new Error("The number of headers and values ​​must be the same");
-      }
       let aux=0;
       let amountRegisterByPage=0;
       [x,y]=addHeadersTable(doc,x,y,headersTable);
       valuesTable.map((item)=>{
         y+=45;
-        item.map((value)=>{
-          doc.fontSize(9).font('Helvetica').fillColor("black").text(value, x , y,{width:80});
-          x+=85;
+        item.map((value,index)=>{
+          if(index===1){
+            x=65;
+            doc.fontSize(8.5).font('Helvetica').fillColor("black").text(value, x , y,{width:80});
+          }else{
+            if(index===item.length-1){
+              doc.fontSize(8.5).font('Helvetica').fillColor("black").text(value, x , y,{width:70});
+            }else{
+              doc.fontSize(8.5).font('Helvetica').fillColor("black").text(typeof value === "string" ? value.toUpperCase():value , x , y,{width:85});
+            }
+          }
+          x+=97;
         });
         amountRegisterByPage++;
 
@@ -290,10 +302,10 @@ const addContentFooter=(doc:any,x:number,y:number,contentFooter?:typeContentFoot
 
 const nameDocument = (name?:string | null) => {
   const regex = /\.pdf$/i;
-  if (!name) {
+  if (name===null || name===undefined ) {
     return "qualty-document.pdf";
   } else if (name.length === 0) {
-    return "qualty-document.pdf";
+    return "qualty-documento.pdf";
   } else if (name.endsWith(".pdf".toLowerCase())) {
     if (regex.test(name)) {
       return name;
@@ -311,8 +323,8 @@ const nameDocument = (name?:string | null) => {
 };
 
 export const generateFilePdf=(
-    res:any,
-    nameFile?:string | null | undefined,
+    res:Response,
+    nameFile:string | null | undefined,
     headerPdf?:typeHeader | null,
     titleAditional?:string | null,
     contentBeforeBodyPdf?:typeContentBeforeBody | null,
@@ -320,8 +332,7 @@ export const generateFilePdf=(
     contentFooter?:typeContentFooter | null
   )=>{
     const doc = new PDFDocument();
-    const stream = res.attachment( nameDocument(nameFile) );
-    doc.pipe(stream);
+    doc.pipe(res);
 
   doc.fillOpacity(0.8);
   let x = 30;
@@ -337,7 +348,5 @@ export const generateFilePdf=(
   [x,y]=addContentBody(doc,x,y,headerPdf,contentFooter,bodyTablePdf);
 
   doc.end();
-  
-
 
 }

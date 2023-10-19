@@ -9,6 +9,10 @@ const ratingSchema = new mongoose.Schema({
     observations: {
         type: String
     },
+    author:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    },
     attendee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Beneficiary',
