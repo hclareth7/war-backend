@@ -1,5 +1,8 @@
 // itemController.js
 import Item from '../models/item';
+import * as config from '../config/config';
+import * as mutil from '../helpers/modelUtilities';
+
 
 export const save = async (req, res, next) => {
 
@@ -31,10 +34,24 @@ export const getAll = async (req, res, next) => {
         "apiKeyAuth": []
     }]
      */
-    const items = await Item.find();
-    res.status(200).json({
-        data: items
-    });
+    try {
+        const page = req.query.page
+        const perPage = req.query.perPage
+        let searchOptions = {};
+
+        if (req.query.queryString) {
+            searchOptions = {
+                queryString: req.query.queryString,
+                searchableFields: config.CONFIGS.searchableFields.item
+            };
+        };
+        const getAllModel = await mutil.getTunnedDocument(Item, [], page, perPage, searchOptions)
+        res.status(200).json({
+            data: getAllModel
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const get = async (req, res, next) => {

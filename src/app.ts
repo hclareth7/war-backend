@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import './db/db';
 import * as auth from './middlewares/auth';
 import router from './routes/router';
+import { get,getAll,save,deleteItem } from "./controllers/item";
 
 dotenv.config();
 //APP
@@ -18,7 +19,7 @@ const corsOptions = {
   origin: process.env.APP_ALLOWED_ORIGINS, //this needs to be changed on production
   optionsSuccessStatus: 200
 };
-app.use(cors(corsOptions));
+app.use(cors());
 
 
 app.use(logger(process.env.APP_LOG_LEVEL as string));
@@ -34,6 +35,10 @@ app.use(auth.checkAuthToken);
 app.use(router);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
+app.post("/i",save);
+app.get("/i",getAll);
+app.get("/i/:id",get);
+app.delete("/i/:id",deleteItem);
 
 
 // catch 404 and forward to error handler
