@@ -10,6 +10,7 @@ import workshopsRouter from './workshops';
 import ratingsRouter from './ratings';
 import associationsRouter from './associations';
 import itemsRouter from './items';
+import wineriesRouter from './wineries';
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.use('/workshops', workshopsRouter);
 router.use('/ratings', ratingsRouter);
 router.use('/associations',associationsRouter);
 router.use('/items',itemsRouter);
+router.use('/wineries',wineriesRouter);
 
 export default router;
