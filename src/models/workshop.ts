@@ -8,6 +8,7 @@ const workshopSchema = new mongoose.Schema({
     execution_date: {
         type: Date,
         required: true,
+        default: Date.now,
     },
     activity: {
         type: mongoose.Schema.Types.ObjectId,
