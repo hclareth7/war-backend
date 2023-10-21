@@ -8,6 +8,9 @@ import * as dotenv from 'dotenv';
 import './db/db';
 import * as auth from './middlewares/auth';
 import router from './routes/router';
+import { save,getAll,get,deleteItem ,update, deleteItemWinerieInventary} from "./controllers/winerie";
+// import { save,getAll,get,deleteItem } from "./controllers/event";
+// import { save,getAll,get,deleteItem } from "./controllers/item";
 
 dotenv.config();
 //APP
@@ -18,7 +21,7 @@ const corsOptions = {
   origin: process.env.APP_ALLOWED_ORIGINS, //this needs to be changed on production
   optionsSuccessStatus: 200
 };
-app.use(cors(corsOptions));
+app.use(cors());
 
 
 app.use(logger(process.env.APP_LOG_LEVEL as string));
@@ -29,6 +32,23 @@ app.use(cookieParser());
 //Check auth
 app.use(auth.checkAuthToken);
 
+// app.post("/e",save)
+// app.get("/e",getAll)
+// app.get("/e/:id",get)
+// app.delete("/e/:id",deleteItem)
+
+// app.post("/i",save)
+// app.get("/i",getAll)
+// app.get("/i/:id",get)
+// app.delete("/i/:id",deleteItem)
+
+
+app.post("/win",save)
+app.get("/win",getAll)
+app.get("/win/:id",get)
+app.delete("/win/:id",deleteItem)
+app.delete("/win/:idWinerie/:idItem",deleteItemWinerieInventary)
+app.put("/win/:id",update)
 
 // Routes 
 app.use(router);

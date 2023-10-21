@@ -11,6 +11,7 @@ import ratingsRouter from './ratings';
 import associationsRouter from './associations';
 import itemsRouter from './items';
 import wineriesRouter from './wineries';
+import eventsRouter from './events';
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.use('/ratings', ratingsRouter);
 router.use('/associations',associationsRouter);
 router.use('/items',itemsRouter);
 router.use('/wineries',wineriesRouter);
+router.use('/events',eventsRouter);
 
 export default router;

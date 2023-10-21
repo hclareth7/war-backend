@@ -25,14 +25,14 @@ export const save = async (req, res, next) => {
         if(inventoryAssociatedWineryFound){
             data.inventory.map(async (dataItem)=>{
             if(dataItem){
-                    const itemFound=inventoryAssociatedWineryFound.find((value)=>value.item?._id.toString()===dataItem.item);
-                    if(itemFound){
-                        const newAmount=itemFound.amount-dataItem.amount;
-                        if(dataItem.amount>itemFound.amount){
-                            return res.status(201).json({ message: 'Invalid amount.'})
-                        }
-                        itemFound.amount=newAmount;
+                const itemFound=inventoryAssociatedWineryFound.find((value)=>value.item?._id.toString()===dataItem.item);
+                if(itemFound){
+                    const newAmount=itemFound.amount-dataItem.amount;
+                    if(dataItem.amount>itemFound.amount){
+                        return res.status(201).json({ message: 'Invalid amount.'})
                     }
+                    itemFound.amount=newAmount;
+                }
             }
             });
             associatedWineryFound.save();
@@ -45,6 +45,46 @@ export const save = async (req, res, next) => {
         next(error)
     }
 };
+
+export const deleteItemWinerieInventary=async (req, res, next)=>{
+    try{
+        const {idWinerie,idItem}=req.params;
+        const {wineries}=config.CONFIGS;
+        const winerieFound=await Winerie.findById(idWinerie).populate('inventory.item','associated_winery');
+        if(winerieFound && winerieFound?.type===wineries.types[0]){
+            const valueFound=winerieFound?.inventory.find((dataItem)=>dataItem?.item?._id.toString()===idItem);
+            if(valueFound){
+               await  Winerie.updateOne(
+                    {_id:winerieFound._id}, 
+                    { $pull: { inventory: {item: valueFound?.item?._id} } }
+                );
+               await  Winerie.updateMany(
+                    {associated_winery:winerieFound._id,type:wineries.types[1]}, 
+                    { $pull: { inventory: {item: valueFound?.item?._id} } }
+                );
+            }else{
+                return next(new Error('Item does not exist'));
+            }
+            return res.status(200).json({message:"Item removed from inventory main"})
+        }
+        const winerieMainFound=await Winerie.findById(winerieFound?.associated_winery).populate('inventory.item','associated_winery');
+        const valueItemWinerieMainFound=winerieMainFound?.inventory.find((dataItem)=>dataItem?.item?._id.toString()===idItem);
+        const valueItemWinerieFound=winerieFound?.inventory.find((dataItem)=>dataItem?.item?._id.toString()===idItem);
+        if(!winerieFound){
+            return next(new Error('Winerie does not exist'));
+        }
+        if(valueItemWinerieMainFound && valueItemWinerieFound){
+            const restoredAmount=valueItemWinerieMainFound?.amount+valueItemWinerieFound?.amount;
+            valueItemWinerieMainFound.amount=restoredAmount;
+            winerieMainFound?.save();
+            await  Winerie.updateOne({_id:winerieFound._id}, { $pull: { inventory: {item: valueItemWinerieFound?.item?._id} } });
+            return res.status(200).json({message:"Item removed from inventory secundary"})
+        }
+        return res.status(200).json({message:"Could not remove item from secondary inventory"})
+    }catch(error){
+        next(error);
+    }
+}
 
 export const getAll = async (req, res, next) => {
     // #swagger.tags = ['Wineries']
@@ -104,7 +144,8 @@ export const update = async (req, res, next) => {
     try {
         const update = req.body
         const id = req.params.id;
-        const winerieUpdated= await Winerie.findByIdAndUpdate(id,update);
+        await Winerie.findByIdAndUpdate(id,update);
+        const winerieUpdated=await Winerie.findById(id);
         return res.status(200).json({
             data: winerieUpdated,
             message: 'Winerie has been updated'
