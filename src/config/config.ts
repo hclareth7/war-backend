@@ -5,6 +5,8 @@ export const CONFIGS = {
     pdfTitle: "Document",
     s3BaseUrl: `${process.env.S3_CLOUD_ENDPOINT}/swift/v1/1e325b6357b7498d909f5f789f02df29/${process.env.BUCKET_NAME}`,
     searchableFields: {
+        events:["name"],
+        winerie:["name","type"],
         item:["name","code"],
         beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
         user: ['name', 'email'],
@@ -29,5 +31,8 @@ export const CONFIGS = {
         headersContentBeforeTableRetings:["DESDE:","HASTA:","TOTAL:"],
         propertiesAttendeesPdf:["identification","first_name","municipality","association","createdAt"],
         propertiesRatingsPdf:["identification","first_name","municipality","association","author_name","createdAt"],
+    },
+    wineries:{
+        types:["Principal","Secundaria"]
     }
 };
