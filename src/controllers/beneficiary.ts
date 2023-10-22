@@ -1,6 +1,6 @@
 import Beneficiary from '../models/beneficiary';
 import Model from '../models/beneficiary';
-import * as service from '../services/localUpload';
+import * as LSservice from '../services/localUpload';
 import * as mutil from '../helpers/modelUtilities';
 import * as config from '../config/config';
 
@@ -148,9 +148,18 @@ export const uploadResource = async (req, res, next) => {
     }]*/
     try {
         //const file = req.file;
-        //console.log(file)
+        const id = req.params.id;
+        let beneficiary = {};
+        for (const key in req.files) {
+            beneficiary[key] = LSservice.getImageUrl(req, req.files[key]);
+        };
+
+        await Model.findByIdAndUpdate(id, beneficiary);
+
+        const updatedModel = await Model.findById(id);
         res.status(200).json({
-            data: service.getImageUrl(req)
+            data: updatedModel,
+            message: `${modelName} has been updated`
         });
 
     } catch (error) {

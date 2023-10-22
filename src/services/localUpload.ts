@@ -9,9 +9,9 @@ const storage = multer.diskStorage({
 
 export const uploadLS = multer({ storage: storage });
 
-export const getImageUrl = (req) => {
-  console.log(req.protocol)
-  return `${req.protocol}://${req.hostname}:${process.env.APP_PORT}/repository/images/${req.file.filename}`;
+export const getImageUrl = (req, file) => {
+  const imag_url = `${req.protocol}://${req.hostname}:${process.env.APP_PORT}/repository/images/${file[0].filename}`;
+  return imag_url;
 }
 
 

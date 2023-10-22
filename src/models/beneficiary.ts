@@ -135,6 +135,21 @@ const beneficiarySchema = new mongoose.Schema({
     photo_url: {
         type: String
     },
+    id_front: {
+        type: String
+    },
+    id_back: {
+        type: String
+    },
+    fosiga_url: {
+        type: String
+    },
+    sisben_url: {
+        type: String
+    },
+    registry_doc_url: {
+        type: String
+    },
     neighborhood: {
         type: String
     },
