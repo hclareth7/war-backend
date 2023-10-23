@@ -122,7 +122,7 @@ export const get = async (req, res, next) => {
      */
     try {
         const id = req.params.id;
-        const winerie = await Winerie.findById(id).populate(['inventory.item','associated_winery']);
+        const winerie = await Winerie.findById(id).populate(['inventory.item','associated_winery.inventory.item']);
         if (!winerie) {
             return next(new Error('Winerie does not exist'));
         }
@@ -142,12 +142,22 @@ export const update = async (req, res, next) => {
     }]
      */
     try {
-        const update = req.body
+        const update = req.body;
+        const {wineries}=config.CONFIGS;
         const id = req.params.id;
-        await Winerie.findByIdAndUpdate(id,update);
-        const winerieUpdated=await Winerie.findById(id);
+        const winerieFound=await Winerie.findById(id);
+        if(winerieFound?.type===wineries.types[0]){
+            await Winerie.findByIdAndUpdate(id,update);
+            const winerieUpdated=await Winerie.findById(id);
+            return res.status(200).json({
+                data: winerieUpdated,
+                message: 'Winerie has been updated'
+            });
+        }
+        const idWinerieMain=update.winerie.associated_winery._id;
+        await Winerie.updateOne({_id:idWinerieMain},{$set:{inventory:update.inventoryWinerieMain}});
+        await Winerie.findByIdAndUpdate(id,update.winerie);
         return res.status(200).json({
-            data: winerieUpdated,
             message: 'Winerie has been updated'
         });
     } catch (error) {
