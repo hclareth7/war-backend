@@ -5,7 +5,7 @@ import * as auth from '../middlewares/auth';
 const router = express.Router();
 
 //WINERIES (BODEGAS)
-const resourceName = 'winery';
+const resourceName = 'winerie';
 router.post('/', auth.allowIfLoggedin, auth.grantAccess('create', resourceName), controller.save);
 router.get("/", auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getAll)
 router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.get);
