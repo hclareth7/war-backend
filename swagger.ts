@@ -99,6 +99,15 @@ const doc = {
             "municipality": "Bogotá",
             "community": "615cd24b8e60a0a123456789", // Replace with a valid ObjectId referencing a Community
             "membersCount": 50
+        },
+        delivery: {
+            "beneficiary": "5f6a98bfc1e86971c45a38d1",  // ObjectId de un Beneficiary existente
+            "event": "5f6a98bfc1e86971c45a38e2",        // ObjectId de un Event existente
+            "itemsList": [
+                "5f6a98bfc1e86971c45a38f3",  // ObjectId de un Item existente
+                "5f6a98bfc1e86971c45a38f4"   // ObjectId de otro Item existente
+            ],
+            "author": "5f6a98bfc1e86971c45a38e1"       // ObjectId de un User existente
         }
     }
 };

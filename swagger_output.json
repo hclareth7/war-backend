@@ -1593,6 +1593,21 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "winerie": {
+                  "example": "any"
+                },
+                "inventoryWinerieMain": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -1782,6 +1797,156 @@
       "delete": {
         "tags": [
           "Events"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/deliverys/": {
+      "post": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Adding new Delivery.",
+            "schema": {
+              "$ref": "#/definitions/delivery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "queryString",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/deliverys/{id}": {
+      "get": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Delivery"
         ],
         "description": "",
         "parameters": [
@@ -2090,6 +2255,33 @@
         "membersCount": {
           "type": "number",
           "example": 50
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "properties": {
+        "beneficiary": {
+          "type": "string",
+          "example": "5f6a98bfc1e86971c45a38d1"
+        },
+        "event": {
+          "type": "string",
+          "example": "5f6a98bfc1e86971c45a38e2"
+        },
+        "itemsList": {
+          "type": "array",
+          "example": [
+            "5f6a98bfc1e86971c45a38f3",
+            "5f6a98bfc1e86971c45a38f4"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "author": {
+          "type": "string",
+          "example": "5f6a98bfc1e86971c45a38e1"
         }
       }
     }
