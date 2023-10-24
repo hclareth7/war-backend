@@ -45,7 +45,7 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.events
             };
         };
-        const getAllModel = await mutil.getTunnedDocument(Delivery, [], page, perPage, searchOptions);
+        const getAllModel = await mutil.getTunnedDocument(Delivery, ['beneficiary','event','itemsList', 'author'], page, perPage, searchOptions);
         res.status(200).json({
             data: getAllModel
         });
@@ -63,7 +63,7 @@ export const get = async (req, res, next) => {
      */
     try {
         const id = req.params.id;
-        const deliveryFound = await Delivery.findById(id);
+        const deliveryFound = await Delivery.findById(id).populate(['beneficiary','event','itemsList', 'author']);
         if (!deliveryFound) {
             return next(new Error('Delivery does not exist'));
         }
