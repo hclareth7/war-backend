@@ -29,6 +29,11 @@ const beneficiarySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    blody_type:{
+        type:String,
+        enum:["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"],
+        required: true
+    },
     eps: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Eps',
@@ -44,7 +49,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['Masculino', 'Femenino'],
+        enum: ['Masculino', 'Femenino','Otro'],
         required: true
     },
     sex: {
