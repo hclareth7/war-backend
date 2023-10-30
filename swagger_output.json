@@ -1971,6 +1971,156 @@
           }
         ]
       }
+    },
+    "/representants/": {
+      "post": {
+        "tags": [
+          "Representant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Adding new Representant.",
+            "schema": {
+              "$ref": "#/definitions/representant"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Representant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "queryString",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/representants/{id}": {
+      "get": {
+        "tags": [
+          "Representant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Representant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Representant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
     }
   },
   "definitions": {
@@ -2282,6 +2432,35 @@
         "author": {
           "type": "string",
           "example": "5f6a98bfc1e86971c45a38e1"
+        }
+      }
+    },
+    "representant": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Juan Pérez"
+        },
+        "identification_type": {
+          "type": "string",
+          "example": "Cédula de Identidad"
+        },
+        "identification": {
+          "type": "string",
+          "example": "1234567890"
+        },
+        "address": {
+          "type": "string",
+          "example": "123 Calle Principal, Ciudad"
+        },
+        "phone": {
+          "type": "string",
+          "example": "555-555-5555"
+        },
+        "association": {
+          "type": "string",
+          "example": "5f6a98bfc1e86971c45a38d1"
         }
       }
     }

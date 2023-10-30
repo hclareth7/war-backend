@@ -108,7 +108,15 @@ const doc = {
                 "5f6a98bfc1e86971c45a38f4"   // ObjectId de otro Item existente
             ],
             "author": "5f6a98bfc1e86971c45a38e1"       // ObjectId de un User existente
-        }
+        },
+        representant: {
+            "name": "Juan Pérez",
+            "identification_type": "Cédula de Identidad",
+            "identification": "1234567890",
+            "address": "123 Calle Principal, Ciudad",
+            "phone": "555-555-5555",
+            "association": "5f6a98bfc1e86971c45a38d1" // ObjectId de una Association existente
+          }
     }
 };
 

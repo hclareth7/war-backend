@@ -13,6 +13,7 @@ import itemsRouter from './items';
 import wineriesRouter from './wineries';
 import eventsRouter from './events';
 import deliveryRouter from './delivery'
+import representantRouter from './representant'
 const router = express.Router();
 
 
@@ -30,5 +31,6 @@ router.use('/items',itemsRouter);
 router.use('/wineries',wineriesRouter);
 router.use('/events',eventsRouter);
 router.use('/deliverys', deliveryRouter);
+router.use('/representants', representantRouter);
 
 export default router;
