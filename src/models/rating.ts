@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const ratingSchema = new mongoose.Schema({
     rating_type: {
         type: String,
-        enum: ['Fisioterapia', 'otros'],
+        enum: ['Fisioterapia', 'Optometría','Psicología'],
         required: true
     },
     observations: {

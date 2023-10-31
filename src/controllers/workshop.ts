@@ -122,7 +122,7 @@ export const generateFilePdf=async (req,res,next)=>{
             null,
             {
                 headers:configFilePdf.headersContentBeforeTableAttendees,
-                values:[getModel?.author?.toJSON()["name"],act?.toJSON()["name"],organizeDate(getModel?.toJSON()["execution_date"],null),dataTablePdf.length]
+                values:[act?.toJSON()["name"],organizeDate(getModel?.toJSON()["execution_date"],null),dataTablePdf.length]
             },
             {
                 headersTable:configFilePdf.headersTableAttendees,

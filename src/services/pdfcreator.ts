@@ -150,7 +150,7 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
       throw new Error("The number of titles and values ​​must be the same");
     }else{
       if(validateSize(headers)){
-        x=140;
+        x=100;
       }else{
         x=40
         aux=1;
@@ -158,15 +158,15 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
       headers.map((title)=>{
         doc.fillColor("blue").fillOpacity(0.5);
         doc.font('Helvetica-Bold').fontSize(10).text(title,x,y,{width:250});
-        aux > 0 ? [x]=incrementX(x,140) : [x]=incrementX(x,130);
+        aux > 0 ? [x]=incrementX(x,140) : [x]=incrementX(x,170);
         doc.fillColor("black").fillOpacity(0.8);
       });
       y+=20;
-      validateSize(values) ? x=140: x=40;
+      validateSize(values) ? x=100: x=40;
       values.map((value)=>{
         doc.fillColor("black").fillOpacity(0.8);
         doc.font('Helvetica').fontSize(10).text(value,x,y,{width:250});
-        aux > 0 ? [x]=incrementX(x,140) : [x]=incrementX(x,130);
+        aux > 0 ? [x]=incrementX(x,140) : [x]=incrementX(x,170);
       });
     }
     y+=50;

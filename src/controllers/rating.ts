@@ -14,28 +14,35 @@ export const generateFilePdf=async (req,res,next)=>{
         const getAllModel=await Model.find(filter).populate(['attendee','author']);
         const {configFilePdf}=config.CONFIGS;
         getAllModel.map((itemModel:any)=>{
-            arrayData.push({...itemModel.attendee._doc,author_name:itemModel?.author?.name});
+            if(itemModel.attendee && itemModel?.author){
+                arrayData.push({...itemModel.attendee._doc,author_name:itemModel?.author?.name});
+            }
         });
         const dataRaitingsPdf=await jsonDataConvertToArray(arrayData,configFilePdf.propertiesRatingsPdf);
-        if(dataRaitingsPdf.length===0){
+        if(dataRaitingsPdf.length > 0){
+            if(dataRaitingsPdf.length===0){
+                return next(new Error("There are no records"));
+            }
+            pdf.generateFilePdf(res,null,
+                {
+                    logo:configFilePdf.logoPdf,
+                    titleMain:configFilePdf.titleMainRatingsPdf
+                },
+                `${valueTypeRating !== 'otros' ? 'LISTADO DE VALORACIONES DE '+ valueTypeRating.toUpperCase(): 'LISTADO DE OTROS TIPOS DE VALORACIONES'}`,
+                {
+                    headers:startDate && endDate ? configFilePdf.headersContentBeforeTableRetings : [],
+                    values:startDate && endDate ? [startDate,endDate,dataRaitingsPdf.length] : []
+                },
+                {
+                    headersTable:configFilePdf.headersTableRetings,
+                    valuesTable:dataRaitingsPdf
+                },
+                configFilePdf.infoContentFooterPdf
+            );
+        }else{
             return next(new Error("There are no records"));
         }
-        pdf.generateFilePdf(res,null,
-            {
-                logo:configFilePdf.logoPdf,
-                titleMain:configFilePdf.titleMainRatingsPdf
-            },
-            `${valueTypeRating !== 'otros' ? 'LISTADO DE VALORACIONES DE '+ valueTypeRating.toUpperCase(): 'LISTADO DE OTROS TIPOS DE VALORACIONES'}`,
-            {
-                headers:startDate && endDate ? configFilePdf.headersContentBeforeTableRetings : [],
-                values:startDate && endDate ? [startDate,endDate,dataRaitingsPdf.length] : []
-            },
-            {
-                headersTable:configFilePdf.headersTableRetings,
-                valuesTable:dataRaitingsPdf
-            },
-            configFilePdf.infoContentFooterPdf
-        );
+        
     }catch(error){
         next(error);
     }

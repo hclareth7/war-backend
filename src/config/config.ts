@@ -27,7 +27,7 @@ export const CONFIGS = {
         titleMainRatingsPdf: "CONSORCIO PARA LA ATENCION INTEGRAL Y PSICOSOCIAL DEL ADULTO MAYOR",
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Usuario", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
-        headersContentBeforeTableAttendees: ["PROFESIONAL:", "ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
+        headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "author_name", "createdAt"],
