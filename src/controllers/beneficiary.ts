@@ -19,7 +19,7 @@ export const save = async (req, res, next) => {
     } */
 
     try {
-        const body = JSON.parse(req.body.data);
+        const body = req.body.data;
         const saveModel = new Model(body);
         await saveModel.save();
         const data = { 'message': `${modelName} successfully created`, 'data': saveModel };
