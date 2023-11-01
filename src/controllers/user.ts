@@ -11,9 +11,9 @@ export const save = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const { name, email, password, role } = req.body
+        const { name, user_name, password, role } = req.body
         const hashedPassword = await hashPassword(password);
-        const newUser = new User({ name, email, password: hashedPassword, role: role || "supervisor" });
+        const newUser = new User({ name, user_name, password: hashedPassword, role: role || "supervisor" });
         await newUser.save();
         res.json(newUser);
     } catch (error) {

@@ -59,7 +59,7 @@ export const login = async (req, res, next) => {
         console.log(user.role)
 
         res.status(200).json({
-            user: { name: user.name, email: user.email, role: user.role, token: accessToken, abilities: res.locals.loggedInUser.abilities.A },
+            user: { name: user.name, user_name: user.user_name, role: user.role, token: accessToken, abilities: res.locals.loggedInUser.abilities.A },
         });
     } catch (error) {
         console.log(error);
