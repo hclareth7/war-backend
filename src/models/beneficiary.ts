@@ -35,8 +35,7 @@ const beneficiarySchema = new mongoose.Schema({
         required: true
     },
     eps: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Eps',
+        type: String,
     },
     sisben_score: {
         type: String,
@@ -124,10 +123,6 @@ const beneficiarySchema = new mongoose.Schema({
     association: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',
-    },
-    activity: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Activity'
     },
     photo_url: {
         type: String
