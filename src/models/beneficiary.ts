@@ -37,11 +37,9 @@ const beneficiarySchema = new mongoose.Schema({
     eps: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Eps',
-        required: true
     },
     sisben_score: {
         type: String,
-        required: true,
     },
     birthday: {
         type: Date,
@@ -50,12 +48,10 @@ const beneficiarySchema = new mongoose.Schema({
     gender: {
         type: String,
         enum: ['Masculino', 'Femenino','Otro'],
-        required: true
     },
     sex: {
         type: String,
         enum: ['Hombre', 'Mujer', 'Otro'],
-        required: true
     },
     ethnic_affiliation: {
         type: String,
@@ -90,12 +86,10 @@ const beneficiarySchema = new mongoose.Schema({
     disability: {
         type: String,
         enum: ['Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
-        required: true
     },
     ocupation: {
         type: String,
         enum: ['Empleo formal', 'Empleo informal', 'Desempleado', 'Pensionado', 'Hogar', 'Campesino'],
-        required: true
     },
     education_level: {
         type: String,
@@ -126,12 +120,10 @@ const beneficiarySchema = new mongoose.Schema({
     community: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Community',
-        require: true
     },
     association: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',
-        require: true
     },
     activity: {
         type: mongoose.Schema.Types.ObjectId,
