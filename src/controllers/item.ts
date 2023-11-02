@@ -14,13 +14,9 @@ export const save = async (req, res, next) => {
      */
   try {
     const { name, code , value } = req.body;
-    const itemFound=await Item.findOne({ code: { $gt: code } });
-    if(!itemFound){
         const newItem = new Item({ name, code , value });
         await newItem.save();
         return res.json({ message: 'Item created successfully.' });
-    }
-    res.json({ message: 'already existing item.' });
 } catch (error) {
     console.log(error);
     next(error)
