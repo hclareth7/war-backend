@@ -16,7 +16,7 @@ const associationSchema = new mongoose.Schema({
     phones: {
         type: String
     },
-    contanct_user_name: {
+    contanct_email: {
         type: String
     },
     department: {
