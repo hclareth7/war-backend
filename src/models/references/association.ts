@@ -8,12 +8,17 @@ const associationSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['Centro de vida', 'Centro de bienestar', 'Municipio y Asociación'],
+        enum: ['CENTRO VIDA', 'Centro de bienestar', 'Municipio y Asociación', "VIDA/DÍA", "CENTRO DÍA"],
         required: true
     },
     address: String,
     coordinator_name: String,
-    phones: [String],
+    phones: {
+        type: String
+    },
+    contanct_email: {
+        type: String
+    },
     department: {
         type: String
     },
