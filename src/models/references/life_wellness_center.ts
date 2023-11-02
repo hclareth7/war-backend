@@ -23,12 +23,12 @@ const lifeWellnessCenterSchema = new mongoose.Schema({
     },
     type: String,
     phone: String,
-    user_name: {
+    email: {
         type: String,
         lowercase: true,
         validate: value => {
-            if (!validator.isuser_name(value)) {
-                throw new Error('Invalid user_name address')
+            if (!validator.isEmail(value)) {
+                throw new Error('Invalid Email address')
             }
         }
     },
