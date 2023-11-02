@@ -1,5 +1,6 @@
 // itemController.js
 import Item from '../models/item';
+import Winerie from '../models/winerie';
 import * as config from '../config/config';
 import * as mutil from '../helpers/modelUtilities';
 
@@ -101,6 +102,11 @@ export const deleteItem = async (req, res, next) => {
      */
     try {
         const id = req.params.id;
+        const wineriesFound=await Winerie.find();
+        wineriesFound.map((winerie)=>{
+            winerie.inventory=winerie?.inventory.filter((data)=>id!==data?.item?.toString());
+            winerie.save();
+        });
         await Item.findByIdAndDelete(id);
         res.status(200).json({
             data: null,
