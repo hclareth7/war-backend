@@ -9,7 +9,7 @@ export const CONFIGS = {
         winerie: ["name", "type"],
         item: ["name", "code"],
         beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
-        user: ['name', 'email'],
+        user: ['name', 'user_name'],
         association: ['community', 'name', 'department', 'municipality']
     },
     filterType: ["dateRange", "dateSpecific", "number", "string"],

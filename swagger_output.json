@@ -99,7 +99,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
+                "user_name": {
                   "example": "any"
                 },
                 "password": {
@@ -132,7 +132,7 @@
                 "name": {
                   "example": "any"
                 },
-                "email": {
+                "user_name": {
                   "example": "any"
                 },
                 "password": {

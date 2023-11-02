@@ -41,11 +41,11 @@ export const checkAuthToken = async (req, res, next) => {
 export const login = async (req, res, next) => {
     // #swagger.tags = ['Auth']
     try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email }).populate('role');
+        const { user_name, password } = req.body;
+        const user = await User.findOne({ user_name }).populate('role');
 
         if (!user) {
-            return next(new Error('Email does not exist'));
+            return next(new Error('user_name does not exist'));
         }
         const validPassword = await validatePassword(password, user.password);
 
