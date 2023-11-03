@@ -73,8 +73,7 @@ export const update = async (req, res, next) => {
     try {
         let update = req.body;
         const id = req.params.id;
-        const actualModel = await Model.findById(id);
-        update = { ...update, attendees: new Set([...update.attendees, ...(actualModel?.attendees as any)]) }
+        
         await Model.findByIdAndUpdate(id, update);
         const updatedModel = await Model.findById(id);
         res.status(200).json({
