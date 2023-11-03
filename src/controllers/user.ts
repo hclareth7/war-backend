@@ -71,7 +71,12 @@ export const update = async (req, res, next) => {
     try {
         const update = req.body
         const id = req.params.id;
-        await User.findByIdAndUpdate(id, update);
+
+
+        const { name, user_name, password, role } = req.body
+
+        const hashedPassword = await hashPassword(password);
+        await User.findByIdAndUpdate(id, { name, user_name, password: hashedPassword, role: role });
         const user = await User.findById(id)
         res.status(200).json({
             data: user,
