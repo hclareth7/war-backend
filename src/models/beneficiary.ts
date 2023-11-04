@@ -124,6 +124,10 @@ const beneficiarySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',
     },
+    ativity:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Activity',
+    },
     photo_url: {
         type: String
     },
