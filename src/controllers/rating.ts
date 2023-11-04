@@ -60,7 +60,9 @@ export const save = async (req, res, next) => {
                 schema: { $ref: '#/definitions/rating' }
     } */
     try {
-        const saveModel = new Model(req.body);
+        const bodydata = req.body;
+        bodydata.author = res.locals.loggedInUser._id;
+        const saveModel = new Model(bodydata);
         await saveModel.save();
         const data = { 'message': `${modelName} successfully created`, 'data': saveModel };
         res.json(data);
