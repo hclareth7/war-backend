@@ -40,7 +40,7 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.events
             };
         };
-        const getAllModel = await mutil.getTunnedDocument(Event, [{path: 'associated_winery', populate:{path: 'inventory.item'}},'participatingAssociations'], page, perPage, searchOptions);
+        const getAllModel = await mutil.getTunnedDocument(Event, [{path: 'associated_winery', populate:{path: 'inventory.item'}},'participatingAssociations','attendees'], page, perPage, searchOptions);
         res.status(200).json({
             data: getAllModel
         });

@@ -19,6 +19,10 @@ const eventSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',
     }],
+    attendees: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Beneficiary',
+    }],
     associated_winery: {
         type: mongoose.Schema.Types.ObjectId,
         ref:'Winerie'
