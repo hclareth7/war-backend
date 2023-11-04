@@ -18,6 +18,7 @@ export const save = async (req, res, next) => {
 
   try {
     const data = req.body;
+    data.author = res.locals.loggedInUser._id;
     const newDelivery = new Delivery({ ...data});
     const deliverySaved = await newDelivery.save();
     res.json({ message: 'Delivery created successfully.', data: deliverySaved });
