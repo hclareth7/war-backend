@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
 export const uploadLS = multer({ storage: storage });
 
 export const getImageUrl = (req, file) => {
-  const imag_url = `${req.protocol}://${req.host}:${process.env.APP_PORT}/repository/images/${file[0].filename}`;
+  const imag_url = `${req.protocol}://${process.env.LS_BASE_URL}/repository/images/${file[0].filename}`;
   return imag_url;
 }
 
