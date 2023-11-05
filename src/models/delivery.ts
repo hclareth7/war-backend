@@ -6,6 +6,13 @@ const deliverySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Beneficiary'
     },
+    representant: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Representant'
+    },
+    type: {
+        type: String
+    },
     event: {
         type: mongoose.Schema.Types.ObjectId,
         ref:'Event'   
@@ -15,9 +22,9 @@ const deliverySchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Item'
     },
-        amount: {
+    amount: {
             type: Number
-        }
+    }
     }],
     author:{
         type: mongoose.Schema.Types.ObjectId,
