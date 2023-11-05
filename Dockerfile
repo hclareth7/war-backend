@@ -3,6 +3,8 @@ FROM node:lts as builder
 # Create app directory
 WORKDIR /usr/src/app
 
+RUN mkdir /var/lib/qualty/data -p
+
 # Install app dependencies
 COPY package*.json ./
 
