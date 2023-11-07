@@ -38,9 +38,7 @@ const associationSchema = new mongoose.Schema({
 });
 
 associationSchema.plugin(mongoosePaginate)
-associationSchema.pre('find', function() {
-    this.where({ status: 'enabled' });
-  });
+
 const Association = mongoose.model('Association', associationSchema);
 
 export default Association;
