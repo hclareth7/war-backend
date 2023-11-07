@@ -27,7 +27,16 @@ const eventSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Winerie'
     },
+    status:{
+        type: String,
+        enum: ['enabled', 'disabled'],
+        default: 'enabled'
+    },
 }, {timestamps: true});
+
+eventSchema.pre('find', function() {
+    this.where({ status: 'enabled'});
+  });
 const mongoosePaginate = require('mongoose-paginate-v2');
 eventSchema.plugin(mongoosePaginate)
 const Event = mongoose.model('Event', eventSchema);

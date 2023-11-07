@@ -27,7 +27,8 @@ const beneficiarySchema = new mongoose.Schema({
     },
     identification: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     blody_type:{
         type:String,
@@ -160,9 +161,13 @@ const beneficiarySchema = new mongoose.Schema({
     },
     kinship: {
         type: String
+    },
+    status:{
+        type: String,
+        enum: ['enabled', 'disabled'],
+        default: 'enabled'
     }
 }, { timestamps: true });
-
 beneficiarySchema.plugin(mongoosePaginate)
 const Beneficiary = mongoose.model('Beneficiary', beneficiarySchema);
 

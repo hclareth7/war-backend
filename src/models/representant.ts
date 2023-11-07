@@ -12,7 +12,8 @@ const representantSchema = new mongoose.Schema({
     },
     identification: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     address: {
         type: String

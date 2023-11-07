@@ -29,9 +29,18 @@ const associationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Community',
     },
-    membersCount: Number
+    membersCount: Number,
+    status:{
+        type: String,
+        enum: ['enabled', 'disabled'],
+        default: 'enabled'
+    }
 });
+
 associationSchema.plugin(mongoosePaginate)
+associationSchema.pre('find', function() {
+    this.where({ status: 'enabled' });
+  });
 const Association = mongoose.model('Association', associationSchema);
 
 export default Association;

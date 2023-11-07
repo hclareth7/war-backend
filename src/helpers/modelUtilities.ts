@@ -69,6 +69,8 @@ export const getTunnedDocument = async (model, populate, page, perPage, searchOp
     if (searchOptions?.queryString) {
       conditions = getSearchOptions(searchOptions);
       page = 0;
+    }else{
+      conditions = getStatusOptions()
     }
     const options = getPaginationOptions(populate, page, perPage);
     const response = await model.paginate(conditions, options);
@@ -93,6 +95,18 @@ const getSearchOptions = (searchOptions) => {
     const object: any = { [field]: { $regex: new RegExp(searchOptions.queryString, "i") } }
     arrayRegex.push(object);
   });
+  const searchOptionsRegex = {
+    $and:[
+    {$or: [{status: { $regex: new RegExp('enabled', "i") }}, { status: { $exists : false }}]}, 
+    {$or: arrayRegex}
+  ]}
+  return searchOptionsRegex;
+}
+
+const getStatusOptions = ()=>{
+  const arrayRegex: any = [];
+  arrayRegex.push({ status: { $regex: new RegExp('enabled', "i") }})
+  arrayRegex.push({ status: { $exists : false }})
   const searchOptionsRegex = { $or: arrayRegex }
   return searchOptionsRegex;
 }
@@ -103,7 +117,8 @@ const getPaginationOptions = (populate, page, perPage): object => {
     page: page || 1,
     limit: perPage || 10,
     pagination: paginationAvailable,
-    populate: populate
+    populate: populate,
+    sort: { updatedAt: -1}
   };
   return options;
 }
