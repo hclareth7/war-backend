@@ -3,6 +3,7 @@ import Event from '../models/event';
 import * as config from '../config/config';
 import * as mutil from '../helpers/modelUtilities';
 
+const modelName = Event.modelName;
 export const save = async (req, res, next) => {
 
     // #swagger.tags = ['Events']
@@ -100,7 +101,10 @@ export const deleteItem = async (req, res, next) => {
      */
     try {
         const id = req.params.id;
-        await Event.findByIdAndDelete(id);
+        const updatedModel = await Event.findByIdAndUpdate(id,{status:'disabled'})
+        if (!updatedModel) {
+            return res.status(404).json({ error: `${modelName} not found` });
+        }
         return res.status(200).json({
             message: 'Event has been deleted'
         });

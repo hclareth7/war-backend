@@ -105,7 +105,10 @@ export const deleteItem = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        await Model.findByIdAndDelete(id);
+        const updatedModel = await Model.findByIdAndUpdate(id, {status:'disabled'})
+        if (!updatedModel) {
+            return res.status(404).json({ error: `${modelName} not found` });
+        }
         res.status(200).json({
             data: null,
             message: `${modelName} has been deleted`
