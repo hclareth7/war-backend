@@ -14,8 +14,8 @@ export const save = async (req, res, next) => {
     }]
      */
   try {
-    const { name, code , value } = req.body;
-        const newItem = new Item({ name, code , value });
+    const { name, code , value, isDefault } = req.body;
+        const newItem = new Item({ name, code , value, isDefault });
         await newItem.save();
         return res.json({ message: 'Item created successfully.' });
 } catch (error) {
