@@ -44,5 +44,6 @@ export const CONFIGS = {
         { name: 'fosiga_url' },
         { name: 'sisben_url' },
         { name: 'registry_doc_url' }
-    ]
+    ],
+    specialRoles:["Super Admin", "admin"]
 };
