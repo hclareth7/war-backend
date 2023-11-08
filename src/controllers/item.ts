@@ -104,7 +104,7 @@ export const deleteItem = async (req, res, next) => {
         const id = req.params.id;
         const wineriesFound=await Winerie.find();
         wineriesFound.map((winerie)=>{
-            winerie.inventory=winerie?.inventory.filter((data)=>id!==data?.item?.toString());
+            // winerie.inventory=winerie?.inventory.filter((data)=>id!==data?.item?.toString());
             winerie.save();
         });
         await Item.findByIdAndDelete(id);

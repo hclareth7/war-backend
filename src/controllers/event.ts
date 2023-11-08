@@ -1,5 +1,6 @@
 // eventController.js
 import Event from '../models/event';
+import Delivery from '../models/delivery';
 import * as config from '../config/config';
 import * as mutil from '../helpers/modelUtilities';
 
@@ -60,6 +61,7 @@ export const get = async (req, res, next) => {
     try {
         const id = req.params.id;
         const eventFound = await Event.findById(id).populate(['associated_winery','participatingAssociations']);
+        const deliveryEvent = await Event.findById({event: id}).populate([]);
         if (!eventFound) {
             return next(new Error('Event does not exist'));
         }
@@ -110,5 +112,28 @@ export const deleteItem = async (req, res, next) => {
         });
     } catch (error) {
         next(error)
+    }
+};
+
+export const getStats = async (req, res, next) => {
+    // #swagger.tags = ['Events']
+    /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
+    try {
+        const id = req.params.id;
+        const eventFound = await Event.findById(id)
+        .populate(['associated_winery','participatingAssociations', 'attendees']);
+
+        if (!eventFound) {
+            return next(new Error('Event does not exist'));
+        }
+        res.status(200).json({
+            data: eventFound
+        });
+    } catch (error) {
+        next(error);
     }
 };

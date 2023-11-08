@@ -17,16 +17,6 @@ const winerieSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Winerie'
     },
-    inventory:[{
-        amount:{
-            type:Number,
-            required:true
-        },
-       item:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Item'
-       }
-    }]
 },{
     timestamps:true
 });
