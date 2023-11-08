@@ -91,10 +91,10 @@ export const update = async (req, res, next) => {
     const update = req.body;
     const id = req.params.id;
     const event: any = await Event.findById(id);
-    update.attendees.length > 0
-      ? (update.attendees = [...event.attendees, ...update.attendees])
-      : false;
-
+    update.attendees =
+      update.attendees.length > 0
+        ? [...event.attendees, ...update.attendees]
+        : event.attendees;
     await Event.findByIdAndUpdate(id, update);
     const eventUpdated = await Event.findById(id);
 
