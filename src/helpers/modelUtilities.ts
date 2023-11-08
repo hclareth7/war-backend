@@ -8,6 +8,8 @@ const handlerProperties= async (property:string,item:any,array:any[],model:any)=
     const getModel=await model.findById(id);
     const name=getModel?.name;
     array.push(name);
+  }else{
+    array.push(" ");
   }
   return array;
 }
@@ -45,7 +47,7 @@ export const jsonDataConvertToArray=async (arrayJson:any[] | null | undefined,pr
       for (let i = 0; i < properties.length; i++) {
         const property:string = properties[i];
         const optionsValidation={
-          "municipality":()=>handlerProperties(property,item,arrayItem,ModelMunicipality),
+          // "municipality":()=>handlerProperties(property,item,arrayItem,ModelMunicipality),
           "association":()=>handlerProperties(property,item,arrayItem,ModelAssociation),
           "first_name":()=> arrayItem.push(`${item[`${property}`]+" "+ item.second_name +" "+ item.first_last_name +" "+ item.second_last_name}`.toUpperCase()),
           "createdAt":()=> organizeDate(item.createdAt,arrayItem),

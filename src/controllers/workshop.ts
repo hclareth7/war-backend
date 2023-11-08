@@ -153,7 +153,7 @@ export const generateFilePdf = async (req, res, next) => {
       res,
       null,
       {
-        logo: configFilePdf.logoPdf,
+        directionLogo: configFilePdf.logoPdfDirection,
         titleMain: `LISTADO DE ASISTENTES AL TALLER ${getModel?.name.toUpperCase()}`,
       },
       null,

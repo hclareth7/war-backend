@@ -100,11 +100,14 @@ const filterHeader = (headers) => {
   return headers.filter((header) => header !== "createAt");
 };
 
+const getLogoPdf=(directionImagen:string)=>{
+  return fs.readFileSync(directionImagen).toString("base64");
+}
 
 const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>{
   doc.fillOpacity(0.8);
   if(header){
-    header.logo &&  doc.image(header.logo,100,y, {width:50});
+    header.directionLogo && doc.image(`data:image/png;base64,${getLogoPdf(header.directionLogo)}`,100,y, {width:50});
     header.textSmall &&  doc.fontSize(6).text(header.textSmall,500,10,{width: 100 });
     y+=30;
     if(header.titleMain){

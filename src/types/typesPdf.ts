@@ -1,6 +1,6 @@
 export interface typeHeader{
     textSmall?:string,
-    logo?:string,
+    directionLogo?:string,
     titleMain?:string,
 }
 

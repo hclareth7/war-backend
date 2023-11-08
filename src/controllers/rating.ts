@@ -48,7 +48,7 @@ export const generateFilePdf = async (req, res, next) => {
         res,
         null,
         {
-          logo: configFilePdf.logoPdf,
+          directionLogo: configFilePdf.logoPdfDirection,
           titleMain: configFilePdf.titleMainRatingsPdf,
         },
         `${
