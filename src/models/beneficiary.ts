@@ -49,7 +49,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     sex: {
         type: String,
-        enum: ['Hombre', 'Mujer', 'Otro'],
+        enum: ['F', 'M'],
     },
     ethnic_affiliation: {
         type: String,
