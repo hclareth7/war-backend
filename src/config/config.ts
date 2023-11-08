@@ -10,7 +10,8 @@ export const CONFIGS = {
         item: ["name", "code"],
         beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
         user: ['name', 'user_name'],
-        association: ['community', 'name', 'department', 'municipality']
+        association: ['community', 'name', 'department', 'municipality'],
+        rating:['author']
     },
     filterType: ["dateRange", "dateSpecific", "number", "string"],
     numberTypeFilterOperators: [">", "<", "="],
@@ -38,6 +39,7 @@ export const CONFIGS = {
     resourceDocuments: [
         { name: 'photo_url' },
         { name: 'id_front' },
+        { name: 'footprint_url' },
         { name: 'id_back' },
         { name: 'fosiga_url' },
         { name: 'sisben_url' },

@@ -2,6 +2,8 @@ import Model from '../models/workshop';
 import * as pdf from '../services/pdfcreator';
 import * as config from '../config/config';
 import { jsonDataConvertToArray, organizeDate } from '../helpers/modelUtilities';
+import Permisions from '../models/permissions';
+
 
 const modelName = Model.modelName;
 
@@ -36,7 +38,11 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate(['activity', 'attendees','author']);
+        const userLogged=res.locals.loggedInUser;
+        const rolUser=await Permisions.findOne({_id:userLogged.role.toString()});
+        const id=userLogged._id.toString();
+        const condition=rolUser?.role !=="Super Admin" && rolUser?.role !=="admin" ? {author:id}:{};
+        const getAllModel = await Model.find({condition}).populate(['activity', 'attendees','author']);
         res.status(200).json({
             data: getAllModel
         });

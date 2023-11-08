@@ -1,5 +1,6 @@
 import { filterByDateRangeAndString, jsonDataConvertToArray } from '../helpers/modelUtilities';
 import Model from '../models/rating';
+import Permisions from '../models/permissions';
 import * as pdf from '../services/pdfcreator';
 import * as config from '../config/config';
 
@@ -79,7 +80,11 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate(['attendee','author']);
+        const userLogged=res.locals.loggedInUser;
+        const rolUser=await Permisions.findOne({_id:userLogged.role.toString()});
+        const id=userLogged._id.toString();
+        const condition=rolUser?.role !=="Super Admin" && rolUser?.role !=="admin" ? {author:id}:{};
+        const getAllModel = await Model.find(condition).populate(['attendee','author']);
         res.status(200).json({
             data: getAllModel
         });

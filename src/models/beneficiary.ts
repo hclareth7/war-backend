@@ -85,7 +85,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     disability: {
         type: String,
-        enum: ['Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
+        enum: ['Ninguna','Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
     },
     ocupation: {
         type: String,
@@ -131,6 +131,9 @@ const beneficiarySchema = new mongoose.Schema({
     },
     photo_url: {
         type: String
+    },
+    footprint_url:{
+        type:String
     },
     id_front: {
         type: String
