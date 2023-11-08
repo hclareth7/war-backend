@@ -18,7 +18,6 @@ const beneficiarySchema = new mongoose.Schema({
     },
     second_last_name: {
         type: String,
-        required: true
     },
     identification_type: {
         type: String,
