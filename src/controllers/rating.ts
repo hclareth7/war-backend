@@ -12,6 +12,10 @@ const modelName = Model.modelName;
 export const generateFilePdf = async (req, res, next) => {
   try {
     const arrayData: any[] = [];
+    const userLogged = res.locals.loggedInUser;
+    const rolUser: any = await Permisions.findOne({
+      _id: userLogged.role.toString(),
+    });
     const { startDate, endDate, valueTypeRating } = req.body;
     const filter =
       startDate !== undefined && endDate !== undefined
@@ -20,9 +24,11 @@ export const generateFilePdf = async (req, res, next) => {
             startDate,
             endDate,
             "rating_type",
-            valueTypeRating
+            valueTypeRating,
+            !config.CONFIGS.specialRoles.includes(rolUser?.role) ? userLogged._id.toString():null
           )
         : { _id: { $eq: req.query.queryString } };
+        console.log(filter)
     const getAllModel = await Model.find(filter).populate([
       "attendee",
       "author",

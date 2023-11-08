@@ -131,13 +131,14 @@ const filterByString = (field, value) => {
   }
 }
 
-export const filterByDateRangeAndString = (fieldDate:string,startDate:string, endDate:string,fieldString?:string,valueFieldString?:any) => {
+export const filterByDateRangeAndString = (fieldDate:string,startDate:string, endDate:string,fieldString?:string,valueFieldString?:any,valueAuthor?:any) => {
   return {
       [fieldDate]: {
         $gte: parseDate(startDate),
         $lte: parseDate(endDate)
       },
-      [`${fieldString}`]:fieldString !== null && valueFieldString!==null ? { $regex: new RegExp(valueFieldString, 'i') }:{}
+      [`${fieldString}`]:fieldString !== null && valueFieldString!==null ? { $regex: new RegExp(valueFieldString, 'i') }:{},
+      author:valueAuthor!=null ? valueAuthor :{}
   }
   // [fieldString]: { $regex: new RegExp(valueFieldString, 'i') }
 }
