@@ -3,6 +3,8 @@ import Event from "../models/event";
 import Delivery from "../models/delivery";
 import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
+import Beneficiary from "../models/beneficiary";
+import Item from "../models/item";
 
 const modelName = Event.modelName;
 export const save = async (req, res, next) => {
@@ -91,10 +93,30 @@ export const update = async (req, res, next) => {
     const update = req.body;
     const id = req.params.id;
     const event: any = await Event.findById(id);
-    update.attendees =
-      update.attendees.length > 0
-        ? [...event.attendees, ...update.attendees]
-        : event.attendees;
+    if (update.attendees.length > 0) {
+      const foundAttendee = Event.findOne({
+        attendees: { $in: [...update.attendees] },
+      });
+
+      if (!foundAttendee) {
+        return res
+          .status(400)
+          .json({ mensaje: "The attendee is already register" });
+      }
+
+      const defaultProducts = await Item.find({ isDefault: true });
+      const dataDefaultDelivery = {
+        beneficiary: update.attendees[0],
+        type: "beneficiary",
+        event: event._id,
+        itemsList: defaultProducts,
+        author: res.locals.loggedInUser._id,
+      };
+      const generatedDefaultDelivery = new Delivery(dataDefaultDelivery);
+      generatedDefaultDelivery.save();
+
+      update.attendees = [...event.attendees, ...update.attendees];
+    }
     await Event.findByIdAndUpdate(id, update);
     const eventUpdated = await Event.findById(id);
 
