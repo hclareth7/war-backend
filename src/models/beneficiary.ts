@@ -11,7 +11,6 @@ const beneficiarySchema = new mongoose.Schema({
 
     second_name: {
         type: String,
-        required: true
     },
     first_last_name: {
         type: String,

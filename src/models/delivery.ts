@@ -1,40 +1,45 @@
-import mongoose from 'mongoose';
-const mongoosePaginate = require('mongoose-paginate-v2');
+import mongoose from "mongoose";
+const mongoosePaginate = require("mongoose-paginate-v2");
 
-const deliverySchema = new mongoose.Schema({
+const deliverySchema = new mongoose.Schema(
+  {
     beneficiary: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'Beneficiary'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Beneficiary",
     },
     representant: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'Representant'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Representant",
     },
     type: {
-        type: String
+      type: String,
     },
     event: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'Event'   
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
     },
-    itemsList: [{
+    itemsList: [
+      {
         item: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Item'
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Item",
+        },
+        amount: {
+          type: Number,
+        },
+      },
+    ],
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-    amount: {
-            type: Number
-    }
-    }],
-    author:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-    }
-},{
-    timestamps:true
-})
+  },
+  {
+    timestamps: true,
+  }
+);
 
-deliverySchema.plugin(mongoosePaginate)
-const Delivery = mongoose.model('Delivery', deliverySchema);
+deliverySchema.plugin(mongoosePaginate);
+const Delivery = mongoose.model("Delivery", deliverySchema);
 
 export default Delivery;

@@ -5,8 +5,7 @@ import Event from "../models/event";
 import Winerie from "../models/winerie";
 import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
-import { Document } from 'mongoose';
-
+import { Document } from "mongoose";
 
 export const save = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
@@ -32,28 +31,25 @@ export const save = async (req, res, next) => {
     }).populate(["inventory.item", "associated_winery.inventory.item"]);
 
     //if (winerie?.inventory) {
-      for (const item of data.itemList) {
-        // const selectedItem = winerie?.inventory.find(
-        //   (dataItem) => dataItem?.item?._id.toString() === item.id
-        // );
-        // console.log(selectedItem);
-        // if (selectedItem?.amount) {
-        //     const data = {
-        //         amount: selectedItem?.amount - item.amount,
-        //         total: selectedItem?.total,
-        //         item: selectedItem?.item,
-        //     };
-        // }
+    for (const item of data.itemList) {
+      // const selectedItem = winerie?.inventory.find(
+      //   (dataItem) => dataItem?.item?._id.toString() === item.id
+      // );
+      // console.log(selectedItem);
+      // if (selectedItem?.amount) {
+      //     const data = {
+      //         amount: selectedItem?.amount - item.amount,
+      //         total: selectedItem?.total,
+      //         item: selectedItem?.item,
+      //     };
+      // }
 
-
-
-        Winerie.findByIdAndUpdate({ _id: winerie }, data);
-       
-      }
+      Winerie.findByIdAndUpdate({ _id: winerie }, data);
+    }
 
     res.json({
       message: "Delivery created successfully.",
-    //   data: deliverySaved,
+      //   data: deliverySaved,
     });
   } catch (error) {
     console.log(error);

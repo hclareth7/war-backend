@@ -90,10 +90,16 @@ export const update = async (req, res, next) => {
   try {
     const update = req.body;
     const id = req.params.id;
+    const event: any = await Event.findById(id);
+    update.attendees.length > 0
+      ? (update.attendees = [...event.attendees, ...update.attendees])
+      : false;
+
     await Event.findByIdAndUpdate(id, update);
-    const event = await Event.findById(id);
+    const eventUpdated = await Event.findById(id);
+
     res.status(200).json({
-      data: event,
+      data: eventUpdated,
       message: "Event has been updated",
     });
   } catch (error) {
