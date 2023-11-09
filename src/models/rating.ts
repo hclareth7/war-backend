@@ -4,7 +4,6 @@ const ratingSchema = new mongoose.Schema(
   {
     rating_type: {
       type: String,
-      enum: ["Fisioterapia", "Optometría", "Psicología"],
       required: true,
     },
     observations: {
