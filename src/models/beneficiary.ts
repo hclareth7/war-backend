@@ -123,7 +123,7 @@ const beneficiarySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',
     },
-    ativity:{
+    activity:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Activity',
     },
