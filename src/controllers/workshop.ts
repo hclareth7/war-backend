@@ -58,7 +58,7 @@ export const getAll = async (req, res, next) => {
       "activity",
       "attendees",
       "author",
-    ]);
+    ]).sort({ createdAt: -1 });
 
     res.status(200).json({
       data: getAllModel,
