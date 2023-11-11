@@ -167,7 +167,15 @@ const beneficiarySchema = new mongoose.Schema({
         type: String,
         enum: ['enabled', 'disabled'],
         default: 'enabled'
-    }
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
 }, { timestamps: true });
 beneficiarySchema.plugin(mongoosePaginate)
 const Beneficiary = mongoose.model('Beneficiary', beneficiarySchema);

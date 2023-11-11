@@ -20,6 +20,7 @@ export const save = async (req, res, next) => {
 
     try {
         const body = req.body.data;
+        body.author = res.locals.loggedInUser._id;
         const saveModel = new Model(body);
         await saveModel.save();
         const data = { 'message': `${modelName} successfully created`, 'data': saveModel };
@@ -75,7 +76,7 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.beneficiary
             };
         };
-        const getAllModel = await mutil.getTunnedDocument(Beneficiary, ['eps', 'association'], page, perPage, searchOptions)
+        const getAllModel = await mutil.getTunnedDocument(Beneficiary, ['association', 'author', 'updatedBy'], page, perPage, searchOptions)
         res.status(200).json(getAllModel);
     } catch (error) {
         next(error);
@@ -90,7 +91,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id);
+        const getModel = await Model.findById(id).populate(['association', 'author', 'updatedBy']);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }
@@ -111,6 +112,7 @@ export const update = async (req, res, next) => {
     try {
         const update = req.body;
         const id = req.params.id;
+        update.updatedBy = res.locals.loggedInUser._id;
         await Model.findByIdAndUpdate(id, update);
         const updatedModel = await Model.findById(id);
         res.status(200).json({
