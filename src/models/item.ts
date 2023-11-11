@@ -19,6 +19,9 @@ const itemSchema = new mongoose.Schema({
     },
     isDefault: {
         type: Boolean
+    },
+    associationItem: {
+        type: Boolean
     }
 },{
     timestamps:true
