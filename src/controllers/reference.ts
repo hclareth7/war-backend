@@ -81,7 +81,7 @@ export const getByRefName = async (req, res, next) => {
 async function getReferenceByName(target, query = {}) {
 
     const options = {
-        associations: async () => await ModelAssociation.find(query),
+        associations: async () => await ModelAssociation.find(query).populate(['community']),
         communities: async () => await ModelCommunity.find(query),
         eps: async () => await ModelEps.find(query),
         life_wellness_centers: async () => await ModelLifeWellnessCenter.find(query),
