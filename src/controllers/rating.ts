@@ -151,7 +151,7 @@ export const get = async (req, res, next) => {
     }]*/
   try {
     const id = req.params.id;
-    const getModel = await Model.findById(id).populate(["attendee", "author"]);
+    const getModel = await Model.findById(id).populate(["attendee", "author", "suggested_items"]);
     if (!getModel) {
       return next(new Error(`${modelName} does not exist`));
     }
@@ -226,5 +226,25 @@ export const generatePdf = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getByBeneficiaryId = async (req, res, next) => {
+  // #swagger.tags = ['Rating']
+  /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
+  try {
+    const id = req.params.id;
+    const getModel = await Model.find({attendee: id}).populate(["attendee", "author"]);
+    if (!getModel) {
+      return next(new Error(`${modelName} does not exist`));
+    }
+    res.status(200).json({
+      data: getModel,
+    });
+  } catch (error) {
+    next(error);
   }
 };
