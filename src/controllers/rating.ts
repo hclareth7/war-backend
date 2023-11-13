@@ -120,30 +120,6 @@ export const getAll = async (req, res, next) => {
     #swagger.security = [{
                "apiKeyAuth": []
     }]*/
-  /*
-  try {
-    const userLogged = res.locals.loggedInUser;
-
-    const rolUser: any = await Permisions.findOne({
-      _id: userLogged.role.toString(),
-    });
-
-    let condition = {};
-    !config.CONFIGS.specialRoles.includes(rolUser?.role)
-      ? (condition = { author: userLogged._id })
-      : (condition = {});
-    const getAllModel = await Model.find(condition).populate([
-      "attendee",
-      "author",
-    ]);
-    res.status(200).json({
-      data: getAllModel,
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-  */
 
   try {
     const page = req.query.page
