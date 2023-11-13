@@ -6,6 +6,8 @@ import {
   organizeDate,
 } from "../helpers/modelUtilities";
 import Permisions from "../models/permissions";
+import * as mutil from '../helpers/modelUtilities';
+
 
 const modelName = Model.modelName;
 
@@ -54,15 +56,28 @@ export const getAll = async (req, res, next) => {
       ? (condition = { author: userLogged._id })
       : (condition = {});
 
-    const getAllModel = await Model.find(condition).populate([
+      const page = req.query.page
+        const perPage = req.query.perPage
+        let searchOptions = { queryString: "",
+        searchableFields: config.CONFIGS.searchableFields.workshop,
+          isLoggedUser: condition};
+
+        if (req.query.queryString) {
+            searchOptions = {
+                queryString: req.query.queryString,
+                searchableFields: config.CONFIGS.searchableFields.workshop,
+                isLoggedUser: condition
+            };
+        };
+
+    const getAllModel = await mutil.getTunnedDocument(Model, ["activity","attendees","author",], page, perPage, searchOptions);
+    /*Model.find(condition).populate([
       "activity",
       "attendees",
       "author",
-    ]).sort({ createdAt: -1 });
+    ]).sort({ createdAt: -1 });*/
 
-    res.status(200).json({
-      data: getAllModel,
-    });
+    res.status(200).json(getAllModel);
   } catch (error) {
     console.log(error);
     next(error);
