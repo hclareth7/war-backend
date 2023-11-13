@@ -1,5 +1,7 @@
 import Model from '../models/activity';
 import * as pdf from '../services/pdfcreator';
+import * as config from '../config/config';
+import * as mutil from '../helpers/modelUtilities';
 
 const modelName = Model.modelName;
 
@@ -32,10 +34,18 @@ export const getAll = async (req, res, next) => {
                "apiKeyAuth": []
     }]*/
     try {
-        const getAllModel = await Model.find({}).populate(['participatingAssociations']);
-        res.status(200).json({
-            data: getAllModel
-        });
+        const page = req.query.page
+        const perPage = req.query.perPage
+        let searchOptions = {};
+
+        if (req.query.queryString) {
+            searchOptions = {
+                queryString: req.query.queryString,
+                searchableFields: config.CONFIGS.searchableFields.activity
+            };
+        };
+        const getAllModel = await mutil.getTunnedDocument(Model,['participatingAssociations'], page, perPage, searchOptions);
+        res.status(200).json(getAllModel);
     } catch (error) {
         console.log(error);
         next(error);
