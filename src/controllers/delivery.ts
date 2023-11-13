@@ -71,7 +71,7 @@ export const getAll = async (req, res, next) => {
     }
     const getAllModel = await mutil.getTunnedDocument(
       Delivery,
-      ["beneficiary", "representant", "event", "itemsList", "author"],
+      ["beneficiary", "representant", "event", "itemList", "author"],
       page,
       perPage,
       searchOptions
@@ -97,7 +97,7 @@ export const get = async (req, res, next) => {
       "beneficiary",
       "representant",
       "event",
-      "itemsList",
+      "itemList",
       "author",
     ]);
     if (!deliveryFound) {
