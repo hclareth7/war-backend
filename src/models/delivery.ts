@@ -18,7 +18,7 @@ const deliverySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Event",
     },
-    itemsList: [
+    itemList: [
       {
         item: {
           type: mongoose.Schema.Types.ObjectId,
