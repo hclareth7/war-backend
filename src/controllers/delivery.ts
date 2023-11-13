@@ -31,7 +31,7 @@ export const save = async (req, res, next) => {
         item: product.item,
       });
 
-      if (!inventory || inventory.amount >= product.amount || product.amount <= 0) {
+      if (!inventory || inventory.amount <= product.amount) {
         return res.status(400).json({ mensaje: "Invalid amount." });
       }
 
