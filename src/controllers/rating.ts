@@ -6,6 +6,7 @@ import Model from "../models/rating";
 import Permisions from "../models/permissions";
 import * as pdf from "../services/pdfcreator";
 import * as config from "../config/config";
+import * as mutil from '../helpers/modelUtilities';
 
 const modelName = Model.modelName;
 
@@ -119,6 +120,7 @@ export const getAll = async (req, res, next) => {
     #swagger.security = [{
                "apiKeyAuth": []
     }]*/
+  /*
   try {
     const userLogged = res.locals.loggedInUser;
 
@@ -141,6 +143,24 @@ export const getAll = async (req, res, next) => {
     console.log(error);
     next(error);
   }
+  */
+
+  try {
+    const page = req.query.page
+    const perPage = req.query.perPage
+    let searchOptions = {};
+
+    if (req.query.queryString) {
+        searchOptions = {
+            queryString: req.query.queryString,
+            searchableFields: config.CONFIGS.searchableFields.rating
+        };
+    };
+    const getAllModel = await mutil.getTunnedDocument(Model, ['attendee', 'author', 'suggested_items'], page, perPage, searchOptions)
+    res.status(200).json(getAllModel);
+} catch (error) {
+    next(error);
+}
 };
 
 export const get = async (req, res, next) => {
@@ -237,7 +257,7 @@ export const getByBeneficiaryId = async (req, res, next) => {
     }]*/
   try {
     const id = req.params.id;
-    const getModel = await Model.find({attendee: id}).populate(["attendee", "author"]);
+    const getModel = await Model.find({attendee: id}).populate(["attendee", "author", "suggested_items"]);
     if (!getModel) {
       return next(new Error(`${modelName} does not exist`));
     }

@@ -11,7 +11,7 @@ export const CONFIGS = {
         beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
         user: ['name', 'user_name'],
         association: ['community', 'name', 'department', 'municipality'],
-        rating:['author']
+        rating:['author', 'attendee', 'rating_type']
     },
     filterType: ["dateRange", "dateSpecific", "number", "string"],
     numberTypeFilterOperators: [">", "<", "="],
