@@ -6,6 +6,7 @@ import Winerie from "../models/winerie";
 import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
 import { Document } from "mongoose";
+import Inventory from "../models/inventory";
 
 export const save = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
@@ -22,29 +23,21 @@ export const save = async (req, res, next) => {
   try {
     const data = req.body;
     data.author = res.locals.loggedInUser._id;
-    const eventFound = await Event.findById({ _id: data.event }).populate([
-      "associated_winery",
-      "participatingAssociations",
-    ]);
-    const winerie = await Winerie.findOne({
-      _id: eventFound?.associated_winery,
-    }).populate(["inventory.item", "associated_winery.inventory.item"]);
 
     //if (winerie?.inventory) {
-    for (const item of data.itemList) {
-      // const selectedItem = winerie?.inventory.find(
-      //   (dataItem) => dataItem?.item?._id.toString() === item.id
-      // );
-      // console.log(selectedItem);
-      // if (selectedItem?.amount) {
-      //     const data = {
-      //         amount: selectedItem?.amount - item.amount,
-      //         total: selectedItem?.total,
-      //         item: selectedItem?.item,
-      //     };
-      // }
+    for (const product of data.itemList) {
+      const inventory = await Inventory.findOne({
+        winerie: data.associated_winery,
+        item: product.item,
+      });
 
-      Winerie.findByIdAndUpdate({ _id: winerie }, data);
+      if (!inventory || inventory.amount >= product.amount || product.amount <= 0) {
+        return res.status(400).json({ mensaje: "Invalid amount." });
+      }
+
+      const newAmount = inventory.amount - product.amount;
+      inventory.amount = newAmount;
+      await inventory.save();
     }
 
     res.json({
