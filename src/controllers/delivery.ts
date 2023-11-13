@@ -24,7 +24,6 @@ export const save = async (req, res, next) => {
     const data = req.body;
     data.author = res.locals.loggedInUser._id;
 
-    //if (winerie?.inventory) {
     for (const product of data.itemList) {
       const inventory = await Inventory.findOne({
         winerie: data.associated_winery,
@@ -40,9 +39,11 @@ export const save = async (req, res, next) => {
       await inventory.save();
     }
 
+    const delivery = new Delivery(data);
+    await delivery.save();
     res.json({
       message: "Delivery created successfully.",
-      //   data: deliverySaved,
+         data: delivery,
     });
   } catch (error) {
     console.log(error);
