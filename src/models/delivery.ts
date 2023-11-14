@@ -33,6 +33,9 @@ const deliverySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    status: {
+      type: String
+    }
   },
   {
     timestamps: true,

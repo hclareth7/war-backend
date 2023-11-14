@@ -22,6 +22,7 @@ export const save = async (req, res, next) => {
 
   try {
     const data = req.body;
+    data.status = 'valid';
     data.author = res.locals.loggedInUser._id;
 
     for (const product of data.itemList) {
@@ -43,7 +44,7 @@ export const save = async (req, res, next) => {
     await delivery.save();
     res.json({
       message: "Delivery created successfully.",
-         data: delivery,
+      data: delivery,
     });
   } catch (error) {
     console.log(error);
@@ -101,7 +102,7 @@ export const get = async (req, res, next) => {
       "author",
     ]);
     if (!deliveryFound) {
-      return next(new Error("Delivery does not exist"));
+      return res.status(404).json({ mensaje: "Delivery does not exist" });
     }
     res.status(200).json({
       data: deliveryFound,
@@ -119,13 +120,31 @@ export const update = async (req, res, next) => {
     }]
      */
   try {
-    const update = req.body;
+    const data = req.body;
     const id = req.params.id;
-    await Delivery.findByIdAndUpdate(id, update);
+    data.author = res.locals.loggedInUser._id;
+
+    for (const product of data.itemList) {
+      const inventory = await Inventory.findOne({
+        winerie: data.associated_winery,
+        item: product.item,
+      });
+      if (!inventory || inventory.amount <= product.amount) {
+        return res.status(400).json({ mensaje: "Invalid amount." });
+      }
+
+      const newAmount = inventory.amount + product.amount;
+      inventory.amount = newAmount;
+      await inventory.save();
+
+    }
+
+    data.status = 'invalidated';
+    await Delivery.findByIdAndUpdate(id, data);
     const delivery = await Delivery.findById(id);
     res.status(200).json({
       data: delivery,
-      message: "Delivery has been updated",
+      message: "Delivery has been invalidated",
     });
   } catch (error) {
     next(error);
