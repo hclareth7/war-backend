@@ -5,6 +5,7 @@ import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
 import Beneficiary from "../models/beneficiary";
 import Item from "../models/item";
+import mongoose from "mongoose";
 
 const modelName = Event.modelName;
 export const save = async (req, res, next) => {
@@ -72,7 +73,7 @@ export const get = async (req, res, next) => {
       "participatingAssociations",
     ]);
     if (!eventFound) {
-      return next(new Error("Event does not exist"));
+      return res.status(400).json({ mensaje: "Event not found" });
     }
     res.status(200).json({
       data: eventFound,
@@ -170,8 +171,49 @@ export const getStats = async (req, res, next) => {
     if (!eventFound) {
       return next(new Error("Event does not exist"));
     }
+
+    const aggregateOptions = [
+      {
+        $match: {
+          event: eventFound._id, // Reemplaza "ID_DEL_EVENTO" con el ID del evento que estás buscando
+        },
+      },
+      {
+        $unwind: "$itemList",
+      },
+      {
+        $group: {
+          _id: "$itemList.item",
+          totalAmount: { $sum: "$itemList.amount" },
+        },
+      },
+      {
+        $lookup: {
+          from: "items", // Reemplaza "items" con el nombre de la colección de items
+          localField: "_id",
+          foreignField: "_id",
+          as: "itemDetails",
+        },
+      },
+      {
+        $unwind: "$itemDetails",
+      },
+    ];
+
+
+    const numberOfAttendees = eventFound?.attendees.length;
+    const numberOfDelivery = await Delivery.find({ event: eventFound?._id }).count();
+    const deliveredItems = await Delivery.aggregate(aggregateOptions);
+    const result = {
+      event: eventFound,
+      numberOfAttendees,
+      numberOfDelivery,
+      deliveredItems
+    }
+
+
     res.status(200).json({
-      data: eventFound,
+      data: result,
     });
   } catch (error) {
     next(error);
