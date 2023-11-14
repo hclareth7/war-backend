@@ -1,11 +1,7 @@
 // eventController.js
 import Delivery from "../models/delivery";
-import Event from "../models/event";
-
-import Winerie from "../models/winerie";
 import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
-import { Document } from "mongoose";
 import Inventory from "../models/inventory";
 
 export const save = async (req, res, next) => {
@@ -95,7 +91,7 @@ export const get = async (req, res, next) => {
   try {
     const id = req.params.id;
     const deliveryFound = await Delivery.findById(id).populate([
-      "beneficiary",
+      { path: "beneficiary", populate: { path: "association" } },
       "representant",
       "event",
       "itemList",
@@ -120,13 +116,17 @@ export const update = async (req, res, next) => {
     }]
      */
   try {
-    const data = req.body;
     const id = req.params.id;
-    data.author = res.locals.loggedInUser._id;
+    const targetDelivery: any = await Delivery.findById(id)
+    .populate(["beneficiary", "representant", "event", "itemList", "author"]);
+    if(!targetDelivery){
+      return res.status(403).json({ mensaje: "Delivery not found" });
+    }
+    targetDelivery.author = res.locals.loggedInUser._id;
 
-    for (const product of data.itemList) {
+    for (const product of targetDelivery.itemList) {
       const inventory = await Inventory.findOne({
-        winerie: data.associated_winery,
+        winerie: targetDelivery.event.associated_winery,
         item: product.item,
       });
       if (!inventory || inventory.amount <= product.amount) {
@@ -139,8 +139,8 @@ export const update = async (req, res, next) => {
 
     }
 
-    data.status = 'invalidated';
-    await Delivery.findByIdAndUpdate(id, data);
+    targetDelivery.status = 'invalidated';
+    await Delivery.findByIdAndUpdate(id, targetDelivery);
     const delivery = await Delivery.findById(id);
     res.status(200).json({
       data: delivery,
