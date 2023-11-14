@@ -27,7 +27,7 @@ export const save = async (req, res, next) => {
         item: product.item,
       });
 
-      if (!inventory || inventory.amount <= product.amount) {
+      if (!inventory || inventory.amount < product.amount) {
         return res.status(400).json({ mensaje: "Invalid amount." });
       }
 
@@ -129,7 +129,7 @@ export const update = async (req, res, next) => {
         winerie: targetDelivery.event.associated_winery,
         item: product.item,
       });
-      if (!inventory || inventory.amount <= product.amount) {
+      if (!inventory) {
         return res.status(400).json({ mensaje: "Invalid amount." });
       }
 
