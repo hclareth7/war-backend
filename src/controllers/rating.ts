@@ -132,13 +132,28 @@ export const getAll = async (req, res, next) => {
     !config.CONFIGS.specialRoles.includes(rolUser?.role)
       ? (condition = { author: userLogged._id })
       : (condition = {});
-    const getAllModel = await Model.find(condition).populate([
+      
+      const page = req.query.page
+      const perPage = req.query.perPage
+      let searchOptions = { 
+        queryString: "",
+        searchableFields: config.CONFIGS.searchableFields.workshop,
+        isLoggedUser: condition
+      };
+
+      if (req.query.queryString) {
+          searchOptions = {
+              queryString: req.query.queryString,
+              searchableFields: config.CONFIGS.searchableFields.rating,
+              isLoggedUser: condition
+          };
+      };
+    const getAllModel = await mutil.getTunnedDocument(Model, ["attendee","author",], page, perPage, searchOptions);
+    /*Model.find(condition).populate([
       "attendee",
       "author",
-    ]);
-    res.status(200).json({
-      data: getAllModel,
-    });
+    ]);*/
+    res.status(200).json(getAllModel);
   } catch (error) {
     console.log(error);
     next(error);
