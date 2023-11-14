@@ -46,12 +46,19 @@ export const getAll = async (req, res, next) => {
             };
         };
         const activities: any = await mutil.getTunnedDocument(Model, ['participatingAssociations'], page, perPage, searchOptions);
-        for (const activity of activities) {
-            const beneficiaryCunt = Beneficiary.find({ activity: activity._id }).count()
-            activity.attending_beneficiaries = beneficiaryCunt;
+        const actData = activities.data.map(activity => activity.toObject()); // Convertir a objeto plano
+        for (let i = 0; i < activities.data.length; i++) {
+            const response = await Beneficiary.find({ activity: activities.data[i]._id });
+            actData[i].attending_beneficiary = response.length;
         }
-
-        res.status(200).json(activities);
+        const finalResponse = {
+            currentPage: activities.currentPage,
+            itemsPerPage: activities.itemsPerPage,
+            totalItems: activities.totalItems,
+            totalPages: activities.totalPages,
+            data: actData        
+        };
+        res.status(200).json(finalResponse);
     } catch (error) {
         console.log(error);
         next(error);
