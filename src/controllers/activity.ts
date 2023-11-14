@@ -2,6 +2,7 @@ import Model from '../models/activity';
 import * as pdf from '../services/pdfcreator';
 import * as config from '../config/config';
 import * as mutil from '../helpers/modelUtilities';
+import Beneficiary from '../models/beneficiary';
 
 const modelName = Model.modelName;
 
@@ -44,8 +45,13 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.activity
             };
         };
-        const getAllModel = await mutil.getTunnedDocument(Model,['participatingAssociations'], page, perPage, searchOptions);
-        res.status(200).json(getAllModel);
+        const activities: any = await mutil.getTunnedDocument(Model, ['participatingAssociations'], page, perPage, searchOptions);
+        for (const activity of activities) {
+            const beneficiaryCunt = Beneficiary.find({ activity: activity._id }).count()
+            activity.attending_beneficiaries = beneficiaryCunt;
+        }
+
+        res.status(200).json(activities);
     } catch (error) {
         console.log(error);
         next(error);
