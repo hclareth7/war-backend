@@ -13,6 +13,7 @@ router.get("/", auth.allowIfLoggedin, controller.getAll)
 router.post("/filter", auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.filter);
 router.post('/resources/:id', auth.allowIfLoggedin, cpUpload, controller.uploadResource);
 router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.get);
+router.get('/activity/:activityId', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getByActivity);
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName), controller.update);
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName), controller.deleteItem);
 

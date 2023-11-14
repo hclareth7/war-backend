@@ -175,7 +175,7 @@ export const getStats = async (req, res, next) => {
     const aggregateOptions = [
       {
         $match: {
-          event: eventFound._id, // Reemplaza "ID_DEL_EVENTO" con el ID del evento que estás buscando
+          event: eventFound._id, 
         },
       },
       {
@@ -189,7 +189,7 @@ export const getStats = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "items", // Reemplaza "items" con el nombre de la colección de items
+          from: "items",
           localField: "_id",
           foreignField: "_id",
           as: "itemDetails",

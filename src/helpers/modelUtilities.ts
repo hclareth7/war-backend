@@ -107,6 +107,10 @@ export const getTunnedDocument = async (
     } else {
       conditions = getStatusOptions(searchOptions);
     }
+    if(searchOptions?.directSearch){
+      conditions['$and'] = [ ...searchOptions?.directSearch]
+    }
+    
     const options = getPaginationOptions(populate, page, perPage);
     const response = await model.paginate(conditions, options);
 

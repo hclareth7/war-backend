@@ -3,6 +3,7 @@ import Model from '../models/beneficiary';
 import * as LSservice from '../services/localUpload';
 import * as mutil from '../helpers/modelUtilities';
 import * as config from '../config/config';
+import mongoose from 'mongoose';
 
 const modelName = Model.modelName;
 
@@ -69,7 +70,6 @@ export const getAll = async (req, res, next) => {
         const page = req.query.page
         const perPage = req.query.perPage
         let searchOptions = {};
-
         if (req.query.queryString) {
             searchOptions = {
                 queryString: req.query.queryString,
@@ -132,7 +132,7 @@ export const deleteItem = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const updatedModel = await Model.findByIdAndUpdate(id,{status:'disabled'})
+        const updatedModel = await Model.findByIdAndUpdate(id, { status: 'disabled' })
         if (!updatedModel) {
             return res.status(404).json({ error: `${modelName} not found` });
         }
@@ -170,5 +170,45 @@ export const uploadResource = async (req, res, next) => {
     } catch (error) {
         console.log(error)
         next(error)
+    }
+};
+
+export const getByActivity = async (req, res, next) => {
+    // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
+    try {
+
+        const page = req.query.page
+        const perPage = req.query.perPage
+        let searchOptions = {};
+
+        const activityId = req.params.activityId;
+        let directSearch: any[] = []
+        if (activityId) {
+            directSearch.push({ activity: new mongoose.Types.ObjectId(activityId) });
+            searchOptions = { directSearch: directSearch }
+        }
+
+        if (req.query.queryString) {
+            searchOptions = {
+                queryString: req.query.queryString,
+                searchableFields: config.CONFIGS.searchableFields.beneficiary,
+                directSearch: directSearch
+            };
+        };
+
+
+        const getModel = await mutil.getTunnedDocument(Beneficiary, ['association', 'author', 'updatedBy', 'activity'], page, perPage, searchOptions)
+        if (!getModel) {
+            return next(new Error("Beneficiaries does not exist"));
+        }
+        res.status(200).json({
+            data: getModel
+        });
+    } catch (error) {
+        next(error);
     }
 };
