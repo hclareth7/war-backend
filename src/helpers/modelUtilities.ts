@@ -105,7 +105,7 @@ export const getTunnedDocument = async (
       conditions = getSearchOptions(searchOptions);
       page = 0;
     } else {
-      conditions = getStatusOptions();
+      conditions = getStatusOptions(searchOptions);
     }
     const options = getPaginationOptions(populate, page, perPage);
     const response = await model.paginate(conditions, options);
@@ -146,11 +146,14 @@ const getSearchOptions = (searchOptions) => {
   return searchOptionsRegex;
 };
 
-const getStatusOptions = () => {
+const getStatusOptions = (searchOptions) => {
   const arrayRegex: any = [];
   arrayRegex.push({ status: { $regex: new RegExp("enabled", "i") } });
   arrayRegex.push({ status: { $exists: false } });
-  const searchOptionsRegex = { $or: arrayRegex };
+  if(searchOptions.isLoggedUser){
+    arrayRegex.push(searchOptions.isLoggedUser)
+  }
+  const searchOptionsRegex = { $or: arrayRegex};
   return searchOptionsRegex;
 };
 
