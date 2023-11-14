@@ -18,7 +18,7 @@ export const save = async (req, res, next) => {
 
   try {
     const data = req.body;
-    data.status = 'valid';
+    data.status = 'enabled';
     data.author = res.locals.loggedInUser._id;
 
     for (const product of data.itemList) {
@@ -139,12 +139,12 @@ export const update = async (req, res, next) => {
 
     }
 
-    targetDelivery.status = 'invalidated';
+    targetDelivery.status = 'disabled';
     await Delivery.findByIdAndUpdate(id, targetDelivery);
     const delivery = await Delivery.findById(id);
     res.status(200).json({
       data: delivery,
-      message: "Delivery has been invalidated",
+      message: "Delivery has been disabled",
     });
   } catch (error) {
     next(error);
