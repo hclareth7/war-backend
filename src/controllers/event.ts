@@ -6,6 +6,7 @@ import * as mutil from "../helpers/modelUtilities";
 import Beneficiary from "../models/beneficiary";
 import Item from "../models/item";
 import mongoose from "mongoose";
+import Inventory from "../models/inventory";
 
 const modelName = Event.modelName;
 export const save = async (req, res, next) => {
@@ -46,7 +47,11 @@ export const getAll = async (req, res, next) => {
     }
     const getAllModel = await mutil.getTunnedDocument(
       Event,
-      ["associated_winery", "participatingAssociations", "attendees"],
+      [
+        "associated_winery",
+        "participatingAssociations",
+        { path: "participatingAssociations", populate: { path: "community" } },
+        "attendees"],
       page,
       perPage,
       searchOptions
@@ -71,6 +76,7 @@ export const get = async (req, res, next) => {
     const eventFound = await Event.findById(id).populate([
       "associated_winery",
       "participatingAssociations",
+      { path: "participatingAssociations", populate: { path: "community" } },
     ]);
     if (!eventFound) {
       return res.status(400).json({ mensaje: "Event not found" });
@@ -105,12 +111,44 @@ export const update = async (req, res, next) => {
           .json({ mensaje: "The attendee is already register" });
       }
 
-      const defaultProducts = await Item.find({ isDefault: true });
+      const defaultProducts = await Item.aggregate([
+        {
+          $match: {
+            isDefault: true,
+          },
+        },
+        {
+          $project: {
+            item: "$_id",
+            amount: 1,
+          },
+        },
+        {
+          $addFields: {
+            amount: 1,
+          },
+        },
+        {
+          $unset: ["_id", "code", "value", "isDefault", "associationItem", "timestamps"],
+        },
+      ]);
+      for (const product of defaultProducts) {
+        const inventory = await Inventory.findOne({
+          winerie: event.associated_winery,
+          item: product.item,
+        });
+        if (!inventory || inventory.amount < product.amount) {
+          return res.status(400).json({ mensaje: `Invalid amount, or item: ${product.item} not found ` });
+        }
+        const newAmount = inventory.amount - product.amount;
+        inventory.amount = newAmount;
+        await inventory.save();
+      }
       const dataDefaultDelivery = {
         beneficiary: update.attendees[0],
         type: "beneficiary",
         event: event._id,
-        itemsList: defaultProducts,
+        itemList: defaultProducts,
         author: res.locals.loggedInUser._id,
       };
       const generatedDefaultDelivery = new Delivery(dataDefaultDelivery);
@@ -175,7 +213,7 @@ export const getStats = async (req, res, next) => {
     const aggregateOptions = [
       {
         $match: {
-          event: eventFound._id, 
+          event: eventFound._id,
         },
       },
       {
