@@ -5,6 +5,7 @@ import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
 import Inventory from "../models/inventory";
 import { generateFilePdfDelivery } from "../services/pdfcreator";
+import mongoose from "mongoose";
 
 export const save = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
@@ -50,38 +51,38 @@ export const save = async (req, res, next) => {
   }
 };
 
-export const generateActaDelivery=async (req, res, next)=>{
+export const generateActaDelivery = async (req, res, next) => {
   //"beneficiary", "representant", "event", "itemList", "author"
-  try{
-    const configPdf=config.CONFIGS.configFilePdf;
-    const idDelivery=req.params.id;
-    const deliveryFound=await Delivery.findOne({_id:idDelivery}).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
-    const beneficiary=deliveryFound?.beneficiary;
-    const idAssociation=beneficiary?.toJSON()["association"].toString();
-    const event=deliveryFound?.event;
-    const association=await Association.findOne({_id:idAssociation});
-    beneficiary ? beneficiary["association"]=association :"";
-    const itemsList=deliveryFound?.itemList;
+  try {
+    const configPdf = config.CONFIGS.configFilePdf;
+    const idDelivery = req.params.id;
+    const deliveryFound = await Delivery.findOne({ _id: idDelivery }).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
+    const beneficiary = deliveryFound?.beneficiary;
+    const idAssociation = beneficiary?.toJSON()["association"].toString();
+    const event = deliveryFound?.event;
+    const association = await Association.findOne({ _id: idAssociation });
+    beneficiary ? beneficiary["association"] = association : "";
+    const itemsList = deliveryFound?.itemList;
     generateFilePdfDelivery(res,
       {
-        directionLogo:configPdf.logoPdfDirection,
-        titleMain:configPdf.headerDocument.titleMain,
-        infoContract:configPdf.headerDocument.infoContrato,
-        textAditional:configPdf.headerDocument.textAditional
+        directionLogo: configPdf.logoPdfDirection,
+        titleMain: configPdf.headerDocument.titleMain,
+        infoContract: configPdf.headerDocument.infoContrato,
+        textAditional: configPdf.headerDocument.textAditional
       },
       beneficiary,
       event,
       itemsList,
       {
-        nameAfterSignature:configPdf.infoContentFooterPdf.nameAfterSignature,
-        representantLegal:configPdf.infoContentFooterPdf.representantLegal
+        nameAfterSignature: configPdf.infoContentFooterPdf.nameAfterSignature,
+        representantLegal: configPdf.infoContentFooterPdf.representantLegal
       },
       {
-        content:configPdf.infoContentFooterPdf.content,
-        aditional:configPdf.infoContentFooterPdf.aditional
+        content: configPdf.infoContentFooterPdf.content,
+        aditional: configPdf.infoContentFooterPdf.aditional
       }
     );
-  }catch(error){
+  } catch (error) {
     next(error);
   }
 }
@@ -102,6 +103,48 @@ export const getAll = async (req, res, next) => {
       searchOptions = {
         queryString: req.query.queryString,
         searchableFields: config.CONFIGS.searchableFields.delivery,
+      };
+    }
+    const getAllModel = await mutil.getTunnedDocument(
+      Delivery,
+      ["beneficiary", "representant", "event", "itemList", "author"],
+      page,
+      perPage,
+      searchOptions
+    );
+    res.status(200).json({
+      data: getAllModel,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllByType = async (req, res, next) => {
+  // #swagger.tags = ['Delivery']
+  /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
+  try {
+    const page = req.query.page;
+    const perPage = req.query.perPage;
+    let searchOptions = {};
+    const type = req.params.type;
+
+
+    let directSearch: any[] = []
+    if (type) {
+      directSearch.push({ type: type });
+      searchOptions = { directSearch: directSearch }
+    }
+   
+    if (req.query.queryString) {
+      searchOptions = {
+        queryString: req.query.queryString,
+        searchableFields: config.CONFIGS.searchableFields.delivery,
+        directSearch: directSearch
       };
     }
     const getAllModel = await mutil.getTunnedDocument(
@@ -156,8 +199,8 @@ export const update = async (req, res, next) => {
   try {
     const id = req.params.id;
     const targetDelivery: any = await Delivery.findById(id)
-    .populate(["beneficiary", "representant", "event", "itemList", "author"]);
-    if(!targetDelivery){
+      .populate(["beneficiary", "representant", "event", "itemList", "author"]);
+    if (!targetDelivery) {
       return res.status(403).json({ mensaje: "Delivery not found" });
     }
     targetDelivery.author = res.locals.loggedInUser._id;
