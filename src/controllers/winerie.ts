@@ -137,44 +137,41 @@ export const getAll = async (req, res, next) => {
       };
     }
 
-    const allInventory: any = await mutil.getTunnedDocument(
-      Inventory,
-      [{ path: "winerie", populate: { path: "associated_winery" } }, "item"],
+    const wineries: any = await mutil.getTunnedDocument(
+      Winerie,
+      ["associated_winery",],
       page,
       perPage,
       searchOptions
     );
-    const inventoryMap = new Map();
-    if (allInventory) {
-      allInventory.data.forEach((inventory: any) => {
-        if (inventory.winerie) {
-          let winerieId = inventory.winerie._id;
 
-          if (!inventoryMap.has(winerieId)) {
-            inventoryMap.set(winerieId, {
-              _id: winerieId,
-              name: inventory.winerie.name,
-              type: inventory.winerie.type,
-              associated_winery: inventory.winerie.associated_winery,
-              inventory: [],
-            });
-          }
 
-          inventoryMap.get(winerieId).inventory.push({
-            amount: inventory.amount,
-            total: inventory.total,
-            item: inventory.item,
-            winerie_id: winerieId,
-          });
-        }
-      });
-
-      // Convertir el mapa a un array de objetos
-      const transformedData = Array.from(inventoryMap.values());
-      allInventory.data = transformedData;
-      allInventory.totalItems = allInventory.data.length;
-      res.status(200).json({ data: allInventory });
+    if (!wineries) {
+      return next(new Error("Winerie does not exist"));
     }
+    const allData: any[] = [];
+    let result: any = {};
+    result.currentPage = wineries.wineries;
+    result.itemsPerPage = wineries.itemsPerPage;
+    result.totalItems = wineries.totalItems;
+    result.totalPages = wineries.totalPages;
+    console.log(wineries);
+    
+    for (const winerie of wineries.data) {
+      const relatedInventory = await Inventory.find({
+        winerie: winerie._id,
+      }).populate([
+        { path: "winerie", populate: { path: "associated_winery" } },
+        "item",
+      ]);
+
+      const data = winerie.toObject();
+      data.inventory = relatedInventory || [];
+      allData.push(data);
+    }
+    result.data = allData;
+    res.status(200).json({ data: result });
+
   } catch (error) {
     next(error);
   }
@@ -290,18 +287,18 @@ export const update = async (req, res, next) => {
       });
 
       console.log(currentProduct);
-      
-      console.log("ID_ITEM: ", currentProduct._id);
-      
 
-      console.log("MAIN",mainInventory);
-      
+      console.log("ID_ITEM: ", currentProduct._id);
+
+
+      console.log("MAIN", mainInventory);
+
       const SecondOldProduct = await Inventory.findOne({
         winerie: data.winerie._id,
         item: currentProduct.item._id
       });
 
-      console.log("SECOND",SecondOldProduct);
+      console.log("SECOND", SecondOldProduct);
       /*
       if (mainInventory) {
         if (mainInventory.total >= currentProduct.amount) {
