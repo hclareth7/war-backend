@@ -14,6 +14,8 @@ export const CONFIGS = {
         rating:['rating_type'],
         activity: ["name"],
         workshop: ["name"],
+        delivery: ['type', 'beneficiary.first_name', 'beneficiary.identification', 'representant.name', 'representant.identification']
+        
     },
     filterType: ["dateRange", "dateSpecific", "number", "string"],
     numberTypeFilterOperators: [">", "<", "="],

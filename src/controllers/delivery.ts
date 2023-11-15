@@ -101,7 +101,7 @@ export const getAll = async (req, res, next) => {
     if (req.query.queryString) {
       searchOptions = {
         queryString: req.query.queryString,
-        searchableFields: config.CONFIGS.searchableFields.events,
+        searchableFields: config.CONFIGS.searchableFields.delivery,
       };
     }
     const getAllModel = await mutil.getTunnedDocument(
