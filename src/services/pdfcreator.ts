@@ -391,10 +391,10 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
 
 const convertUrl=(url,fileName)=>{
   if(fileName){
-    return `${process.env.LS_STATIC_PATH}/${fileName}`;
+    return `${process.env.LS_STATIC_PATH}${fileName}`;
   } 
   const parts=url.split("/");
-  return `${process.env.LS_STATIC_PATH}/${parts[parts.length-1]}`;
+  return `${process.env.LS_STATIC_PATH}${parts[parts.length-1]}`;
 }
 
 const getImageBase64=(directionImagen:string)=>{
