@@ -39,7 +39,19 @@ export const getAll = async (req, res, next) => {
         };
     };
     const user = await mutil.getTunnedDocument(User, ["role"], page, perPage, searchOptions)
-    res.status(200).json(user);
+
+     // Exclude 'password' and 'accessToken' fields from each user document
+     const usersWithoutSensitiveFields = user.data.map(user => {
+        const { password, accessToken, ...userWithoutSensitiveFields } = user.toObject();
+        return userWithoutSensitiveFields;
+    });
+
+    const users = {
+        ...user,
+        data: usersWithoutSensitiveFields
+    };
+
+    res.status(200).json(users);
 };
 
 export const get = async (req, res, next) => {
@@ -50,7 +62,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const user = await User.findById(id).populate('role');
+        const user = await User.findById(id).select('-password -accessToken').populate('role');
         if (!user) {
             return next(new Error('User does not exist'));
         }
@@ -72,11 +84,16 @@ export const update = async (req, res, next) => {
         const update = req.body
         const id = req.params.id;
 
-
         const { name, user_name, password, role } = req.body
+        // Check if the password is provided
+        if (password !== undefined && password !== null && password !== '') {
+            const hashedPassword = await hashPassword(password);
+            await User.findByIdAndUpdate(id, { name, user_name, password: hashedPassword, role });
+        } else {
+            // If password is empty, update without changing the password
+            await User.findByIdAndUpdate(id, { name, user_name, role });
+        }
 
-        const hashedPassword = await hashPassword(password);
-        await User.findByIdAndUpdate(id, { name, user_name, password: hashedPassword, role: role });
         const user = await User.findById(id)
         res.status(200).json({
             data: user,
