@@ -100,27 +100,7 @@ const filterHeader = (headers) => {
   return headers.filter((header) => header !== "createAt");
 };
 
-const getLogoPdf=(directionImagen:string)=>{
-  return fs.readFileSync(directionImagen).toString("base64");
-}
 
-const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>{
-  doc.fillOpacity(0.8);
-  if(header){
-    header.directionLogo && doc.image(`data:image/png;base64,${getLogoPdf(header.directionLogo)}`,100,y, {width:50});
-    header.textSmall &&  doc.fontSize(6).text(header.textSmall,500,10,{width: 100 });
-    y+=30;
-    if(header.titleMain){
-      doc.font('Helvetica').fontSize(10).text(header.titleMain, 175,y,{ align: 'center',width: 290 });
-      y += 70;
-    }
-    x=30;
-  }else{
-    y=30;
-    x=30;
-  }
-  return [x,y];
-}
 
 const addContentBeforeBody=(doc:any,x:number,y:number,headerPdf?:typeHeader | null,contentAditional?:typeContentBeforeBody | null)=>{
   if(contentAditional){
@@ -276,8 +256,8 @@ const addContentFooter=(doc:any,x:number,y:number,contentFooter?:typeContentFoot
   if(contentFooter){
     const {content,aditional}=contentFooter;
     if(content){
-      y=680;
-      x=80;
+      y=683;
+      x=200;
       content.map((item)=>{
         doc.fontSize(7).font('Helvetica-Bold').fillColor("black").text(item.title, x , y);
         if(item.info){
@@ -349,6 +329,273 @@ export const generateFilePdf=(
 
   addContentFooter(doc,x,y,contentFooter);
   [x,y]=addContentBody(doc,x,y,headerPdf,contentFooter,bodyTablePdf);
+
+  doc.end();
+
+}
+
+const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>{
+  doc.fillOpacity(0.8);
+  if(header){
+    header.directionLogo && doc.image(getImageBase64(convertUrl(null,header.directionLogo)),95,y, {width:50});
+    header.textSmall &&  doc.fontSize(6).text(header.textSmall,500,10,{width: 100 });
+    y-=10;
+    if(header.titleMain){
+      doc.font('Helvetica').fontSize(10).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
+      y += 40;
+    }
+    if(header.infoContract){
+      doc.font('Helvetica').fontSize(8).text(header.infoContract, 165,y,{ align: 'center',width: 290 });
+      y += 40;
+    }
+    x=30;
+    if(header.textAditional){
+      doc.font('Helvetica').fontSize(8).text(header.textAditional.toUpperCase(), x,y,{ align: 'left'});
+      y += 40;
+    }
+
+    doc.lineWidth(.3)
+   .moveTo(x, y)
+   .lineTo(x + 550, y)
+   .strokeColor('black')
+   .stroke();
+
+    y+=20;
+    x=30;
+  }else{
+    y=30;
+    x=30;
+  }
+  return [x,y];
+}
+
+/**
+ FILE PDF DELIVERY
+ */
+
+ function calculateAge(dateOfBirth) {
+  const today = new Date();
+  const birthDate = new Date(dateOfBirth);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  
+  // Adjust age if the birthday hasn't occurred this year yet
+  const currentMonth = today.getMonth() + 1;
+  const birthMonth = birthDate.getMonth() + 1;
+
+  if (birthMonth > currentMonth || (birthMonth === currentMonth && birthDate.getDate() > today.getDate())) {
+      age--;
+  }
+
+  return age;
+}
+
+const convertUrl=(url,fileName)=>{
+  if(fileName){
+    return `${process.env.LS_STATIC_PATH}/${fileName}`;
+  } 
+  const parts=url.split("/");
+  return `${process.env.LS_STATIC_PATH}/${parts[parts.length-1]}`;
+}
+
+const getImageBase64=(directionImagen:string)=>{
+  return  `data:image/png;base64,${fs.readFileSync(directionImagen).toString("base64")}`;
+}
+
+const addContentInfoBeneficiarie=(doc:any,x:number,y:number,beneficiary?:any | null, event?:any | null)=>{
+  if(beneficiary){
+    doc.font('Helvetica-Bold').fontSize(13).text("Acta de entrega", x,y,{ align: 'left' });
+    y+=30;
+    doc.font('Helvetica-Bold').fontSize(10).text("Información del beneficiario:", x,y,{ align: 'left' });
+    y+=20;
+    doc.image(getImageBase64(convertUrl(beneficiary?.photo_url,null)),x,y, {width:120, height:100});
+    x+=130;
+    doc.image(getImageBase64(convertUrl(beneficiary?.footprint_url,null)),x,y, {width:120, height:100});
+    y-=20;
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text(`${beneficiary?.first_name ? beneficiary?.first_name: ""} ${beneficiary?.second_name ? beneficiary?.second_name: ""} ${beneficiary?.first_last_name ? beneficiary?.first_last_name: ""}  ${beneficiary?.second_last_name ? beneficiary?.second_last_name: ""}`.toUpperCase(), x,y,{ align: 'left',width:200 });
+    y+=20;
+
+    doc.font('Helvetica-Bold').fontSize(10).text("Cédula:", x,y,{ align: 'left'});
+    x=350;
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.identification, x,y,{ align: 'left' });
+    y+=20;
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("Fecha de nacimiento:", x,y,{ align: 'left'});
+    x=420;
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.birthday.toISOString().substring(0, 10), x,y,{ align: 'left' });
+    y+=20;
+
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("Edad:", x,y,{ align: 'left'});
+    x=350;
+    doc.font('Helvetica').fontSize(10).text(calculateAge(beneficiary?.birthday), x,y,{ align: 'left' });
+    y+=20;
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("Municipio:", x,y,{ align: 'left'});
+    x=370;
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.municipality, x,y,{ align: 'left' });
+    y+=20;
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("Asociación:", x,y,{ align: 'left'});
+    x=370;
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.association.name, x,y,{ align: 'left' });
+    y+=20;
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("SISBEN:", x,y,{ align: 'left'});
+    x=360;
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.sisben_score, x,y,{ align: 'left' });
+    y+=20;
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("ADRES:", x,y,{ align: 'left'});
+    x=350;
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.health_regimen, x,y,{ align: 'left' });
+    y+=20;
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("Nombre del evento:", x,y,{ align: 'left'});
+    x=410;
+    doc.font('Helvetica').fontSize(10).text(event?.name, x,y,{ align: 'left' });
+    y+=20;
+
+    x=310;
+    doc.font('Helvetica-Bold').fontSize(10).text("Fecha del evento:", x,y,{ align: 'left'});
+    x=400;
+    doc.font('Helvetica').fontSize(10).text(event?.execution_date.toISOString().substring(0, 10), x,y,{ align: 'left' });
+    y+=20;
+
+    x=30;
+    y+=20;
+
+  }
+  return [x,y];
+}
+
+const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=>{
+
+  if(itemsList){
+    doc.font('Helvetica-Bold').fontSize(10).text("Información de entrega:", x,y,{ align: 'left' });
+    y+=20;
+
+    doc.font('Helvetica-Bold').fontSize(10).text("Nombre del articulo", x,y,{ align: 'left' });
+    x+=200;
+    doc.font('Helvetica-Bold').fontSize(10).text("Cantidad", x,y,{ align: 'left' });
+    x+=200;
+    doc.font('Helvetica-Bold').fontSize(10).text("Precio", x,y,{ align: 'left' });
+
+    y+=10;
+    x=30;
+    doc.lineWidth(.3)
+    .moveTo(x, y)
+    .lineTo(x + 550, y)  
+    .strokeColor('black')  
+    .stroke();
+
+    y+=12;
+    itemsList.map((data)=>{
+      x=30;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.item?.name.toUpperCase(), x,y,{ align: 'left' });
+      x+=200;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.amount, x,y,{ align: 'left' });
+      x+=200;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.item?.value >0 ? `$ ${data?.item?.value}`: `$ ${0}`, x,y,{ align: 'left' });
+      x=30;
+      y+=13;
+    })
+  }
+  return [x,y];
+}
+
+const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | null)=>{
+  x=30;
+  y=550;
+  doc.image(getImageBase64(convertUrl(null,"replegalprint.png")),x,y, {width:100, height:60});
+  y+=80
+  doc.lineWidth(.3)
+    .moveTo(x, y)
+    .lineTo(x + 150, y)  
+    .strokeColor('black')  
+    .opacity(0.5)   
+    .stroke();
+
+    doc.opacity(1); 
+    y+=5; 
+    doc.font('Helvetica-Bold').fontSize(8).text(dataBeforeFooter.nameAfterSignature, x,y,{ align: 'left' });
+    doc.opacity(.5); 
+    y+=10; 
+
+    x=50;
+    doc.font('Helvetica').fontSize(8).text("Representante legal", x,y,{ align: 'left' });
+    y+=10;
+    x=30;
+    doc.font('Helvetica').fontSize(7).text(dataBeforeFooter.representantLegal, x,y,{ align: 'left',width:140 });
+
+    x=30;
+    y=30;
+    doc.opacity(1);
+  return [x,y];
+}
+
+ export const generateFilePdfDelivery=(
+  res:any,
+  headerPdf?:typeHeader | null,
+  beneficiary?:any | null,
+  event?:any | null,
+  itemsList?:any | null,
+  dataBeforeFooter?:any | null,
+  dataFooter?:typeContentFooter | null
+)=>{
+  const doc = new PDFDocument();
+  doc.pipe(res);
+
+  doc.fillOpacity(0.8);
+  let x = 30;
+  let y = 30;
+
+  [x,y]=addContentPrevious(doc,x,y,headerPdf);
+  [x,y]=addContentInfoBeneficiarie(doc,x,y,beneficiary,event);
+  [x,y]=addContentTableDelivery(doc,x,y,itemsList);
+  [x,y]=addContentBeforeFooter(doc,x,y,dataBeforeFooter);
+  [x,y]=addContentFooter(doc,x,y,dataFooter);
+
+  doc.addPage();
+
+  [x,y]=addContentPrevious(doc,x,y,headerPdf);
+  if(beneficiary?.id_front){
+    doc.image(getImageBase64(convertUrl(beneficiary?.id_front,null)),180,150, {width:300,height:230});
+    y+=238;
+  }
+  if(beneficiary?.id_back){
+    doc.image(getImageBase64(convertUrl(beneficiary?.id_back,null)),180,y, {width:300,height:230});
+  }
+
+  [x,y]=addContentFooter(doc,x,y,dataFooter);
+
+   doc.addPage();
+  [x,y]=addContentPrevious(doc,x,y,headerPdf);
+    if(beneficiary?.fosiga_url){
+      doc.image(getImageBase64(convertUrl(beneficiary?.fosiga_url,null)),40,150, {width:530,height:500});
+    }
+  [x,y]=addContentFooter(doc,x,y,dataFooter);
+
+  doc.addPage();
+  [x,y]=addContentPrevious(doc,x,y,headerPdf);
+    if(beneficiary?.sisben_url){
+      doc.image(getImageBase64(convertUrl(beneficiary?.sisben_url,null)),40,150, {width:530,height:500});
+    }
+  [x,y]=addContentFooter(doc,x,y,dataFooter);
+
+  doc.addPage();
+  [x,y]=addContentPrevious(doc,x,y,headerPdf);
+    if(beneficiary?.registry_doc_url){
+      doc.image(getImageBase64(convertUrl(beneficiary?.registry_doc_url,null)),40,150, {width:530,height:500});
+    }
+  [x,y]=addContentFooter(doc,x,y,dataFooter);
 
   doc.end();
 

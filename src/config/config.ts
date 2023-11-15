@@ -19,13 +19,15 @@ export const CONFIGS = {
     numberTypeFilterOperators: [">", "<", "="],
 
     configFilePdf: {
-        logoPdfDirection: __dirname+"/logo_pdf.png",
+        logoPdfDirection:"uped-logo.png",
         infoContentFooterPdf: {
+            nameAfterSignature:"YAIM JULIAN VACCA MESENES",
+            representantLegal:`UNIDAD ESPECIALIZADA EN SERVICIOS Y SUMINISTRO EN SALUD S.A.S
+            `,
             content: [
-                { title: "Oficina principal", info: ["(5) 664 0305 +(57) 318 237 8729", "Centro Comercial Getsemaní local 2A-03", "Cartagena - Bolívar, Colombia"] },
                 { title: "Sede Cúcuta", info: ["+(57) 311 833 0792", "Barrio Blanco, Calle 18 #0-37", "Cúcuta - Norte de Santander, Colombia"] }
             ],
-            aditional: ["wvega@costanorteipssas.com", "gerencia@yovivomejor.org"]
+            aditional: ["wvega@aservices.com"]
         },
         titleMainRatingsPdf: "CONSORCIO PARA LA ATENCION INTEGRAL Y PSICOSOCIAL DEL ADULTO MAYOR",
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Usuario", "Fecha"],
@@ -34,6 +36,15 @@ export const CONFIGS = {
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "author_name", "createdAt"],
+
+        headerDocument:{
+            titleMain:`
+                UNIDAD ESPECIALIZADA EN SERVICIOS
+                Y SUMINISTRO EN SALUD S.A.S
+            `,
+            infoContrato:"N CONTRATO LP-SEG-02678-2023",
+            textAditional:`objetivo del contrato : apoyo al fortalecimiento a los programas de atención integral del adulto mayor, promiviendo el funcionamiento de los centros de bienestar del anciano y centro de vida para la tercera edad en el departamento norte de santander`,
+        }
     },
     wineries: {
         types: ["Principal", "Secundaria"]

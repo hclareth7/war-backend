@@ -2,6 +2,8 @@ export interface typeHeader{
     textSmall?:string,
     directionLogo?:string,
     titleMain?:string,
+    infoContract?:string,
+    textAditional?:string
 }
 
 export interface typeContentBeforeBody{
