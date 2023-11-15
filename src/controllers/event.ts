@@ -100,61 +100,63 @@ export const update = async (req, res, next) => {
     const update = req.body;
     const id = req.params.id;
     const event: any = await Event.findById(id);
-    if (update.attendees.length > 0) {
-      const foundAttendee = Event.findOne({
-        attendees: { $in: [...update.attendees] },
-      });
-
-      if (!foundAttendee) {
-        return res
-          .status(400)
-          .json({ mensaje: "The attendee is already register" });
-      }
-
-      const defaultProducts = await Item.aggregate([
-        {
-          $match: {
-            isDefault: true,
-          },
-        },
-        {
-          $project: {
-            item: "$_id",
-            amount: 1,
-          },
-        },
-        {
-          $addFields: {
-            amount: 1,
-          },
-        },
-        {
-          $unset: ["_id", "code", "value", "isDefault", "associationItem", "timestamps"],
-        },
-      ]);
-      for (const product of defaultProducts) {
-        const inventory = await Inventory.findOne({
-          winerie: event.associated_winery,
-          item: product.item,
+    if(update.attendees){
+      if (update.attendees.length > 0) {
+        const foundAttendee = Event.findOne({
+          attendees: { $in: [...update.attendees] },
         });
-        if (!inventory || inventory.amount < product.amount) {
-          return res.status(400).json({ mensaje: `Invalid amount, or item: ${product.item} not found ` });
-        }
-        const newAmount = inventory.amount - product.amount;
-        inventory.amount = newAmount;
-        await inventory.save();
-      }
-      const dataDefaultDelivery = {
-        beneficiary: update.attendees[0],
-        type: "beneficiary",
-        event: event._id,
-        itemList: defaultProducts,
-        author: res.locals.loggedInUser._id,
-      };
-      const generatedDefaultDelivery = new Delivery(dataDefaultDelivery);
-      generatedDefaultDelivery.save();
 
-      update.attendees = [...event.attendees, ...update.attendees];
+        if (!foundAttendee) {
+          return res
+            .status(400)
+            .json({ mensaje: "The attendee is already register" });
+        }
+
+        const defaultProducts = await Item.aggregate([
+          {
+            $match: {
+              isDefault: true,
+            },
+          },
+          {
+            $project: {
+              item: "$_id",
+              amount: 1,
+            },
+          },
+          {
+            $addFields: {
+              amount: 1,
+            },
+          },
+          {
+            $unset: ["_id", "code", "value", "isDefault", "associationItem", "timestamps"],
+          },
+        ]);
+        for (const product of defaultProducts) {
+          const inventory = await Inventory.findOne({
+            winerie: event.associated_winery,
+            item: product.item,
+          });
+          if (!inventory || inventory.amount < product.amount) {
+            return res.status(400).json({ mensaje: `Invalid amount, or item: ${product.item} not found ` });
+          }
+          const newAmount = inventory.amount - product.amount;
+          inventory.amount = newAmount;
+          await inventory.save();
+        }
+        const dataDefaultDelivery = {
+          beneficiary: update.attendees[0],
+          type: "beneficiary",
+          event: event._id,
+          itemList: defaultProducts,
+          author: res.locals.loggedInUser._id,
+        };
+        const generatedDefaultDelivery = new Delivery(dataDefaultDelivery);
+        generatedDefaultDelivery.save();
+
+        update.attendees = [...event.attendees, ...update.attendees];
+      }
     }
     await Event.findByIdAndUpdate(id, update);
     const eventUpdated = await Event.findById(id);
