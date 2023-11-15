@@ -1,8 +1,10 @@
 // eventController.js
 import Delivery from "../models/delivery";
+import Association from "../models/references/association";
 import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
 import Inventory from "../models/inventory";
+import { generateFilePdfDelivery } from "../services/pdfcreator";
 
 export const save = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
@@ -47,6 +49,42 @@ export const save = async (req, res, next) => {
     next(error);
   }
 };
+
+export const generateActaDelivery=async (req, res, next)=>{
+  //"beneficiary", "representant", "event", "itemList", "author"
+  try{
+    const configPdf=config.CONFIGS.configFilePdf;
+    const idDelivery=req.params.id;
+    const deliveryFound=await Delivery.findOne({_id:idDelivery}).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
+    const beneficiary=deliveryFound?.beneficiary;
+    const idAssociation=beneficiary?.toJSON()["association"].toString();
+    const event=deliveryFound?.event;
+    const association=await Association.findOne({_id:idAssociation});
+    beneficiary ? beneficiary["association"]=association :"";
+    const itemsList=deliveryFound?.itemList;
+    generateFilePdfDelivery(res,
+      {
+        directionLogo:configPdf.logoPdfDirection,
+        titleMain:configPdf.headerDocument.titleMain,
+        infoContract:configPdf.headerDocument.infoContrato,
+        textAditional:configPdf.headerDocument.textAditional
+      },
+      beneficiary,
+      event,
+      itemsList,
+      {
+        nameAfterSignature:configPdf.infoContentFooterPdf.nameAfterSignature,
+        representantLegal:configPdf.infoContentFooterPdf.representantLegal
+      },
+      {
+        content:configPdf.infoContentFooterPdf.content,
+        aditional:configPdf.infoContentFooterPdf.aditional
+      }
+    );
+  }catch(error){
+    next(error);
+  }
+}
 
 export const getAll = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
