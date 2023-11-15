@@ -590,6 +590,13 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
     }
   [x,y]=addContentFooter(doc,x,y,dataFooter);
 
+  doc.addPage();
+  [x,y]=addContentPrevious(doc,x,y,headerPdf);
+    if(beneficiary?.registry_doc_url){
+      doc.image(getImageBase64(convertUrl(beneficiary?.registry_doc_url,null)),40,150, {width:530,height:500});
+    }
+  [x,y]=addContentFooter(doc,x,y,dataFooter);
+
   doc.end();
 
 }
