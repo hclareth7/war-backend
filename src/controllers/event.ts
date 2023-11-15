@@ -101,15 +101,12 @@ export const update = async (req, res, next) => {
     const id = req.params.id;
     const event: any = await Event.findById(id);
     if (update?.attendees?.length > 0) {
-      const foundAttendee = Event.findOne({
-        attendees: { $in: [...update.attendees] },
-      });
-
-      if (!foundAttendee) {
+        const isAttendee = await event.attendees.some((attendee) => new mongoose.Types.ObjectId(update?.attendees[0]).equals(attendee._id));
+        if (isAttendee) {
         return res
           .status(400)
           .json({ mensaje: "The attendee is already register" });
-      }
+        }
 
       const defaultProducts = await Item.aggregate([
         {
