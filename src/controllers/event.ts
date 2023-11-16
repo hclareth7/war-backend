@@ -237,7 +237,44 @@ export const getStats = async (req, res, next) => {
 
 
     const numberOfAttendees = eventFound?.attendees.length;
-    const numberOfDelivery = await Delivery.find({ event: eventFound?._id }).count();
+    const aggregateNdelivery =[
+      {
+        $match: {
+          event: eventFound._id
+        }
+      },
+      {
+        $unwind: "$itemList"
+      },
+      {
+        $lookup: {
+          from: "items", // Reemplaza "items" con el nombre real de tu colección de items
+          localField: "itemList.item",
+          foreignField: "_id",
+          as: "item"
+        }
+      },
+      {
+        $match: {
+          "item.isDefault": false
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          beneficiary: { $first: "$beneficiary" },
+          representant: { $first: "$representant" },
+          type: { $first: "$type" },
+          event: { $first: "$event" },
+          itemList: { $push: "$itemList" },
+          author: { $first: "$author" },
+          status: { $first: "$status" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" }
+        }
+      }
+    ];
+    const numberOfDelivery = await (await Delivery.aggregate(aggregateNdelivery)).length;
     const deliveredItems = await Delivery.aggregate(aggregateOptions);
     const result = {
       event: eventFound,
