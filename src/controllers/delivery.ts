@@ -67,7 +67,9 @@ export const generateActaDelivery = async (req, res, next) => {
     deliveriesFound.map((delivery)=>{
       itemsList.push(...delivery.itemList);
     });
-    generateFilePdfDelivery(res,
+
+    // Assuming that generateFilePdfDelivery is asynchronous and returns a Promise
+    await generateFilePdfDelivery(res,
       {
         directionLogo: configPdf.logoPdfDirection,
         titleMain: configPdf.headerDocument.titleMain,
@@ -90,7 +92,7 @@ export const generateActaDelivery = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 export const getAll = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
