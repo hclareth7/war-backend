@@ -256,7 +256,7 @@ const addContentFooter=(doc:any,x:number,y:number,contentFooter?:typeContentFoot
   if(contentFooter){
     const {content,aditional}=contentFooter;
     if(content){
-      y=683;
+      y=680;
       x=200;
       content.map((item)=>{
         doc.fontSize(7).font('Helvetica-Bold').fillColor("black").text(item.title, x , y);
@@ -391,10 +391,10 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
 
 const convertUrl=(url,fileName)=>{
   if(fileName){
-    return `${process.env.LS_STATIC_PATH}${fileName}`;
+    return `${process.env.LS_STATIC_PATH}/${fileName}`;
   } 
   const parts=url.split("/");
-  return `${process.env.LS_STATIC_PATH}${parts[parts.length-1]}`;
+  return `${process.env.LS_STATIC_PATH}/${parts[parts.length-1]}`;
 }
 
 const getImageBase64=(directionImagen:string)=>{
@@ -403,13 +403,15 @@ const getImageBase64=(directionImagen:string)=>{
 
 const addContentInfoBeneficiarie=(doc:any,x:number,y:number,beneficiary?:any | null, event?:any | null)=>{
   if(beneficiary){
-    doc.font('Helvetica-Bold').fontSize(13).text("Acta de entrega", x,y,{ align: 'left' });
+    doc.font('Helvetica-Bold').fontSize(13).text("Acta de entrega - ", x,y,{ align: 'left' });
+    y+=2;
+    doc.font('Helvetica-Bold').fontSize(9).text(event?.name, 140,y,{ align: 'left' });
+
     y+=30;
     doc.font('Helvetica-Bold').fontSize(10).text("Información del beneficiario:", x,y,{ align: 'left' });
     y+=20;
-    doc.image(getImageBase64(convertUrl(beneficiary?.photo_url,null)),x,y, {width:120, height:100});
-    x+=130;
-    doc.image(getImageBase64(convertUrl(beneficiary?.footprint_url,null)),x,y, {width:120, height:100});
+    doc.image(getImageBase64(convertUrl(beneficiary?.photo_url,null)),80,y, {width:120, height:100});
+
     y-=20;
     x=310;
     doc.font('Helvetica-Bold').fontSize(10).text(`${beneficiary?.first_name ? beneficiary?.first_name: ""} ${beneficiary?.second_name ? beneficiary?.second_name: ""} ${beneficiary?.first_last_name ? beneficiary?.first_last_name: ""}  ${beneficiary?.second_last_name ? beneficiary?.second_last_name: ""}`.toUpperCase(), x,y,{ align: 'left',width:200 });
@@ -458,19 +460,13 @@ const addContentInfoBeneficiarie=(doc:any,x:number,y:number,beneficiary?:any | n
     y+=20;
 
     x=310;
-    doc.font('Helvetica-Bold').fontSize(10).text("Nombre del evento:", x,y,{ align: 'left'});
-    x=410;
-    doc.font('Helvetica').fontSize(10).text(event?.name, x,y,{ align: 'left' });
-    y+=20;
-
-    x=310;
     doc.font('Helvetica-Bold').fontSize(10).text("Fecha del evento:", x,y,{ align: 'left'});
     x=400;
     doc.font('Helvetica').fontSize(10).text(event?.execution_date.toISOString().substring(0, 10), x,y,{ align: 'left' });
     y+=20;
 
     x=30;
-    y+=20;
+    y+=15;
 
   }
   return [x,y];
@@ -506,15 +502,16 @@ const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=
       doc.font('Helvetica-Bold').fontSize(9).text(data?.item?.value >0 ? `$ ${data?.item?.value}`: `$ ${0}`, x,y,{ align: 'left' });
       x=30;
       y+=13;
-    })
+      
+    });
   }
   return [x,y];
 }
 
-const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | null)=>{
+const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | null, beneficiary?:any | null)=>{
   x=30;
   y=550;
-  doc.image(getImageBase64(convertUrl(null,"replegalprint.png")),x,y, {width:100, height:60});
+  doc.image(getImageBase64(convertUrl(null,dataBeforeFooter.replegalprint)),x,y, {width:100, height:60});
   y+=80
   doc.lineWidth(.3)
     .moveTo(x, y)
@@ -535,9 +532,21 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
     x=30;
     doc.font('Helvetica').fontSize(7).text(dataBeforeFooter.representantLegal, x,y,{ align: 'left',width:140 });
 
+    doc.opacity(1);
+
+    y=530;
+    x=400;
+    doc.image(getImageBase64(convertUrl(beneficiary?.footprint_url,null)),x,y, {width:100, height:100});
+    y+=106;
+    doc.font('Helvetica-Bold').fontSize(8).text(`${beneficiary?.first_name ? beneficiary?.first_name: ""} ${beneficiary?.second_name ? beneficiary?.second_name: ""} ${beneficiary?.first_last_name ? beneficiary?.first_last_name: ""}  ${beneficiary?.second_last_name ? beneficiary?.second_last_name: ""}`.toUpperCase(), x,y,{ align: 'left',width:200 });
+    y+=13
+    doc.font('Helvetica').fontSize(8.6).text("CC: "+beneficiary?.identification, x,y,{ align: 'left' });
+
+
     x=30;
     y=30;
-    doc.opacity(1);
+    
+
   return [x,y];
 }
 
@@ -560,7 +569,7 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
   [x,y]=addContentPrevious(doc,x,y,headerPdf);
   [x,y]=addContentInfoBeneficiarie(doc,x,y,beneficiary,event);
   [x,y]=addContentTableDelivery(doc,x,y,itemsList);
-  [x,y]=addContentBeforeFooter(doc,x,y,dataBeforeFooter);
+  [x,y]=addContentBeforeFooter(doc,x,y,dataBeforeFooter, beneficiary);
   [x,y]=addContentFooter(doc,x,y,dataFooter);
 
   doc.addPage();
@@ -595,6 +604,7 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
     if(beneficiary?.registry_doc_url){
       doc.image(getImageBase64(convertUrl(beneficiary?.registry_doc_url,null)),40,150, {width:530,height:500});
     }
+
   [x,y]=addContentFooter(doc,x,y,dataFooter);
 
   doc.end();

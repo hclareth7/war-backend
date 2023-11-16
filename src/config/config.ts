@@ -22,6 +22,7 @@ export const CONFIGS = {
 
     configFilePdf: {
         logoPdfDirection:"uped-logo.png",
+        replegalprint:"replegalprint.png",
         infoContentFooterPdf: {
             nameAfterSignature:"YAIM JULIAN VACCA MESENES",
             representantLegal:`UNIDAD ESPECIALIZADA EN SERVICIOS Y SUMINISTRO EN SALUD S.A.S

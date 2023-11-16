@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 
 export const save = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
-  /*    
+  /*
     #swagger.security = [{
         "apiKeyAuth": []
     }]
@@ -55,14 +55,18 @@ export const generateActaDelivery = async (req, res, next) => {
   //"beneficiary", "representant", "event", "itemList", "author"
   try {
     const configPdf = config.CONFIGS.configFilePdf;
-    const idDelivery = req.params.id;
-    const deliveryFound = await Delivery.findOne({ _id: idDelivery }).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
-    const beneficiary = deliveryFound?.beneficiary;
+    const idEvent = req.params.idEvent;
+    const idBen = req.params.idBeneficiarie;
+    const deliveriesFound = await Delivery.find({ event:idEvent,beneficiary:idBen }).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
+    const beneficiary = deliveriesFound[0]?.beneficiary;
     const idAssociation = beneficiary?.toJSON()["association"].toString();
-    const event = deliveryFound?.event;
+    const event = deliveriesFound[0]?.event;
     const association = await Association.findOne({ _id: idAssociation });
     beneficiary ? beneficiary["association"] = association : "";
-    const itemsList = deliveryFound?.itemList;
+    const itemsList :any[]=[];
+    deliveriesFound.map((delivery)=>{
+      itemsList.push(...delivery.itemList);
+    });
     generateFilePdfDelivery(res,
       {
         directionLogo: configPdf.logoPdfDirection,
@@ -75,7 +79,8 @@ export const generateActaDelivery = async (req, res, next) => {
       itemsList,
       {
         nameAfterSignature: configPdf.infoContentFooterPdf.nameAfterSignature,
-        representantLegal: configPdf.infoContentFooterPdf.representantLegal
+        representantLegal: configPdf.infoContentFooterPdf.representantLegal,
+        replegalprint:configPdf.replegalprint
       },
       {
         content: configPdf.infoContentFooterPdf.content,
@@ -89,7 +94,7 @@ export const generateActaDelivery = async (req, res, next) => {
 
 export const getAll = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
-  /*    
+  /*
     #swagger.security = [{
         "apiKeyAuth": []
     }]
@@ -122,7 +127,7 @@ export const getAll = async (req, res, next) => {
 
 export const getAllByType = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
-  /*    
+  /*
     #swagger.security = [{
         "apiKeyAuth": []
     }]
@@ -139,7 +144,7 @@ export const getAllByType = async (req, res, next) => {
       directSearch.push({ type: type });
       searchOptions = { directSearch: directSearch }
     }
-   
+
     if (req.query.queryString) {
       searchOptions = {
         queryString: req.query.queryString,
@@ -164,7 +169,7 @@ export const getAllByType = async (req, res, next) => {
 
 export const get = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
-  /*    
+  /*
     #swagger.security = [{
         "apiKeyAuth": []
     }]
@@ -191,7 +196,7 @@ export const get = async (req, res, next) => {
 
 export const update = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
-  /*    
+  /*
     #swagger.security = [{
         "apiKeyAuth": []
     }]
@@ -234,7 +239,7 @@ export const update = async (req, res, next) => {
 
 export const deleteItem = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
-  /*    
+  /*
     #swagger.security = [{
         "apiKeyAuth": []
     }]

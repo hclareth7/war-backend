@@ -10,7 +10,7 @@ router.post('/', auth.allowIfLoggedin, auth.grantAccess('create', resourceName),
 router.get("/", auth.allowIfLoggedin, controller.getAll);
 router.get("/type/:type", auth.allowIfLoggedin, controller.getAllByType);
 router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.get);
-router.get('/pdf/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.generateActaDelivery);
+router.get('/pdf/:idEvent/:idBeneficiarie', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.generateActaDelivery);
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName),controller.update);
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItem);
 
