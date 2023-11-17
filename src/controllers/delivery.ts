@@ -69,7 +69,7 @@ export const generateActaDelivery = async (req, res, next) => {
     });
 
     // Assuming that generateFilePdfDelivery is asynchronous and returns a Promise
-    const pdfBuffer = await generateFilePdfDelivery(res,
+    generateFilePdfDelivery(res,
       {
         directionLogo: configPdf.logoPdfDirection,
         titleMain: configPdf.headerDocument.titleMain,
@@ -89,9 +89,9 @@ export const generateActaDelivery = async (req, res, next) => {
         aditional: configPdf.infoContentFooterPdf.aditional
       }
     );
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=delivery.pdf');
-    res.send(pdfBuffer);
+    // res.setHeader('Content-Type', 'application/pdf');
+    // res.setHeader('Content-Disposition', 'attachment; filename=delivery.pdf');
+    // res.send(pdfBuffer);
   } catch (error) {
     next(error);
   }
