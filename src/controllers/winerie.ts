@@ -381,7 +381,12 @@ export const deleteItem = async (req, res, next) => {
 
 
 export const close = async (req, res, next) => {
-  const data = req.body;
+   // #swagger.tags = ['Wineries']
+  /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
   const { wineries } = config.CONFIGS;
 
   const id = req.params.id;

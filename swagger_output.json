@@ -1860,6 +1860,38 @@
         }
       }
     },
+    "/wineries/close/{id}": {
+      "put": {
+        "tags": [
+          "Wineries"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/events/": {
       "post": {
         "tags": [
@@ -2120,6 +2152,50 @@
         ]
       }
     },
+    "/deliverys/type/{type}": {
+      "get": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "queryString",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/deliverys/{id}": {
       "get": {
         "tags": [
@@ -2210,6 +2286,30 @@
             "apiKeyAuth": []
           }
         ]
+      }
+    },
+    "/deliverys/pdf/{idEvent}/{idBeneficiarie}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "idBeneficiarie",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
       }
     },
     "/physicalDelivery/": {
