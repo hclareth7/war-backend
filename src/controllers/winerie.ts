@@ -378,3 +378,43 @@ export const deleteItem = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const close = async (req, res, next) => {
+  const data = req.body;
+  const { wineries } = config.CONFIGS;
+
+  const id = req.params.id;
+  const winerie: any = await Winerie.findById(id).populate([
+    "associated_winery",
+  ]);
+
+  if (winerie.type == wineries.types[0]) {
+    return res.status(400).json({ mensaje: "You can not close main wineries" });
+  }
+
+  const inventory = await Inventory.findOne({
+    winerie: winerie._id,
+  });
+
+  for (const product of inventory) {
+    const mainInventory = await Inventory.findOne({
+      winerie: winerie.associated_winery._id,
+      item: product.item._id
+    });
+
+    if (mainInventory) {
+      const newAmount = mainInventory.amount + product.amount;
+      mainInventory.amount = newAmount;
+      await mainInventory.save();
+    }
+  }
+
+  winerie.status = "disabled";
+  winerie.save();
+  
+  return res.status(201).json({
+    message: "Winerie closed successfully.",
+    data: winerie,
+  });
+};

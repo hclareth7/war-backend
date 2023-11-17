@@ -12,6 +12,6 @@ router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName),
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName),controller.update);
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItem);
 router.delete('/:idWinerie/:idItem', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItemWinerieInventary);
-
+router.put('/close/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.close);
 
 export default router
