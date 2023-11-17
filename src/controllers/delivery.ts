@@ -130,50 +130,6 @@ export const getAll = async (req, res, next) => {
     next(error);
   }
 };
-/*
-export const getAllByType = async (req, res, next) => {
-  // #swagger.tags = ['Delivery']
-  /*
-    #swagger.security = [{
-        "apiKeyAuth": []
-    }]
-     
-  try {
-    const page = req.query.page;
-    const perPage = req.query.perPage;
-    let searchOptions = {};
-    const type = req.params.type;
-
-
-    let directSearch: any[] = []
-    if (type) {
-      directSearch.push({ type: type });
-      searchOptions = { directSearch: directSearch }
-    }
-
-    if (req.query.queryString) {
-      searchOptions = {
-        queryString: req.query.queryString,
-        searchableFields: config.CONFIGS.searchableFields.delivery,
-        directSearch: directSearch
-      };
-    }
-    const getAllModel = await mutil.getTunnedDocument(
-      Delivery,
-      ["beneficiary", "representant", "event", "itemList", "author"],
-      page,
-      perPage,
-      searchOptions
-    );
-    res.status(200).json({
-      data: getAllModel,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-*/
 
 export const getAllByType = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
