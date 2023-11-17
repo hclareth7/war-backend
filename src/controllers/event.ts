@@ -101,12 +101,12 @@ export const update = async (req, res, next) => {
     const id = req.params.id;
     const event: any = await Event.findById(id);
     if (update?.attendees?.length > 0) {
-        const isAttendee = await event.attendees.some((attendee) => new mongoose.Types.ObjectId(update?.attendees[0]).equals(attendee._id));
-        if (isAttendee) {
+      const isAttendee = await event.attendees.some((attendee) => new mongoose.Types.ObjectId(update?.attendees[0]).equals(attendee._id));
+      if (isAttendee) {
         return res
           .status(400)
           .json({ mensaje: "The attendee is already register" });
-        }
+      }
 
       const defaultProducts = await Item.aggregate([
         {
@@ -155,7 +155,10 @@ export const update = async (req, res, next) => {
     }
     await Event.findByIdAndUpdate(id, update);
     const eventUpdated = await Event.findById(id);
-
+    const beneficiary : any = Beneficiary.findOne({ _id: new mongoose.Types.ObjectId(update?.attendees[0]) })
+   
+    beneficiary.isAttendee = true;
+    
     res.status(200).json({
       data: eventUpdated,
       message: "Event has been updated",
@@ -237,14 +240,14 @@ export const getStats = async (req, res, next) => {
 
 
     const numberOfAttendees = eventFound?.attendees.length;
-    const aggregateNdelivery =[
+    const aggregateNdelivery = [
       {
         $match: {
           event: eventFound._id,
           $or: [
             { status: 'enabled' }, // Incidencias con status 'enabled'
             { status: { $exists: false } } // Incidencias sin la propiedad 'status'
-          ]    
+          ]
         }
       },
       {

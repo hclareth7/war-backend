@@ -28,9 +28,9 @@ const beneficiarySchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    blody_type:{
-        type:String,
-        enum:["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"],
+    blody_type: {
+        type: String,
+        enum: ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"],
         required: true
     },
     eps: {
@@ -45,7 +45,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['Masculino', 'Femenino','Otro'],
+        enum: ['Masculino', 'Femenino', 'Otro'],
     },
     sex: {
         type: String,
@@ -83,7 +83,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     disability: {
         type: String,
-        enum: ['Ninguna','Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
+        enum: ['Ninguna', 'Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
     },
     ocupation: {
         type: String,
@@ -123,15 +123,15 @@ const beneficiarySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Association',
     },
-    activity:{
+    activity: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Activity',
     },
     photo_url: {
         type: String
     },
-    footprint_url:{
-        type:String
+    footprint_url: {
+        type: String
     },
     id_front: {
         type: String
@@ -163,7 +163,7 @@ const beneficiarySchema = new mongoose.Schema({
     kinship: {
         type: String
     },
-    status:{
+    status: {
         type: String,
         enum: ['enabled', 'disabled'],
         default: 'enabled'
@@ -175,6 +175,9 @@ const beneficiarySchema = new mongoose.Schema({
     updatedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+    },
+    isAttendee: {
+        type: Boolean
     },
 }, { timestamps: true });
 beneficiarySchema.plugin(mongoosePaginate)
