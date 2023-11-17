@@ -240,7 +240,11 @@ export const getStats = async (req, res, next) => {
     const aggregateNdelivery =[
       {
         $match: {
-          event: eventFound._id
+          event: eventFound._id,
+          $or: [
+            { status: 'enabled' }, // Incidencias con status 'enabled'
+            { status: { $exists: false } } // Incidencias sin la propiedad 'status'
+          ]    
         }
       },
       {
