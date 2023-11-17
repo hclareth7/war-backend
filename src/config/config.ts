@@ -28,9 +28,10 @@ export const CONFIGS = {
             representantLegal:`UNIDAD ESPECIALIZADA EN SERVICIOS Y SUMINISTRO EN SALUD S.A.S
             `,
             content: [
-                { title: "Sede Cúcuta", info: ["+(57) 311 833 0792", "Barrio Blanco, Calle 18 #0-37", "Cúcuta - Norte de Santander, Colombia"] }
+                { info: ["Calle 9N #5E-43, Barrio Riviera - Cúcuta", "3182695176", "upedserviciossuministro@gmail.com"] },
             ],
-            aditional: ["wvega@aservices.com"]
+            titleInfo:["Dirección:","Telefono:","Correo:"]
+
         },
         titleMainRatingsPdf: "CONSORCIO PARA LA ATENCION INTEGRAL Y PSICOSOCIAL DEL ADULTO MAYOR",
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Usuario", "Fecha"],

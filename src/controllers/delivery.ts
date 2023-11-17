@@ -86,7 +86,7 @@ export const generateActaDelivery = async (req, res, next) => {
       },
       {
         content: configPdf.infoContentFooterPdf.content,
-        aditional: configPdf.infoContentFooterPdf.aditional
+        titleInfo:configPdf.infoContentFooterPdf.titleInfo,
       }
     );
     // res.setHeader('Content-Type', 'application/pdf');
