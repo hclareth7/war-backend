@@ -398,14 +398,14 @@ export const close = async (req, res, next) => {
     return res.status(400).json({ mensaje: "You can not close main wineries" });
   }
 
-  const inventory = await Inventory.findOne({
+  const inventory = await Inventory.find({
     winerie: winerie._id,
   });
 
   for (const product of inventory) {
     const mainInventory = await Inventory.findOne({
       winerie: winerie.associated_winery._id,
-      item: product.item._id
+      item: product.item?._id
     });
 
     if (mainInventory) {
