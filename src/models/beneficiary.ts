@@ -65,7 +65,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     health_regimen: {
         type: String,
-        enum: ['Subsidiado', 'Contributivo Cotizante', 'Contributivo Cotizante', 'Contributivo Beneficiario', 'Régimen Especial', 'Retirado' ]
+        enum: ['Subsidiado', 'Contributivo Cotizante', 'Contributivo Beneficiario', 'Régimen Especial', 'Retirado' ]
     },
     residence_department: {
         type: String
