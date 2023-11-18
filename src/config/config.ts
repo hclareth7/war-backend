@@ -23,6 +23,7 @@ export const CONFIGS = {
     configFilePdf: {
         logoPdfDirection:"uped-logo.png",
         replegalprint:"replegalprint.png",
+        textDataBeforeFooter:"los Articulos entregados por la gobernación del norte de santander al adulto mayor son de uso exclusivo del adulto mayor, esta prohibida su comercializacion",
         infoContentFooterPdf: {
             nameAfterSignature:"YAIM JULIAN VACCA MESENES",
             representantLegal:`UNIDAD ESPECIALIZADA EN SERVICIOS Y SUMINISTRO EN SALUD S.A.S

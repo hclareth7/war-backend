@@ -79,6 +79,7 @@ export const generateActaDelivery = async (req, res, next) => {
       beneficiary,
       event,
       itemsList,
+      configPdf.textDataBeforeFooter,
       {
         nameAfterSignature: configPdf.infoContentFooterPdf.nameAfterSignature,
         representantLegal: configPdf.infoContentFooterPdf.representantLegal,
