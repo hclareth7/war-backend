@@ -30,7 +30,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     blody_type: {
         type: String,
-        enum: ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"],
+        enum: ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-", "NI"],
         required: true
     },
     eps: {
