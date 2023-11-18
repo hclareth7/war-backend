@@ -77,7 +77,6 @@ export const CONFIGS = {
             birthday: "Fecha de Nacimiento",
             gender: "Género",
             sex: "Sexo",
-            is_disability: "Tiene Discapacidad",
             health_regimen: "Régimen de Salud",
             residence_department: "Departamento de Residencia",
             sisben_department: "Departamento Sisbén",
@@ -92,7 +91,6 @@ export const CONFIGS = {
             association: "Asociación",
             address: "Dirección",
             phones: "Teléfonos",
-            status: "Estado",        
             activity: "Actividad",
           }
     }
