@@ -177,7 +177,8 @@ const beneficiarySchema = new mongoose.Schema({
         ref: "User",
     },
     isAttendee: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
 }, { timestamps: true });
 beneficiarySchema.plugin(mongoosePaginate)
