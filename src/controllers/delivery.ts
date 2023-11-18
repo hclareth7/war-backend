@@ -158,15 +158,77 @@ export const getAllByType = async (req, res, next) => {
         directSearch: directSearch
       };
     }
-    const getAllModel = await mutil.getTunnedDocument(
-      Delivery,
-      ["beneficiary", "representant", "event", "itemList", "author"],
-      page,
-      perPage,
-      searchOptions
-    );
+    
+    const aggregateNdelivery =[
+      {
+        $match: {
+          type: type,
+          $and:[
+            {
+            $or: [
+              { status: { $regex: new RegExp("enabled", "i") } },
+              { status: { $exists: false } },
+            ], 
+          },
+          ]
+        }
+      },
+      {
+        $unwind: "$itemList"
+      },
+      {
+        $lookup: {
+          from: "items", // Reemplaza "items" con el nombre real de tu colección de items
+          localField: "itemList.item",
+          foreignField: "_id",
+          as: "item"
+        }
+      },
+      {
+        $match: {
+          "item.isDefault": false
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          beneficiary: { $first: "$beneficiary" },
+          representant: { $first: "$representant" },
+          type: { $first: "$type" },
+          event: { $first: "$event" },
+          itemList: { $push: "$itemList" },
+          author: { $first: "$author" },
+          status: { $first: "$status" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" }
+        }
+      }
+    ];
+    const options = {
+      page: page || 1,
+      limit: perPage || 10,
+      sort: { updatedAt: -1 },
+    };
+
+    const aggregate = Delivery.aggregate(aggregateNdelivery);
+    const getAllModel = await Delivery.aggregatePaginate(aggregate, options);
+    const response = await Delivery.populate(getAllModel.docs, [
+      { path: "beneficiary" },
+      { path: "representant" },
+      { path: "event" },
+      { path: "itemList.item" },
+      { path: "author" },
+    ]);
+   
+    const result = {
+      currentPage: getAllModel.page,
+      itemsPerPage: getAllModel.limit,
+      totalItems: getAllModel.totalDocs,
+      totalPages: getAllModel.totalPages,
+      data: response
+    };
     res.status(200).json({
-      data: getAllModel,
+      data: result,
     });
   } catch (error) {
     next(error);

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const deliverySchema = new mongoose.Schema(
   {
@@ -43,6 +44,7 @@ const deliverySchema = new mongoose.Schema(
 );
 
 deliverySchema.plugin(mongoosePaginate);
+deliverySchema.plugin(aggregatePaginate);
 const Delivery = mongoose.model("Delivery", deliverySchema);
 
 export default Delivery;
