@@ -108,7 +108,7 @@ export const getTunnedDocument = async (
       conditions = getStatusOptions(searchOptions);
     }
     if(searchOptions?.directSearch){
-      conditions['$and'] =conditions['$and']? [...conditions['$and'], ...searchOptions?.directSearch]:[...searchOptions?.directSearch]
+      conditions['$and'] = conditions['$and']? [...conditions['$and'], ...searchOptions?.directSearch]:[...searchOptions?.directSearch]
     }
     
     const options = getPaginationOptions(populate, page, perPage);
