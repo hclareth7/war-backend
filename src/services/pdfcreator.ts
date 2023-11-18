@@ -256,15 +256,21 @@ const addContentFooter=(doc:any,x:number,y:number,contentFooter?:typeContentFoot
   if(contentFooter){
     const {content,aditional}=contentFooter;
     if(content){
-      y=680;
-      x=200;
+      y=677;
+      x=210;
       content.map((item)=>{
         doc.fontSize(7).font('Helvetica-Bold').fillColor("black").text(item.title, x , y);
         if(item.info){
-          y+=10;
-          item.info.map((valueInfo)=>{
-            doc.fontSize(6).font('Helvetica').fillColor("black").text(valueInfo, x , y);
-            y+=10
+          y+=11;
+          item.info.map((valueInfo,index)=>{
+            if(contentFooter.titleInfo){
+              doc.fontSize(8).font('Helvetica-Bold').fillColor("black").text(contentFooter.titleInfo[index], x , y);
+              x+=(contentFooter.titleInfo[index].length * 5);
+
+              doc.fontSize(8).font('Helvetica').fillColor("black").text(valueInfo, x , y);
+              x=210;
+              y+=10;
+            }
           });
         }
         y=680;
@@ -559,7 +565,14 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
   dataBeforeFooter?:any | null,
   dataFooter?:typeContentFooter | null
 )=>{
-  const doc = new PDFDocument();
+  const doc = new PDFDocument({
+    margin: {
+      top: 50,         // Puedes ajustar estos valores según tus necesidades
+      bottom: 50,
+      left: 50,
+      right: 50,
+    },
+  });
   doc.pipe(res);
 
   doc.fillOpacity(0.8);

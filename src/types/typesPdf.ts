@@ -18,5 +18,6 @@ export interface typeTable{
 
 export interface typeContentFooter{
     content?:{title?:string,info?:string[]}[],
+    titleInfo?:string[],
     aditional?:string[],
 }
