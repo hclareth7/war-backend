@@ -93,6 +93,7 @@ export const CONFIGS = {
             address: "Dirección",
             phones: "Teléfonos",
             activity: "Actividad",
-          }
+            author: 'Usuario'
+        }
     }
 };
