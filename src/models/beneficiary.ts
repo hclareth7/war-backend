@@ -65,7 +65,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     health_regimen: {
         type: String,
-        enum: ['Subsidiado', 'Contributivo', 'Cotizante', 'Cotizante Beneficiario']
+        enum: ['Subsidiado', 'Contributivo Cotizante', 'Contributivo Cotizante', 'Contributivo Beneficiario', 'Régimen Especial', 'Retirado' ]
     },
     residence_department: {
         type: String
@@ -83,7 +83,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
     disability: {
         type: String,
-        enum: ['Ninguna', 'Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
+        enum: ['Ninguna', 'Motriz', 'Auditiva', 'Visual', 'Del gusto', 'Olfato', 'Tacto', 'Multiple', 'Mental-Cognitiva', 'Mental-Psicosocial', 'Otra'],
     },
     ocupation: {
         type: String,
