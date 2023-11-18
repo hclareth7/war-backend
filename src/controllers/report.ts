@@ -2,6 +2,7 @@
 import Event from "../models/event";
 import Beneficiary from "../models/beneficiary";
 import * as excelCreator from "../services/xlsxCreator"
+import * as config from '../config/config';
 
 
 const generateReportAssistance = async (event_id) => {
@@ -15,9 +16,11 @@ const generateReportAssistance = async (event_id) => {
     }
   );
 
+  const confiAssistance = config.CONFIGS.reportColumNames.event_assistance;
   const attendees = eventFound.toObject().attendees;
-  const listKey = Object.keys(Beneficiary.schema.paths);
-  const excel = await excelCreator.createExcel(listKey, listKey, attendees);
+  const listKey = Object.keys(confiAssistance);
+  const columNames = Object.values(confiAssistance);
+  const excel = await excelCreator.createExcel(columNames, listKey, attendees);
 
   return excel;
 

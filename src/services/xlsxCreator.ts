@@ -1,7 +1,6 @@
 const ExcelJS = require('exceljs');
-import { Stream } from 'stream';
 
-export const createExcel = async function (columNames, listKey, jsonData){ 
+export const createExcel = async function (columNames, listKey, jsonData) {
   // Crear un nuevo libro de Excel
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet 1');
