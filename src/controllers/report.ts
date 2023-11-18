@@ -3,16 +3,17 @@ import Event from "../models/event";
 import Beneficiary from "../models/beneficiary";
 import * as excelCreator from "../services/xlsxCreator"
 import * as config from '../config/config';
+import mongoose from "mongoose";
 
 
-const generateReportAssistance = async (event_id) => {
-
+const generateReportEventAssistance = async (event_id) => {
   const eventFound = await Event.findById(event_id).populate(
     {
       path: 'attendees', populate: [
         { path: 'community', select: '-_id name' },
         { path: 'association', select: '-_id name' },
-        { path: 'activity', select: '-_id name' }],
+        { path: 'activity', select: '-_id name' },
+        { path: 'author', select: '-_id name' }],
     }
   );
 
@@ -23,14 +24,18 @@ const generateReportAssistance = async (event_id) => {
   const excel = await excelCreator.createExcel(columNames, listKey, attendees);
 
   return excel;
-
 }
 
-const generateReportDelivery = async (event_id) => { }
-const generateReportWorkshops = async (event_id) => { }
-const generateReportRatings = async (event_id) => { }
-const generateReportActivities = async (event_id) => { }
+const generateReportActivityAssistance = async (act_id) => { 
+  const assistList = await Beneficiary.find({ activity: new mongoose.Types.ObjectId(act_id) })
+    .populate(['community', 'association', 'activity', 'author']);
+  const confiAssistance = config.CONFIGS.reportColumNames.event_assistance;
+  const listKey = Object.keys(confiAssistance);
+  const columNames = Object.values(confiAssistance);
+  const excel = await excelCreator.createExcel(columNames, listKey, assistList);
 
+  return excel;
+}
 
 
 export const generateReports = async (req, res, next) => {
@@ -48,9 +53,9 @@ export const generateReports = async (req, res, next) => {
 
   try {
     const data = req.body;
-    const { type, event_id } = data;
+    const { type, objectId } = data;
     const reportMethod = CHART_FACTORY_DICTIONARY[type];
-    const response = await reportMethod(event_id);
+    const response = await reportMethod(objectId);
 
     // Configurar la respuesta HTTP
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -81,9 +86,6 @@ export enum REPORT_TYPE {
 };
 
 export const CHART_FACTORY_DICTIONARY = {
-  [REPORT_TYPE.EVENT_ASSISTANCE]: generateReportAssistance,
-  [REPORT_TYPE.DELIVERY_ACT]: generateReportDelivery,
-  [REPORT_TYPE.ACTIVITY_ASSISTANCE]: generateReportWorkshops,
-  [REPORT_TYPE.WORKSHOPS_LIST]: generateReportRatings,
-  [REPORT_TYPE.RATINGS_LIST]: generateReportActivities,
+  [REPORT_TYPE.EVENT_ASSISTANCE]: generateReportEventAssistance,
+  [REPORT_TYPE.ACTIVITY_ASSISTANCE]: generateReportActivityAssistance,
 };
