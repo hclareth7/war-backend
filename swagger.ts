@@ -116,6 +116,10 @@ const doc = {
             "address": "123 Calle Principal, Ciudad",
             "phone": "555-555-5555",
             "association": "5f6a98bfc1e86971c45a38d1" // ObjectId de una Association existente
+          },
+          report:{
+            event_id: "131331",
+            type: "EVENT_ASSISTANCE"
           }
     }
 };

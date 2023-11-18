@@ -1,6 +1,6 @@
 const ExcelJS = require('exceljs');
 
-export const createExcel = async function (columNames, listKey, jsonData){ 
+export const createExcel = async function (columNames, listKey, jsonData) {
   // Crear un nuevo libro de Excel
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet 1');
@@ -14,7 +14,11 @@ export const createExcel = async function (columNames, listKey, jsonData){
 
   // Agregar los datos al libro con estilos de borde
   jsonData.forEach((data) => {
-    const dataRow = worksheet.addRow(listKey.map(column => data[column]));
+    const dataRow = worksheet.addRow(listKey.map(column => {
+      const cellValue = typeof data[column] === 'object' && data[column] !== null ? data[column]?.name || data[column] : data[column];
+      console.log(cellValue);
+      return cellValue;
+    }));
     dataRow.eachCell((cell) => {
       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
     });

@@ -15,6 +15,7 @@ import eventsRouter from './events';
 import deliveryRouter from './delivery'
 import representantRouter from './representant'
 import physicalDeliverys from './physicalDelivery'
+import reportRouter from './reports'
 const router = express.Router();
 
 
@@ -34,5 +35,6 @@ router.use('/events',eventsRouter);
 router.use('/deliverys', deliveryRouter);
 router.use('/physicalDelivery', physicalDeliverys);
 router.use('/representants', representantRouter);
+router.use('/reports', reportRouter);
 
 export default router;

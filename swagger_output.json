@@ -2601,6 +2601,40 @@
           }
         ]
       }
+    },
+    "/reports/": {
+      "post": {
+        "tags": [
+          "Reports"
+        ],
+        "description": "",
+        "produces": [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ],
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Generate new excel",
+            "schema": {
+              "$ref": "#/definitions/report"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
     }
   },
   "definitions": {
@@ -2941,6 +2975,19 @@
         "association": {
           "type": "string",
           "example": "5f6a98bfc1e86971c45a38d1"
+        }
+      }
+    },
+    "report": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "example": "131331"
+        },
+        "type": {
+          "type": "string",
+          "example": "EVENT_ASSISTANCE"
         }
       }
     }
