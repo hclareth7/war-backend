@@ -23,6 +23,7 @@ export const CONFIGS = {
     configFilePdf: {
         logoPdfDirection:"uped-logo.png",
         replegalprint:"replegalprint.png",
+        textDataBeforeFooter:"los Articulos entregados por la gobernación del norte de santander al adulto mayor son de uso exclusivo del adulto mayor, esta prohibida su comercializacion",
         infoContentFooterPdf: {
             nameAfterSignature:"YAIM JULIAN VACCA MESENES",
             representantLegal:`UNIDAD ESPECIALIZADA EN SERVICIOS Y SUMINISTRO EN SALUD S.A.S
@@ -62,5 +63,37 @@ export const CONFIGS = {
         { name: 'sisben_url' },
         { name: 'registry_doc_url' }
     ],
-    specialRoles:["Super Admin", "admin"]
+    specialRoles:["Super Admin", "admin"],
+    reportColumNames:{
+        beneficiary: {
+            first_name: "Primer Nombre",
+            second_name: "Segundo Nombre",
+            first_last_name: "Primer Apellido",
+            second_last_name: "Segundo Apellido",
+            identification_type: "Tipo de Identificación",
+            identification: "Identificación",
+            blody_type: "Tipo de Sangre",
+            eps: "EPS",
+            sisben_score: "Puntaje Sisbén",
+            birthday: "Fecha de Nacimiento",
+            gender: "Género",
+            sex: "Sexo",
+            health_regimen: "Régimen de Salud",
+            residence_department: "Departamento de Residencia",
+            sisben_department: "Departamento Sisbén",
+            civil_status: "Estado Civil",
+            ethnicity: "Etnicidad",
+            disability: "Tipo de Discapacidad",
+            ocupation: "Ocupación",
+            education_level: "Nivel de Educación",
+            is_victim_armed_conflict: "Es Víctima de Conflicto Armado",
+            municipality: "Municipio",
+            community: "Comunidad",
+            association: "Asociación",
+            address: "Dirección",
+            phones: "Teléfonos",
+            activity: "Actividad",
+            author: 'Usuario'
+        }
+    }
 };

@@ -354,11 +354,12 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
       doc.font('Helvetica').fontSize(8).text(header.infoContract, 165,y,{ align: 'center',width: 290 });
       y += 40;
     }
-    x=30;
+    x=60;
     if(header.textAditional){
-      doc.font('Helvetica').fontSize(8).text(header.textAditional.toUpperCase(), x,y,{ align: 'left'});
+      doc.font('Helvetica').fontSize(8).text(header.textAditional.toUpperCase(), x,y,{ align: 'center'});
       y += 40;
     }
+    x=30;
 
     doc.lineWidth(.3)
    .moveTo(x, y)
@@ -514,9 +515,13 @@ const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=
   return [x,y];
 }
 
-const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | null, beneficiary?:any | null)=>{
-  x=30;
+const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | null, beneficiary?:any | null, textDataBeforeFooter?:string)=>{
+  x=90;
   y=550;
+  doc.font('Helvetica').fontSize(9.5).text(textDataBeforeFooter, x,y,{ align: 'center',with:600 });
+
+  y=580;
+  x=30;
   doc.image(getImageBase64(convertUrl(null,dataBeforeFooter.replegalprint)),x,y, {width:100, height:60});
   y+=80
   doc.lineWidth(.3)
@@ -540,13 +545,13 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
 
     doc.opacity(1);
 
-    y=530;
+    y=580;
     x=400;
-    doc.image(getImageBase64(convertUrl(beneficiary?.footprint_url,null)),x,y, {width:100, height:100});
-    y+=106;
-    doc.font('Helvetica-Bold').fontSize(8).text(`${beneficiary?.first_name ? beneficiary?.first_name: ""} ${beneficiary?.second_name ? beneficiary?.second_name: ""} ${beneficiary?.first_last_name ? beneficiary?.first_last_name: ""}  ${beneficiary?.second_last_name ? beneficiary?.second_last_name: ""}`.toUpperCase(), x,y,{ align: 'left',width:200 });
+    doc.image(getImageBase64(convertUrl(beneficiary?.footprint_url,null)),x,y, {width:75, height:75});
+    y+=78;
+    doc.font('Helvetica-Bold').fontSize(8.3).text(`${beneficiary?.first_name ? beneficiary?.first_name: ""} ${beneficiary?.second_name ? beneficiary?.second_name: ""} ${beneficiary?.first_last_name ? beneficiary?.first_last_name: ""}  ${beneficiary?.second_last_name ? beneficiary?.second_last_name: ""}`.toUpperCase(), x,y,{ align: 'left',width:200 });
     y+=13
-    doc.font('Helvetica').fontSize(8.6).text("CC: "+beneficiary?.identification, x,y,{ align: 'left' });
+    doc.font('Helvetica').fontSize(8.3).text("CC: "+beneficiary?.identification, x,y,{ align: 'left' });
 
 
     x=30;
@@ -562,6 +567,7 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
   beneficiary?:any | null,
   event?:any | null,
   itemsList?:any | null,
+  textDataBeforeFooter?:string | null,
   dataBeforeFooter?:any | null,
   dataFooter?:typeContentFooter | null
 )=>{
@@ -582,7 +588,7 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
   [x,y]=addContentPrevious(doc,x,y,headerPdf);
   [x,y]=addContentInfoBeneficiarie(doc,x,y,beneficiary,event);
   [x,y]=addContentTableDelivery(doc,x,y,itemsList);
-  [x,y]=addContentBeforeFooter(doc,x,y,dataBeforeFooter, beneficiary);
+  [x,y]=addContentBeforeFooter(doc,x,y,dataBeforeFooter, beneficiary,textDataBeforeFooter as string);
   [x,y]=addContentFooter(doc,x,y,dataFooter);
 
   doc.addPage();
