@@ -16,7 +16,6 @@ export const createExcel = async function (columNames, listKey, jsonData) {
   jsonData.forEach((data) => {
     const dataRow = worksheet.addRow(listKey.map(column => {
       const cellValue = typeof data[column] === 'object' && data[column] !== null ? data[column]?.name || data[column] : data[column];
-      console.log(cellValue);
       return cellValue;
     }));
     dataRow.eachCell((cell) => {

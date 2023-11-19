@@ -6,7 +6,8 @@ import * as config from '../config/config';
 import mongoose from "mongoose";
 
 
-const generateReportEventAssistance = async (event_id) => {
+const generateReportEventAssistance = async (configObject) => {
+  const { event_id } = configObject;
   const eventFound = await Event.findById(event_id).populate(
     {
       path: 'attendees', populate: [
@@ -17,7 +18,7 @@ const generateReportEventAssistance = async (event_id) => {
     }
   );
 
-  const confiAssistance = config.CONFIGS.reportColumNames.event_assistance;
+  const confiAssistance = config.CONFIGS.reportColumNames.beneficiary;
   const attendees = eventFound.toObject().attendees;
   const listKey = Object.keys(confiAssistance);
   const columNames = Object.values(confiAssistance);
@@ -26,10 +27,11 @@ const generateReportEventAssistance = async (event_id) => {
   return excel;
 }
 
-const generateReportActivityAssistance = async (act_id) => { 
+const generateReportActivityAssistance = async (configObject) => {
+  const { act_id } = configObject; 
   const assistList = await Beneficiary.find({ activity: new mongoose.Types.ObjectId(act_id) })
     .populate(['community', 'association', 'activity', 'author']);
-  const confiAssistance = config.CONFIGS.reportColumNames.event_assistance;
+  const confiAssistance = config.CONFIGS.reportColumNames.beneficiary;
   const listKey = Object.keys(confiAssistance);
   const columNames = Object.values(confiAssistance);
   const excel = await excelCreator.createExcel(columNames, listKey, assistList);
@@ -37,6 +39,36 @@ const generateReportActivityAssistance = async (act_id) => {
   return excel;
 }
 
+const generateReportBeneficiaryList = async (_) => {
+  const benList = await Beneficiary.find().populate(['community', 'association', 'activity', 'author']);
+  const beneficiaryConfig = config.CONFIGS.reportColumNames.beneficiary;
+  const listKey = Object.keys(beneficiaryConfig);
+  const columNames = Object.values(beneficiaryConfig);
+  const excel = await excelCreator.createExcel(columNames, listKey, benList);
+
+  return excel;
+}
+
+const generateReportWithoutSupports = async (_) => {
+  const benList = await Beneficiary.find({
+    $or: [
+      { photo_url: { $exists: false } },
+      { footprint_url: { $exists: false } },
+      { id_front: { $exists: false } },
+      { id_back: { $exists: false } },
+      { fosiga_url: { $exists: false } },
+      { sisben_url: { $exists: false } },
+      { registry_doc_url: { $exists: false } },
+    ],
+  }).populate(['community', 'association', 'activity', 'author']);
+
+  const beneficiaryConfig = config.CONFIGS.reportColumNames.beneficiary;
+  const listKey = Object.keys(beneficiaryConfig);
+  const columNames = Object.values(beneficiaryConfig);
+  const excel = await excelCreator.createExcel(columNames, listKey, benList);
+
+  return excel;
+}
 
 export const generateReports = async (req, res, next) => {
   // #swagger.tags = ['Reports']
@@ -53,9 +85,9 @@ export const generateReports = async (req, res, next) => {
 
   try {
     const data = req.body;
-    const { type, objectId } = data;
+    const { type, configObject } = data;
     const reportMethod = CHART_FACTORY_DICTIONARY[type];
-    const response = await reportMethod(objectId);
+    const response = await reportMethod(configObject);
 
     // Configurar la respuesta HTTP
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -83,9 +115,13 @@ export enum REPORT_TYPE {
   RATINGS_DETAIL = 'RATINGS_DETAIL',
   EVENT_ASSISTANCE_BY_ASSOCIATION = 'EVENT_ASSISTANCE_BY_ASSOCIATION',
   ACTIVITY_ASSISTANCE_BY_ASSOCIATION = 'ACTIVITY_ASSISTANCE_BY_ASSOCIATION',
+  BENEFICIARY_LIST = 'BENEFICIARY_LIST',
+  WITHOUT_SUPPORTS = 'WITHOUT_SUPPORTS',
 };
 
 export const CHART_FACTORY_DICTIONARY = {
   [REPORT_TYPE.EVENT_ASSISTANCE]: generateReportEventAssistance,
   [REPORT_TYPE.ACTIVITY_ASSISTANCE]: generateReportActivityAssistance,
+  [REPORT_TYPE.BENEFICIARY_LIST]: generateReportBeneficiaryList,
+  [REPORT_TYPE.WITHOUT_SUPPORTS]: generateReportWithoutSupports,
 };
