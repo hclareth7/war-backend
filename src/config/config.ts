@@ -11,7 +11,7 @@ export const CONFIGS = {
         beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
         user: ['name', 'user_name'],
         association: ['name', 'department', 'municipality'],
-        rating:['rating_type'],
+        rating:['rating_type', {attendee: ['first_name', 'identification', 'first_last_name']}, {author: ['name', 'user_name']}],
         activity: ["name"],
         workshop: ["name"],
         delivery: ['type', 'beneficiary.first_name', 'beneficiary.identification', 'representant.name', 'representant.identification']

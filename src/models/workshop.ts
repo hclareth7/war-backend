@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 
+const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+
 const workshopSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -22,8 +25,10 @@ const workshopSchema = new mongoose.Schema({
         ref: 'User',
     }
 }, { timestamps: true });
-const mongoosePaginate = require('mongoose-paginate-v2');
-workshopSchema.plugin(mongoosePaginate)
+
+workshopSchema.plugin(mongoosePaginate);
+workshopSchema.plugin(aggregatePaginate);
+
 const Workshop = mongoose.model('Workshop', workshopSchema);
 
 export default Workshop;

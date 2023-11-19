@@ -76,7 +76,7 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.beneficiary
             };
         };
-        const getAllModel = await mutil.getTunnedDocument(Beneficiary, ['association', 'author', 'updatedBy'], page, perPage, searchOptions)
+        const getAllModel = await mutil.getTunnedDocument2(Beneficiary, ['association', 'author', 'updatedBy'], page, perPage, searchOptions)
         res.status(200).json(getAllModel);
     } catch (error) {
         next(error);

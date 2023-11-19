@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const municipalitySchema = new mongoose.Schema({
   name: {
@@ -7,8 +9,9 @@ const municipalitySchema = new mongoose.Schema({
   },
   description: String,
 });
-const mongoosePaginate = require('mongoose-paginate-v2');
-municipalitySchema.plugin(mongoosePaginate)
+municipalitySchema.plugin(mongoosePaginate);
+municipalitySchema.plugin(aggregatePaginate);
+
 const Municipality = mongoose.model('Municipality', municipalitySchema);
 
 export default Municipality;

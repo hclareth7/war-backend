@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const physicalDeliverySchema = new mongoose.Schema({
     event: {
@@ -20,7 +21,9 @@ const physicalDeliverySchema = new mongoose.Schema({
     timestamps:true
 })
 
-physicalDeliverySchema.plugin(mongoosePaginate)
+physicalDeliverySchema.plugin(mongoosePaginate);
+physicalDeliverySchema.plugin(aggregatePaginate);
+
 const PhysicalDelivery = mongoose.model('PhysicalDelivery', physicalDeliverySchema);
 
 export default PhysicalDelivery;

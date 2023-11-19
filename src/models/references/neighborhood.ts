@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const neighborhoodSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -7,8 +8,10 @@ const neighborhoodSchema = new mongoose.Schema({
     },
     description: String
 });
-const mongoosePaginate = require('mongoose-paginate-v2');
-neighborhoodSchema.plugin(mongoosePaginate)
+
+neighborhoodSchema.plugin(mongoosePaginate);
+neighborhoodSchema.plugin(aggregatePaginate);
+
 const Neighborhood = mongoose.model('Neighborhood', neighborhoodSchema);
 
 export default Neighborhood;

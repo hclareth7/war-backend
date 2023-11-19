@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const inventorySchema = new mongoose.Schema(
   {
     amount: {
@@ -24,8 +25,8 @@ const inventorySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const mongoosePaginate = require("mongoose-paginate-v2");
 inventorySchema.plugin(mongoosePaginate);
+inventorySchema.plugin(aggregatePaginate);
 const Inventory = mongoose.model("Inventory", inventorySchema);
 
 export default Inventory;

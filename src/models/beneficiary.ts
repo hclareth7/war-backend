@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import validator from 'validator';
 const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const beneficiarySchema = new mongoose.Schema({
 
@@ -182,6 +182,7 @@ const beneficiarySchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 beneficiarySchema.plugin(mongoosePaginate)
+beneficiarySchema.plugin(aggregatePaginate);
 const Beneficiary = mongoose.model('Beneficiary', beneficiarySchema);
 
 export default Beneficiary;   

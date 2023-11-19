@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const representantSchema = new mongoose.Schema({
     name: {
@@ -30,7 +31,9 @@ const representantSchema = new mongoose.Schema({
     timestamps:true
 })
 
-representantSchema.plugin(mongoosePaginate)
+representantSchema.plugin(mongoosePaginate);
+representantSchema.plugin(aggregatePaginate);
+
 const Representant = mongoose.model('Representant', representantSchema);
 
 export default Representant;

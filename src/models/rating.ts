@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const ratingSchema = new mongoose.Schema(
   {
@@ -29,8 +31,9 @@ const ratingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const mongoosePaginate = require("mongoose-paginate-v2");
+
 ratingSchema.plugin(mongoosePaginate);
+ratingSchema.plugin(aggregatePaginate);
 const Rating = mongoose.model("Rating", ratingSchema);
 
 export default Rating;
