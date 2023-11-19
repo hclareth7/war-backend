@@ -94,6 +94,31 @@ export const CONFIGS = {
             phones: "Teléfonos",
             activity: "Actividad",
             author: 'Usuario'
+        },
+        benWithSupports: {
+            first_name: "Primer Nombre",
+            second_name: "Segundo Nombre",
+            first_last_name: "Primer Apellido",
+            second_last_name: "Segundo Apellido",
+            identification: "Identificación",
+            eps: "EPS",
+            sisben_score: "Puntaje Sisbén",
+            birthday: "Fecha de Nacimiento",
+            health_regimen: "Régimen de Salud",
+            residence_department: "Departamento de Residencia",
+            sisben_department: "Departamento Sisbén",
+            municipality: "Municipio",
+            community: "Comunidad",
+            association: "Asociación",
+            activity: "Actividad",
+            author: 'Usuario',
+            photo_url: 'Foto',
+            footprint_url: 'Huella',
+            id_front: 'Cedula Frontal',
+            id_back: 'Cedula Posterior',
+            fosiga_url: 'Soporte EPS',
+            sisben_url: 'Soporte SISBEN',
+            registry_doc_url: 'Soporte Registraduria'
         }
-    }
+    },
 };

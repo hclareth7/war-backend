@@ -62,7 +62,7 @@ const generateReportWithoutSupports = async (_) => {
     ],
   }).populate(['community', 'association', 'activity', 'author']);
 
-  const beneficiaryConfig = config.CONFIGS.reportColumNames.beneficiary;
+  const beneficiaryConfig = config.CONFIGS.reportColumNames.benWithSupports;
   const listKey = Object.keys(beneficiaryConfig);
   const columNames = Object.values(beneficiaryConfig);
   const excel = await excelCreator.createExcel(columNames, listKey, benList);
