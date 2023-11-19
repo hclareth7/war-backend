@@ -1,5 +1,5 @@
 import * as config from "../config/config";
-import ModelMunicipality from "../models/references/municipality";
+const mongoose = require('mongoose');
 import ModelAssociation from "../models/references/association";
 
 const handlerProperties = async (
@@ -67,15 +67,14 @@ export const jsonDataConvertToArray = async (
             handlerProperties(property, item, arrayItem, ModelAssociation),
           first_name: () =>
             arrayItem.push(
-              `${
-                item[`${property}`] +
+              `${item[`${property}`] +
                 " " +
                 item.second_name +
                 " " +
                 item.first_last_name +
                 " " +
                 item.second_last_name
-              }`.toUpperCase()
+                }`.toUpperCase()
             ),
           createdAt: () => organizeDate(item.createdAt, arrayItem),
         };
@@ -107,10 +106,10 @@ export const getTunnedDocument = async (
     } else {
       conditions = getStatusOptions(searchOptions);
     }
-    if(searchOptions?.directSearch){
-      conditions['$and'] = conditions['$and']? [...conditions['$and'], ...searchOptions?.directSearch]:[...searchOptions?.directSearch]
+    if (searchOptions?.directCondition) {
+      conditions['$and'] = conditions['$and'] ? [...conditions['$and'], ...searchOptions?.directCondition] : [...searchOptions?.directCondition]
     }
-    
+
     const options = getPaginationOptions(populate, page, perPage);
     const response = await model.paginate(conditions, options);
 
@@ -127,6 +126,141 @@ export const getTunnedDocument = async (
     throw err;
   }
 };
+
+export const getTunnedDocument2 = async (
+  model,
+  populate,
+  page,
+  perPage,
+  searchOptions: any = {}
+) => {
+  try {
+    let conditions: any = [];
+    if (searchOptions?.queryString) {
+      conditions.push(...buildAggregate(model, populate, searchOptions));
+      page = 0;
+    } else {
+      conditions.push(...buildAggregate(model, populate, searchOptions));
+    }
+    if (searchOptions?.directSearch) {
+      conditions['$and'] = conditions['$and'] ? [...conditions['$and'], ...searchOptions?.directSearch] : [...searchOptions?.directSearch]
+    }
+
+    const aggregate = model.aggregate(conditions);
+    const options = getPaginationOptions(populate, page, perPage);
+    const response = await model.aggregatePaginate(aggregate, options);
+
+    const result = {
+      currentPage: response.page,
+      itemsPerPage: response.limit,
+      totalItems: response.totalDocs,
+      totalPages: response.totalPages,
+      data: response.docs,
+    };
+
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+
+const buildAggregate = (model, populate, searchOptions) => {
+  let aggregate: any[] = [];
+  let lookupArray: any = [];
+  let orArray: any = [];
+  let andArray: any = [];
+  let addFieldObject = {};
+  let ProjectObject = {};
+  
+    /// ['type', {attendee: [name, identification]}, {author: [name, user_name]}]
+    for (const localField of populate) {
+      
+      const fieldObject = {
+        $lookup: {
+          from: mongoose.model(model.schema.path(localField).options.ref).collection.name,
+          localField: localField,
+          foreignField: "_id",
+          as: `${localField}Info`
+        }
+      };
+
+      addFieldObject[localField] = { $arrayElemAt: [`$${localField}Info`, 0] };
+      ProjectObject[`${localField}Info`] = 0;
+      lookupArray.push(fieldObject);
+    }
+    searchOptions?.searchableFields?.forEach((field) => {
+    if (isObject(field)) {
+      const localField = Object.keys(field)[0];
+      for (const subfield of field[localField]) {
+
+        if(searchOptions.queryString){
+          const andObject ={
+            [`${localField}Info.${subfield}`]: { $regex: new RegExp(searchOptions.queryString, "i") }
+          }
+          orArray.push(andObject)
+        }
+        
+       
+      }
+    } else {
+      if(searchOptions.queryString){
+        const andObject = {
+          [field]: { $regex: new RegExp(searchOptions.queryString, "i") }
+        }
+        orArray.push(andObject)
+      }
+    }
+
+    
+
+  });
+  aggregate.push(...lookupArray, 
+    {$match:
+    {
+      $and: [
+        {
+          $or: [
+            { status: { $regex: new RegExp("enabled", "i") } },
+            { status: { $exists: false } },
+          ],
+        }
+        
+      ]
+    }
+  }
+
+  );
+
+  if (Object.keys(addFieldObject).length > 0) {
+    aggregate.push({
+      $addFields: {
+        ...addFieldObject
+      }
+    });
+  }
+
+  if (Object.keys(ProjectObject).length > 0) {
+    aggregate.push({
+      $project: ProjectObject
+
+    });
+  }
+
+    for (const itemAggregate of aggregate) {
+      if(itemAggregate['$match']){
+        if(orArray.length>0){
+          itemAggregate['$match']['$and'].push({ $or: orArray });
+        }
+        if(searchOptions.directCondition){
+          itemAggregate['$match']['$and'].push(...searchOptions.directCondition)
+        }
+        
+      }
+    }
+  console.log(JSON.stringify(aggregate))
+  return aggregate;
+}
 
 const getSearchOptions = (searchOptions) => {
   const arrayRegex: any = [];
@@ -154,10 +288,10 @@ const getStatusOptions = (searchOptions) => {
   const arrayRegex: any = [];
   arrayRegex.push({ status: { $regex: new RegExp("enabled", "i") } });
   arrayRegex.push({ status: { $exists: false } });
-  if(searchOptions.isLoggedUser){
+  if (searchOptions.isLoggedUser) {
     arrayRegex.push(searchOptions.isLoggedUser)
   }
-  const searchOptionsRegex = { $or: arrayRegex};
+  const searchOptionsRegex = { $or: arrayRegex };
   return searchOptionsRegex;
 };
 
@@ -166,8 +300,6 @@ const getPaginationOptions = (populate, page, perPage): object => {
   const options = {
     page: page || 1,
     limit: perPage || 10,
-    pagination: paginationAvailable,
-    populate: populate,
     sort: { updatedAt: -1 },
   };
   return options;
@@ -290,3 +422,8 @@ export const getFilteredDocument = async (modelo, options) => {
   }
   return [];
 };
+
+
+const isObject = (obj) => {
+  return obj !== null && typeof obj === 'object';
+}

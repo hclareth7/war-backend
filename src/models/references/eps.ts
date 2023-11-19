@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const epsSchema = new mongoose.Schema({
     name: {
@@ -9,8 +11,9 @@ const epsSchema = new mongoose.Schema({
         type: String
     }
 }, { timestamps: true });
-const mongoosePaginate = require('mongoose-paginate-v2');
-epsSchema.plugin(mongoosePaginate)
+epsSchema.plugin(mongoosePaginate);
+epsSchema.plugin(aggregatePaginate);
+
 const Eps = mongoose.model('Eps', epsSchema);
 
 export default Eps;   

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const associationSchema = new mongoose.Schema({
     name: {
@@ -38,6 +39,7 @@ const associationSchema = new mongoose.Schema({
 });
 
 associationSchema.plugin(mongoosePaginate)
+associationSchema.plugin(aggregatePaginate);
 
 const Association = mongoose.model('Association', associationSchema);
 

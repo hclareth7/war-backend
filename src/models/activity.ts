@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const activitySchema = new mongoose.Schema({
     name: {
@@ -20,8 +22,10 @@ const activitySchema = new mongoose.Schema({
         ref: 'Association',
     }],
 }, {timestamps: true});
-const mongoosePaginate = require('mongoose-paginate-v2');
-activitySchema.plugin(mongoosePaginate)
+
+activitySchema.plugin(mongoosePaginate);
+activitySchema.plugin(aggregatePaginate);
+
 const Activity = mongoose.model('Activity', activitySchema);
 
 export default Activity;

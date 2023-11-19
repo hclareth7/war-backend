@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
-const mongoosePaginate = require('mongoose-paginate-v2');
+
+const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 
 const winerieSchema = new mongoose.Schema({
@@ -21,7 +23,8 @@ const winerieSchema = new mongoose.Schema({
     timestamps:true
 });
 
-winerieSchema.plugin(mongoosePaginate)
+winerieSchema.plugin(mongoosePaginate);
+winerieSchema.plugin(aggregatePaginate);
 const Winerie = mongoose.model('Winerie', winerieSchema);
 
 export default Winerie;

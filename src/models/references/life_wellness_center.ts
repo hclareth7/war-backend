@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
-
+const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const lifeWellnessCenterSchema = new mongoose.Schema({
 
     name: {
@@ -34,8 +35,9 @@ const lifeWellnessCenterSchema = new mongoose.Schema({
     },
     legalized: Boolean
 });
-const mongoosePaginate = require('mongoose-paginate-v2');
-lifeWellnessCenterSchema.plugin(mongoosePaginate)
+
+lifeWellnessCenterSchema.plugin(mongoosePaginate);
+lifeWellnessCenterSchema.plugin(aggregatePaginate);
 const LifeWellnessCenter = mongoose.model('LifeWellnessCenter', lifeWellnessCenterSchema);
 
 export default LifeWellnessCenter;

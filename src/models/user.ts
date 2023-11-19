@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
-const mongoosePaginate = require('mongoose-paginate-v2');
-
+const mongoosePaginate = require("mongoose-paginate-v2");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -28,7 +28,9 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-userSchema.plugin(mongoosePaginate)
+userSchema.plugin(mongoosePaginate);
+userSchema.plugin(aggregatePaginate);
+
 const User = mongoose.model('User', userSchema);
 
 export default User;
