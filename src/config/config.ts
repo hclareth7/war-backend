@@ -64,7 +64,7 @@ export const CONFIGS = {
     ],
     specialRoles:["Super Admin", "admin"],
     reportColumNames:{
-        event_assistance: {
+        beneficiary: {
             first_name: "Primer Nombre",
             second_name: "Segundo Nombre",
             first_last_name: "Primer Apellido",
