@@ -1,5 +1,5 @@
 import * as config from "../config/config";
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 import ModelAssociation from "../models/references/association";
 
 const handlerProperties = async (
@@ -142,9 +142,6 @@ export const getTunnedDocument2 = async (
     } else {
       conditions.push(...buildAggregate(model, populate, searchOptions));
     }
-    if (searchOptions?.directSearch) {
-      conditions['$and'] = conditions['$and'] ? [...conditions['$and'], ...searchOptions?.directSearch] : [...searchOptions?.directSearch]
-    }
 
     const aggregate = model.aggregate(conditions);
     const options = getPaginationOptions(populate, page, perPage);
@@ -175,6 +172,7 @@ const buildAggregate = (model, populate, searchOptions) => {
   
     /// ['type', {attendee: [name, identification]}, {author: [name, user_name]}]
     for (const localField of populate) {
+      console.log(localField);
       
       const fieldObject = {
         $lookup: {

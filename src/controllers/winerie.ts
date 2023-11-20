@@ -139,7 +139,7 @@ export const getAll = async (req, res, next) => {
 
     const wineries: any = await mutil.getTunnedDocument(
       Winerie,
-      ["associated_winery",],
+      ["associated_winery"],
       page,
       perPage,
       searchOptions

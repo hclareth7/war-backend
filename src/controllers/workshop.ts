@@ -70,7 +70,7 @@ export const getAll = async (req, res, next) => {
             };
         };
 
-    const getAllModel = await mutil.getTunnedDocument(Model, ["activity","attendees","author",], page, perPage, searchOptions);
+    const getAllModel = await mutil.getTunnedDocument(Model, ["activity","attendees","author"], page, perPage, searchOptions);
     /*Model.find(condition).populate([
       "activity",
       "attendees",

@@ -148,7 +148,7 @@ export const getAll = async (req, res, next) => {
               directCondition: conditions
           };
       };
-    const getAllModel = await mutil.getTunnedDocument2(Model, ["attendee","author",], page, perPage, searchOptions);
+    const getAllModel = await mutil.getTunnedDocument2(Model, ["attendee","author"], page, perPage, searchOptions);
     /*Model.find(condition).populate([
       "attendee",
       "author",
