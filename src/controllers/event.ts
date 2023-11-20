@@ -100,7 +100,8 @@ export const update = async (req, res, next) => {
     const update = req.body;
     const id = req.params.id;
     const event: any = await Event.findById(id);
-    const beneficiary : any = Beneficiary.findOne({ _id: new mongoose.Types.ObjectId(update?.attendees[0]) });
+    const beneficiary : any = await Beneficiary.findOne({ _id: new mongoose.Types.ObjectId(update?.attendees[0]) });
+    
     if(beneficiary?.isAttendee){
       return res
       .status(400)
@@ -133,7 +134,12 @@ export const update = async (req, res, next) => {
         winerie: event.associated_winery,
         item: product.item,
       });
+      const test = { winerie: event.associated_winery,
+        item: product.item,}
+      
+      
       if (!inventory || inventory.amount < product.amount) {
+        
         return res.status(400).json({ mensaje: `Invalid amount, or item: ${product.item} not found ` });
       }
       const newAmount = inventory.amount - product.amount;
