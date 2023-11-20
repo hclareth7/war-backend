@@ -106,10 +106,10 @@ export const getTunnedDocument = async (
     } else {
       conditions = getStatusOptions(searchOptions);
     }
-    if (searchOptions?.directCondition) {
-      conditions['$and'] = conditions['$and'] ? [...conditions['$and'], ...searchOptions?.directCondition] : [...searchOptions?.directCondition]
+    if(searchOptions?.directSearch){
+      conditions['$and'] = [ ...searchOptions?.directSearch]
     }
-
+    
     const options = getPaginationOptions(populate, page, perPage);
     const response = await model.paginate(conditions, options);
 
@@ -126,7 +126,6 @@ export const getTunnedDocument = async (
     throw err;
   }
 };
-
 export const getTunnedDocument2 = async (
   model,
   populate,
@@ -298,6 +297,8 @@ const getPaginationOptions = (populate, page, perPage): object => {
   const options = {
     page: page || 1,
     limit: perPage || 10,
+    pagination: paginationAvailable,
+    populate: populate,
     sort: { updatedAt: -1 },
   };
   return options;

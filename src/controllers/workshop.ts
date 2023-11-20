@@ -51,26 +51,26 @@ export const getAll = async (req, res, next) => {
       _id: userLogged.role.toString(),
     });
 
-    let conditions: any [] = [];
+    let condition = {};
     !config.CONFIGS.specialRoles.includes(rolUser?.role)
-      ? (conditions = [{ author: userLogged._id }])
-      : (conditions = []);
+      ? (condition = { author: userLogged._id })
+      : (condition = {});
 
-      const page = req.query.page;
-        const perPage = req.query.perPage;
+      const page = req.query.page
+        const perPage = req.query.perPage
         let searchOptions = { queryString: "",
         searchableFields: config.CONFIGS.searchableFields.workshop,
-        directCondition: conditions};
+          isLoggedUser: condition};
 
         if (req.query.queryString) {
             searchOptions = {
                 queryString: req.query.queryString,
                 searchableFields: config.CONFIGS.searchableFields.workshop,
-                directCondition: conditions
+                isLoggedUser: condition
             };
         };
 
-    const getAllModel = await mutil.getTunnedDocument2(Model, ["activity","attendees","author"], page, perPage, searchOptions);
+    const getAllModel = await mutil.getTunnedDocument(Model, ["activity","attendees","author",], page, perPage, searchOptions);
     /*Model.find(condition).populate([
       "activity",
       "attendees",
