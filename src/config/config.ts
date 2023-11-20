@@ -8,7 +8,16 @@ export const CONFIGS = {
         events: ["name"],
         winerie: ["name", "type"],
         item: ["name", "code"],
-        beneficiary: ['first_name', 'second_name', 'first_last_name', 'second_last_name', 'identification'],
+        beneficiary: [
+            'first_name', 
+            'second_name', 
+            'first_last_name', 
+            'second_last_name', 
+            'identification',
+            {association: ['name']},
+            {author: ['name', 'user_name']}
+        
+        ],
         user: ['name', 'user_name'],
         association: ['name', 'department', 'municipality'],
         rating:['rating_type', {attendee: ['first_name', 'identification', 'first_last_name']}, {author: ['name', 'user_name']}],
