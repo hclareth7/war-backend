@@ -11,12 +11,12 @@ export const createExcel = async function (columNames, listKey, jsonData) {
     cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
     cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '87CEEB' } };
   });
-
   // Agregar los datos al libro con estilos de borde
   jsonData.forEach((data) => {
+    const specialFields = ['photo_url', 'footprint_url', 'id_front', 'id_back', 'fosiga_url', 'sisben_url', 'registry_doc_url'];
     const dataRow = worksheet.addRow(listKey.map(column => {
       const cellValue = typeof data[column] === 'object' && data[column] !== null ? data[column]?.name || data[column] : data[column];
-      return cellValue;
+      return specialFields.includes(column) ? cellValue ? 'TIENE' : 'NO TIENE' : cellValue;
     }));
     dataRow.eachCell((cell) => {
       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
