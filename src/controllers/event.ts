@@ -51,7 +51,7 @@ export const getAll = async (req, res, next) => {
         "associated_winery",
         "participatingAssociations",
         { path: "participatingAssociations", populate: { path: "community" } },
-        "attendees"],
+        ],
       page,
       perPage,
       searchOptions
@@ -208,8 +208,6 @@ export const getStats = async (req, res, next) => {
     const id = req.params.id;
     const eventFound = await Event.findById(id).populate([
       "associated_winery",
-      "participatingAssociations",
-      "attendees",
     ]);
 
     if (!eventFound) {
