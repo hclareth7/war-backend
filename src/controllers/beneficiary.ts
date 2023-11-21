@@ -76,7 +76,7 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.beneficiary
             };
         };
-        const getAllModel = await mutil.getTunnedDocument2(Beneficiary, ['association', 'author', 'updatedBy'], page, perPage, searchOptions)
+        const getAllModel = await mutil.getTunnedDocument2(Beneficiary, ['association', 'author', 'updatedBy','activity', 'community'], page, perPage, searchOptions)
         res.status(200).json(getAllModel);
     } catch (error) {
         next(error);
@@ -91,7 +91,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id).populate(['association', 'author', 'updatedBy']);
+        const getModel = await Model.findById(id).populate(['association', 'author', 'updatedBy','activity', 'community']);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }
