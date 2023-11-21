@@ -4,6 +4,7 @@ import * as LSservice from '../services/localUpload';
 import * as mutil from '../helpers/modelUtilities';
 import * as config from '../config/config';
 import mongoose from 'mongoose';
+import { generateFilePdf } from '../services/pdfcreator';
 
 const modelName = Model.modelName;
 
@@ -57,6 +58,46 @@ export const filter = async (req, res, next) => {
         })
     } catch (error) {
         next(error)
+    }
+}
+
+export const getPdfListBeneficiarie=async(req, res, next)=>{
+    try {
+        const userLogged = res.locals.loggedInUser;
+        const configPdf=config.CONFIGS.configFilePdf;
+        const data = req.body;
+        const idAuthor=userLogged._id.toString();
+        const allBeneficiaries=await Beneficiary.find({
+            createdAt: {
+                $gte: new Date(data.startDate),
+                $lte: new Date(data.endDate)
+            },
+            author: idAuthor
+        }).populate(['association', 'author', 'updatedBy']);
+        const dataTable=await mutil.jsonDataConvertToArray(allBeneficiaries,configPdf.propertiesTableBeneficiaries);
+        generateFilePdf(
+            res,
+            null,
+            {
+                directionLogo:configPdf.logoPdfDirection,
+                titleMain:configPdf.titleUped
+            },
+            null,
+            {
+                headers:configPdf.headersContentBeforeTableBeneficiare,
+                values:[mutil.organizeDate(new Date(data.startDate),null),mutil.organizeDate(new Date(data.endDate),null),allBeneficiaries.length,allBeneficiaries[0].author.name]
+            },
+            {
+                headersTable:configPdf.headersTablebeneficiarie,
+                valuesTable:dataTable
+            },
+            {
+                content: configPdf.infoContentFooterPdf.content,
+                titleInfo:configPdf.infoContentFooterPdf.titleInfo,
+            }
+        );
+    } catch (error) {
+        next(error);
     }
 }
 

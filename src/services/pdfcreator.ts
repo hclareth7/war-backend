@@ -129,9 +129,9 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
   let aux=0;
   if(headers && values){
 
-    if(headers.length < values.length || values.length < headers.length){
-      throw new Error("The number of titles and values ​​must be the same");
-    }else{
+    // if(headers.length < values.length || values.length < headers.length){
+    //   throw new Error("The number of titles and values ​​must be the same");
+    // }
       if(validateSize(headers)){
         x=100;
       }else{
@@ -151,17 +151,16 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
         doc.font('Helvetica').fontSize(10).text(value,x,y,{width:250});
         aux > 0 ? [x]=incrementX(x,140) : [x]=incrementX(x,170);
       });
-    }
     y+=50;
     x=30;
     return [x,y];
 
   }else if(headers){
-    validateSize(headers) ? x=85: x=15;
+    validateSize(headers) ? x=85: x=30;
     headers.map((title)=>{
       doc.fillColor("blue").fillOpacity(0.5);
       doc.font('Helvetica-Bold').fontSize(12).text(title,x,y,{width:300});
-      aux > 0 ? [x]=incrementX(x,100) : x+=200;
+      aux > 0 ? [x]=incrementX(x,100) : x+=150;
       doc.fillColor("black").fillOpacity(0.8);
     });
 
@@ -170,11 +169,11 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
   return [x,y];
 
   }else if(values){
-    validateSize(values) ? x=85: x=40 ; aux=1;
+    validateSize(values) ? x=85: x=30 ; aux=1;
     values.map((value)=>{
       doc.fillColor("black").fillOpacity(0.8);
-      doc.font('Helvetica').fontSize(12).text(value,x,y,{width:300});
-      aux > 0 ? [x]=incrementX(x,100) : x+=200;
+      doc.font('Helvetica').fontSize(12).text(value,x,y,{});
+      aux > 0 ? [x]=incrementX(x,100) : x+=150;
     });
     y+=40;
     x=30;
@@ -346,9 +345,15 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
     header.directionLogo && doc.image(getImageBase64(convertUrl(null,header.directionLogo)),95,y, {width:50});
     header.textSmall &&  doc.fontSize(6).text(header.textSmall,500,10,{width: 100 });
     y-=10;
-    if(header.titleMain){
-      doc.font('Helvetica').fontSize(10).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
-      y += 40;
+    if(header.titleMain ){
+      if(header.titleMain.length < 20){
+        y+=40;
+        doc.font('Helvetica').fontSize(15).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
+        y += 40;
+      }else{
+        doc.font('Helvetica').fontSize(10).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
+        y += 40;
+      }
     }
     if(header.infoContract){
       doc.font('Helvetica').fontSize(8).text(header.infoContract, 165,y,{ align: 'center',width: 290 });
