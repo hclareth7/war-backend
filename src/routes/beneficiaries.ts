@@ -9,6 +9,7 @@ const router = express.Router();
 const cpUpload = ls.uploadLS.fields(config.CONFIGS.resourceDocuments);
 
 router.post('/', auth.allowIfLoggedin, auth.grantAccess('create', resourceName), controller.save);
+router.post('/pdf', auth.allowIfLoggedin, auth.grantAccess('create', resourceName), controller.getPdfListBeneficiarie);
 router.get("/", auth.allowIfLoggedin, controller.getAll)
 router.post("/filter", auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.filter);
 router.post('/resources/:id', auth.allowIfLoggedin, cpUpload, controller.uploadResource);

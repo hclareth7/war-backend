@@ -65,6 +65,8 @@ export const jsonDataConvertToArray = async (
           // "municipality":()=>handlerProperties(property,item,arrayItem,ModelMunicipality),
           association: () =>
             handlerProperties(property, item, arrayItem, ModelAssociation),
+          author_name: () =>
+            arrayItem.push(item.author.name),
           first_name: () =>
             arrayItem.push(
               `${item[`${property}`] +
