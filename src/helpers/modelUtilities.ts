@@ -135,13 +135,7 @@ export const getTunnedDocument2 = async (
 ) => {
   try {
     let conditions: any = [];
-    if (searchOptions?.queryString) {
-      conditions.push(...buildAggregate(model, populate, searchOptions));
-      page = 0;
-    } else {
-      conditions.push(...buildAggregate(model, populate, searchOptions));
-    }
-
+    conditions.push(...buildAggregate(model, populate, searchOptions));
     const aggregate = model.aggregate(conditions);
     const options = getPaginationOptions(populate, page, perPage);
     const response = await model.aggregatePaginate(aggregate, options);
