@@ -107,11 +107,17 @@ export const update = async (req, res, next) => {
       .status(400)
       .json({ mensaje: "The attendee is already register" });
     }
-    
-    const defaultProducts = await Item.aggregate([
+    const aggregate = [
+      {$lookup: {
+        from: 'inventories',
+        localField: '_id',
+        foreignField: "item",
+        as: `ItemInfo`
+      }},
       {
         $match: {
           isDefault: true,
+          'ItemInfo.winerie': event.associated_winery
         },
       },
       {
@@ -128,16 +134,13 @@ export const update = async (req, res, next) => {
       {
         $unset: ["_id", "code", "value", "isDefault", "associationItem", "timestamps"],
       },
-    ]);
+    ];
+    const defaultProducts = await Item.aggregate(aggregate);
     for (const product of defaultProducts) {
       const inventory = await Inventory.findOne({
         winerie: event.associated_winery,
         item: product.item,
       });
-      const test = { winerie: event.associated_winery,
-        item: product.item,}
-      
-      
       if (!inventory || inventory.amount < product.amount) {
         
         return res.status(400).json({ mensaje: `Invalid amount, or item: ${product.item} not found ` });
