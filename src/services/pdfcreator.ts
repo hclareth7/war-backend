@@ -348,10 +348,10 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
     if(header.titleMain ){
       if(header.titleMain.length < 20){
         y+=40;
-        doc.font('Helvetica').fontSize(15).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
+        doc.font('Helvetica-Bold').fontSize(15).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
         y += 40;
       }else{
-        doc.font('Helvetica').fontSize(10).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
+        doc.font('Helvetica-Bold').fontSize(10).text(header.titleMain, 155,y,{ align: 'center',width: 290 });
         y += 40;
       }
     }
@@ -363,8 +363,13 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
     if(header.textAditional){
       doc.font('Helvetica').fontSize(8).text(header.textAditional.toUpperCase(), x,y,{ align: 'center'});
       y += 40;
+<<<<<<< HEAD
     } else {
       y += 20;
+=======
+    }else{
+      y+=15;
+>>>>>>> 2636ff48c9ac5655545137dca30350f8a8f13611
     }
     x=30;
 
@@ -374,7 +379,15 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
    .strokeColor('black')
    .stroke();
 
-    y+=20;
+   
+    if(header && header?.titleSecundary){
+      y+=20;
+      x=100;
+      doc.font('Helvetica').fontSize(12).text(header?.titleSecundary.toUpperCase(), x,y,{ align: 'center'});
+
+    }
+
+    y+=30;
     x=30;
   }else{
     y=30;
@@ -421,7 +434,7 @@ const addContentInfoBeneficiarie=(doc:any,x:number,y:number,beneficiary?:any | n
     y+=2;
     doc.font('Helvetica-Bold').fontSize(9).text(event?.name, 140,y,{ align: 'left' });
 
-    y+=30;
+    y+=20;
     doc.font('Helvetica-Bold').fontSize(10).text("Información del beneficiario:", x,y,{ align: 'left' });
     y+=20;
     doc.image(getImageBase64(convertUrl(beneficiary?.photo_url,null)),80,y, {width:120, height:100});
@@ -477,10 +490,10 @@ const addContentInfoBeneficiarie=(doc:any,x:number,y:number,beneficiary?:any | n
     doc.font('Helvetica-Bold').fontSize(10).text("Fecha del evento:", x,y,{ align: 'left'});
     x=400;
     doc.font('Helvetica').fontSize(10).text(event?.execution_date.toISOString().substring(0, 10), x,y,{ align: 'left' });
-    y+=20;
+    y+=10;
 
     x=30;
-    y+=15;
+    y+=5;
 
   }
   return [x,y];
@@ -525,7 +538,7 @@ const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=
 const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | null, beneficiary?:any | null, textDataBeforeFooter?:string)=>{
   x=90;
   y=550;
-  doc.font('Helvetica').fontSize(9.5).text(textDataBeforeFooter, x,y,{ align: 'center',with:600 });
+  doc.font('Helvetica').fontSize(8.8).text(textDataBeforeFooter, x,y,{ align: 'center',with:600 });
 
   y=580;
   x=30;
