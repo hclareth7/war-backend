@@ -30,10 +30,11 @@ export const CONFIGS = {
     numberTypeFilterOperators: [">", "<", "="],
 
     configFilePdf: {
+        titleSecundadyListBeneficiarie:"Listado de beneficiarios registrados",
         logoPdfDirection:"uped-logo.png",
         titleUped:"UPED",
         replegalprint:"replegalprint.png",
-        textDataBeforeFooter:"los Articulos entregados por la gobernación del norte de santander al adulto mayor son de uso exclusivo del adulto mayor, esta prohibida su comercializacion",
+        textDataBeforeFooter:"Los Artículos entregados por la gobernación del norte de Santander al adulto mayor son de uso exclusivo del adulto mayor, está prohibida su comercialización",
         infoContentFooterPdf: {
             nameAfterSignature:"YAIM JULIAN VACCA MESENES",
             representantLegal:`UNIDAD ESPECIALIZADA EN SERVICIOS Y SUMINISTRO EN SALUD S.A.S
@@ -49,7 +50,7 @@ export const CONFIGS = {
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Usuario", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
-        headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","AUTHOR:"],
+        headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","AUTOR:"],
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "author_name", "createdAt"],

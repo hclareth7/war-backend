@@ -83,7 +83,7 @@ export const jsonDataConvertToArray = async (
         if (optionsValidation[`${property}`]) {
           await optionsValidation[`${property}`]();
         } else {
-          arrayItem.push(item[`${property}`]);
+          arrayItem.push(item[`${property}`] ? item[`${property}`]: "");
         }
       }
       arrayParent.push(arrayItem);
@@ -314,7 +314,7 @@ export const filterByDateRangeAndString = (
   valueFieldString?: any,
   valueAuthor?: any
 ) => {
-  return {
+  const filter={
     [fieldDate]: {
       $gte: parseDate(startDate),
       $lte: parseDate(endDate),
@@ -323,8 +323,12 @@ export const filterByDateRangeAndString = (
       fieldString !== null && valueFieldString !== null
         ? { $regex: new RegExp(valueFieldString, "i") }
         : {},
-    author: valueAuthor != null ? valueAuthor : {},
+    // author: valueAuthor !== null ? valueAuthor :{},
   };
+  if(valueAuthor!==null){
+    filter["author"]=valueAuthor;
+  }
+  return filter;
   // [fieldString]: { $regex: new RegExp(valueFieldString, 'i') }
 };
 

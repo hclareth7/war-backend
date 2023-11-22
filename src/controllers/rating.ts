@@ -29,7 +29,6 @@ export const generateFilePdf = async (req, res, next) => {
             !config.CONFIGS.specialRoles.includes(rolUser?.role) ? userLogged._id.toString():null
           )
         : { _id: { $eq: req.query.queryString } };
-        console.log(filter)
     const getAllModel = await Model.find(filter).populate([
       "attendee",
       "author",
@@ -39,7 +38,7 @@ export const generateFilePdf = async (req, res, next) => {
       if (itemModel.attendee && itemModel?.author) {
         arrayData.push({
           ...itemModel.attendee._doc,
-          author_name: itemModel?.author?.name,
+          author: itemModel?.author,
         });
       }
     });
@@ -56,13 +55,14 @@ export const generateFilePdf = async (req, res, next) => {
         null,
         {
           directionLogo: configFilePdf.logoPdfDirection,
-          titleMain: configFilePdf.titleMainRatingsPdf,
+          titleMain: configFilePdf.headerDocument.titleMain,
+          titleSecundary:`${
+            valueTypeRating !== "otros"
+              ? "LISTADO DE VALORACIONES DE " + valueTypeRating.toUpperCase()
+              : "LISTADO DE OTROS TIPOS DE VALORACIONES"
+          }`
         },
-        `${
-          valueTypeRating !== "otros"
-            ? "LISTADO DE VALORACIONES DE " + valueTypeRating.toUpperCase()
-            : "LISTADO DE OTROS TIPOS DE VALORACIONES"
-        }`,
+        null,
         {
           headers:
             startDate && endDate
