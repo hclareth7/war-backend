@@ -65,17 +65,17 @@ export const jsonDataConvertToArray = async (
           // "municipality":()=>handlerProperties(property,item,arrayItem,ModelMunicipality),
           association: () =>
             handlerProperties(property, item, arrayItem, ModelAssociation),
-          author_name: () =>
-            arrayItem.push(item.author.name),
+          activity: () =>
+            arrayItem.push(item.activity.name),
           first_name: () =>
             arrayItem.push(
               `${item[`${property}`] +
                 " " +
-                item.second_name +
+                (item.second_name || '') +
                 " " +
                 item.first_last_name +
                 " " +
-                item.second_last_name
+                (item.second_last_name || '')
                 }`.toUpperCase()
             ),
           createdAt: () => organizeDate(item.createdAt, arrayItem),

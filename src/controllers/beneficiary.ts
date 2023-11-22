@@ -73,7 +73,7 @@ export const getPdfListBeneficiarie=async(req, res, next)=>{
                 $lte: new Date(data.endDate)
             },
             author: idAuthor
-        }).populate(['association', 'author', 'updatedBy']);
+        }).populate(['association', 'author', 'activity']);
         const dataTable=await mutil.jsonDataConvertToArray(allBeneficiaries,configPdf.propertiesTableBeneficiaries);
         generateFilePdf(
             res,
@@ -114,7 +114,7 @@ export const getAll = async (req, res, next) => {
         if (req.query.queryString) {
             searchOptions = {
                 queryString: req.query.queryString,
-                searchableFields: config.CONFIGS.searchableFields.beneficiary
+                searchableFields: config.CONFIGS.searchableFields.beneficiary,
             };
         };
         const getAllModel = await mutil.getTunnedDocument2(Beneficiary, ['association', 'author', 'updatedBy','activity', 'community'], page, perPage, searchOptions)

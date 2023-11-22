@@ -31,7 +31,10 @@ export const CONFIGS = {
 
     configFilePdf: {
         logoPdfDirection:"uped-logo.png",
-        titleUped:"UPED",
+        titleUped: `
+            UNIDAD ESPECIALIZADA EN SERVICIOS
+            Y SUMINISTRO EN SALUD S.A.S
+            `,
         replegalprint:"replegalprint.png",
         textDataBeforeFooter:"los Articulos entregados por la gobernación del norte de santander al adulto mayor son de uso exclusivo del adulto mayor, esta prohibida su comercializacion",
         infoContentFooterPdf: {
@@ -44,16 +47,19 @@ export const CONFIGS = {
             titleInfo:["Dirección:","Telefono:","Correo:"]
 
         },
-        headersTablebeneficiarie: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Usuario", "Fecha"],
-        titleMainRatingsPdf: "CONSORCIO PARA LA ATENCION INTEGRAL Y PSICOSOCIAL DEL ADULTO MAYOR",
-        headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Usuario", "Fecha"],
+        headersTablebeneficiarie: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Actividad", "Fecha"],
+        titleMainRatingsPdf: `
+            UNIDAD ESPECIALIZADA EN SERVICIOS
+            Y SUMINISTRO EN SALUD S.A.S
+        `,
+        headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Actividad", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
         headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","AUTHOR:"],
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
-        propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "author_name", "createdAt"],
-        propertiesTableBeneficiaries: ["identification", "first_name", "municipality", "association", "author_name", "createdAt"],
+        propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],
+        propertiesTableBeneficiaries: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],
 
         headerDocument:{
             titleMain:`
