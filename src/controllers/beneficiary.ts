@@ -80,7 +80,8 @@ export const getPdfListBeneficiarie=async(req, res, next)=>{
             null,
             {
                 directionLogo:configPdf.logoPdfDirection,
-                titleMain:configPdf.titleUped
+                titleMain:configPdf.titleUped,
+                titleSecundary:configPdf.titleSecundadyListBeneficiarie
             },
             null,
             {

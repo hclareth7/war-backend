@@ -3,7 +3,8 @@ export interface typeHeader{
     directionLogo?:string,
     titleMain?:string,
     infoContract?:string,
-    textAditional?:string
+    textAditional?:string,
+    titleSecundary?:string
 }
 
 export interface typeContentBeforeBody{
