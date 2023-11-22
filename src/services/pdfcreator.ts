@@ -363,13 +363,8 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
     if(header.textAditional){
       doc.font('Helvetica').fontSize(8).text(header.textAditional.toUpperCase(), x,y,{ align: 'center'});
       y += 40;
-<<<<<<< HEAD
-    } else {
-      y += 20;
-=======
     }else{
       y+=15;
->>>>>>> 2636ff48c9ac5655545137dca30350f8a8f13611
     }
     x=30;
 
