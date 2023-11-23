@@ -184,14 +184,16 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
 }
 
 const addHeadersTable=(doc:any,x:number,y:number,headers?:string[] | null)=>{
+  const headWidth = headers?.length === 5 ? 120 : 80;
+  const delta = headers?.length === 5 ? 120 : 97;
   headers?.map((header,index)=>{
     if(index===1){
       x=65;
-      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width:80});
+      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width: headWidth});
     }else{
-      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width:85});
+      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width: headWidth + 5});
     }
-    x+=97;
+    x+=delta;
   });
   x=30;
 
@@ -204,21 +206,23 @@ const addContentBody=(doc:any,x:number,y:number,headerPdf?:typeHeader | null,con
     if(headersTable && valuesTable){
       let aux=0;
       let amountRegisterByPage=0;
+      const headWidth = headersTable?.length === 5 ? 120 : 80;
+      const delta = headersTable?.length === 5 ? 120 : 97;
       [x,y]=addHeadersTable(doc,x,y,headersTable);
       valuesTable.map((item)=>{
         y+=45;
         item.map((value,index)=>{
           if(index===1){
             x=65;
-            doc.fontSize(8.5).font('Helvetica').fillColor("black").text(value, x , y,{width:80});
+            doc.fontSize(8.5).font('Helvetica').fillColor("black").text(value, x , y,{width: headWidth});
           }else{
             if(index===item.length-1){
-              doc.fontSize(8.5).font('Helvetica').fillColor("black").text(value, x , y,{width:70});
+              doc.fontSize(8.5).font('Helvetica').fillColor("black").text(value, x , y,{width: headWidth - 10});
             }else{
-              doc.fontSize(8.5).font('Helvetica').fillColor("black").text(typeof value === "string" ? value.toUpperCase():value , x , y,{width:85});
+              doc.fontSize(8.5).font('Helvetica').fillColor("black").text(typeof value === "string" ? value.toUpperCase():value , x , y,{width: headWidth + 5});
             }
           }
-          x+=97;
+          x+=delta;
         });
         amountRegisterByPage++;
 
