@@ -68,7 +68,7 @@ export const jsonDataConvertToArray = async (
             participants: () =>
             arrayItem.push(item.attendees.length),
           activity: () =>
-            arrayItem.push(item.activity.name),
+            arrayItem.push(item.activity ? item.activity.name: " " ),
           first_name: () =>
             arrayItem.push(
               `${item[`${property}`] +
