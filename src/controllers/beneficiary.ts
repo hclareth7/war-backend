@@ -67,13 +67,14 @@ export const getPdfListBeneficiarie=async(req, res, next)=>{
         const configPdf=config.CONFIGS.configFilePdf;
         const data = req.body;
         const idAuthor=userLogged._id.toString();
-        const allBeneficiaries=await Beneficiary.find({
+        const dataFilter={
             createdAt: {
                 $gte: new Date(data.startDate),
                 $lte: new Date(data.endDate)
             },
             author: idAuthor
-        }).populate(['association', 'author', 'activity']);
+        }
+        const allBeneficiaries=await Beneficiary.find(dataFilter).populate(['association', 'author', 'activity']);
         const dataTable=await mutil.jsonDataConvertToArray(allBeneficiaries,configPdf.propertiesTableBeneficiaries);
         generateFilePdf(
             res,

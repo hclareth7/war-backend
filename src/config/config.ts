@@ -53,11 +53,15 @@ export const CONFIGS = {
             UNIDAD ESPECIALIZADA EN SERVICIOS
             Y SUMINISTRO EN SALUD S.A.S
         `,
+        titleSecundaryListWorkshops:"LISTA DE TALLERES REGISTRADOS",
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Actividad", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
+        headersTableListWorkshop: ["#", "Fecha" ,"Taller" ,"Actividad" ,"# Participantes"],
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
-        headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","AUTOR:"],
+        headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","USUARIO:"],
+        headersContentBeforeTableListWorkshops: ["DESDE:", "HASTA:","USUARIO:"],
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:"],
+        propertiesListWorkshops: ["createdAt","name", "activity","participants"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],
         propertiesTableBeneficiaries: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],

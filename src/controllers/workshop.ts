@@ -11,6 +11,51 @@ import * as mutil from '../helpers/modelUtilities';
 
 const modelName = Model.modelName;
 
+export const getPdfListWorkShops=async (req, res, next)=>{
+  try {
+      const data=req.body;
+      const userLogged = res.locals.loggedInUser;
+      const configPdf=config.CONFIGS.configFilePdf;
+      const idAuthor=userLogged._id.toString();
+      const dataFilter={
+        createdAt: {
+            $gte: new Date(data.startDate),
+            $lte: new Date(data.endDate)
+        },
+        name:{ $regex: new RegExp(data.typeWorkShop, "i") },
+        author: idAuthor
+      }
+      const allWorkshops=await Model.find(dataFilter).populate(["activity","attendees","author",]);
+      if(allWorkshops.length >0){
+        const author=allWorkshops[0].author;
+        const dataPdf=await jsonDataConvertToArray(allWorkshops,configPdf.propertiesListWorkshops);
+        pdf.generateFilePdf(res,null,
+          {
+            directionLogo: configPdf.logoPdfDirection,
+            titleMain: configPdf.headerDocument.titleMain,
+            titleSecundary:configPdf.titleSecundaryListWorkshops
+          },null,
+          {
+            headers:configPdf.headersContentBeforeTableListWorkshops,
+            values:[organizeDate(new Date(data.startDate),null) , organizeDate(new Date(data.endDate),null) , author.name]
+          },
+          {
+            headersTable:configPdf.headersTableListWorkshop,
+            valuesTable:dataPdf
+          },
+          {
+            content: configPdf.infoContentFooterPdf.content,
+            titleInfo:configPdf.infoContentFooterPdf.titleInfo,
+          }
+        )
+      }else{
+        res.json({message:"Registers not found"})
+      }
+  } catch (error) {
+    next(error);
+  }
+} 
+
 export const save = async (req, res, next) => {
   // #swagger.tags = ['Workshop']
   /*    
