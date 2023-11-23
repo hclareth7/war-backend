@@ -65,7 +65,9 @@ export const generateActaDelivery = async (req, res, next) => {
     beneficiary ? beneficiary["association"] = association : "";
     const itemsList :any[]=[];
     deliveriesFound.map((delivery)=>{
-      itemsList.push(...delivery.itemList);
+      if(delivery.status===config.CONFIGS.statusDelivery || !delivery.status){
+        itemsList.push(...delivery.itemList);
+      }
     });
 
     // Assuming that generateFilePdfDelivery is asynchronous and returns a Promise

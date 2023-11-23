@@ -28,7 +28,7 @@ export const CONFIGS = {
     },
     filterType: ["dateRange", "dateSpecific", "number", "string"],
     numberTypeFilterOperators: [">", "<", "="],
-
+    statusDelivery:"enabled",
     configFilePdf: {
         titleSecundadyListBeneficiarie:"Listado de beneficiarios registrados",
         logoPdfDirection:"uped-logo.png",
@@ -53,11 +53,15 @@ export const CONFIGS = {
             UNIDAD ESPECIALIZADA EN SERVICIOS
             Y SUMINISTRO EN SALUD S.A.S
         `,
+        titleSecundaryListWorkshops:"LISTA DE TALLERES REGISTRADOS",
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
+        headersTableListWorkshop: ["#", "Fecha" ,"Taller" ,"Actividad" ,"# Participantes"],
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
-        headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","AUTOR:"],
-        headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:", "AUTOR:"],
+        headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","USUARIO:"],
+        headersContentBeforeTableListWorkshops: ["DESDE:", "HASTA:","USUARIO:"],
+        headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:", "USUARIO:"],
+        propertiesListWorkshops: ["createdAt","name", "activity","participants"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesTableBeneficiaries: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],
