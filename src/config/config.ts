@@ -28,7 +28,7 @@ export const CONFIGS = {
     },
     filterType: ["dateRange", "dateSpecific", "number", "string"],
     numberTypeFilterOperators: [">", "<", "="],
-
+    statusDelivery:"enabled",
     configFilePdf: {
         titleSecundadyListBeneficiarie:"Listado de beneficiarios registrados",
         logoPdfDirection:"uped-logo.png",
