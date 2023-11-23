@@ -70,7 +70,7 @@ export const generateFilePdf = async (req, res, next) => {
               : [],
           values:
             startDate && endDate
-              ? [startDate, endDate, dataRaitingsPdf.length]
+              ? [startDate, endDate, dataRaitingsPdf.length, arrayData[0]?.author?.name]
               : [],
         },
         {

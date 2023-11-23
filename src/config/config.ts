@@ -53,13 +53,13 @@ export const CONFIGS = {
             UNIDAD ESPECIALIZADA EN SERVICIOS
             Y SUMINISTRO EN SALUD S.A.S
         `,
-        headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Actividad", "Fecha"],
+        headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
         headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","AUTOR:"],
-        headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:"],
+        headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:", "AUTOR:"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
-        propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],
+        propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesTableBeneficiaries: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],
 
         headerDocument:{
