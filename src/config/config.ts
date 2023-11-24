@@ -54,7 +54,7 @@ export const CONFIGS = {
             Y SUMINISTRO EN SALUD S.A.S
         `,
         titleSecundaryListWorkshops:"LISTA DE TALLERES REGISTRADOS",
-        titleSecundaryListArticles:"CONSOLIDADO DE ARTÍCULOS ENTREGADOS EN EL EVENTO - ",
+        titleSecundaryListArticles:"CONSOLIDADO DE EVENTO - ",
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersTableListArticles: ["#", "Nombre", "Cantidad"],

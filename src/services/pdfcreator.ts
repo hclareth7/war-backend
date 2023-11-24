@@ -570,11 +570,11 @@ const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | nu
     y+=20;
 
     doc.font('Helvetica-Bold').fontSize(10).text("#", x,y,{ align: 'left' });
-    x+=150;
+    x+=26;
     doc.font('Helvetica-Bold').fontSize(10).text("Código", x,y,{ align: 'left' });
-    x+=150;
+    x+=90;
     doc.font('Helvetica-Bold').fontSize(10).text("Nombre del artículo", x,y,{ align: 'left' });
-    x+=150;
+    x+=330;
     doc.font('Helvetica-Bold').fontSize(10).text("Cantidad", x,y,{ align: 'left' });
 
     y+=10;
@@ -587,13 +587,13 @@ const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | nu
 
     y+=12;
     itemsList.map((data,index)=>{
-      x=30;
+      x=26;
       doc.font('Helvetica-Bold').fontSize(9).text((index+1), x,y,{ align: 'left' });
-      x+=150;
+      x+=30;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.code, x,y,{ align: 'left' });
-      x+=150;
+      x+=90;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.name.toUpperCase(), x,y,{ align: 'left' });
-      x+=150;
+      x+=330;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.amount, x,y,{ align: 'left' });
       x=30;
       y+=20;
