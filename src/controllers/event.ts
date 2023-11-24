@@ -227,11 +227,6 @@ export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
         }
       },
       {
-        $match: {
-          "item.isDefault": false
-        }
-      },
-      {
         $group: {
           _id: "$_id",
           beneficiary: { $first: "$beneficiary" },

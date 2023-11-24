@@ -365,8 +365,8 @@ titleAditional !==null? y+=60 :"";
 
 [x,y]=addContentBeforeBody(doc,x,y,headerPdf,contentBeforeBodyPdf);
 
-addContentFooter(doc,x,y,contentFooter);
-[x,y]=addContentTableListArticles(doc,x,y,bodyTablePdf);
+[x,y]=addContentFooter(doc,x,y,contentFooter);
+[x,y]=addContentTableListArticles(doc,x,y,bodyTablePdf,headerPdf,contentFooter);
 
 doc.end();
 
@@ -563,18 +563,18 @@ const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=
   return [x,y];
 }
 
-const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | null)=>{
+const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | null,header?:typeHeader | null,contentFooter?:typeContentFooter | null)=>{
 
   if(itemsList){
     doc.font('Helvetica-Bold').fontSize(10).text("Información de entrega:", x,y,{ align: 'left' });
     y+=20;
 
     doc.font('Helvetica-Bold').fontSize(10).text("#", x,y,{ align: 'left' });
-    x+=150;
+    x+=26;
     doc.font('Helvetica-Bold').fontSize(10).text("Código", x,y,{ align: 'left' });
-    x+=150;
+    x+=90;
     doc.font('Helvetica-Bold').fontSize(10).text("Nombre del artículo", x,y,{ align: 'left' });
-    x+=150;
+    x+=330;
     doc.font('Helvetica-Bold').fontSize(10).text("Cantidad", x,y,{ align: 'left' });
 
     y+=10;
@@ -587,17 +587,24 @@ const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | nu
 
     y+=12;
     itemsList.map((data,index)=>{
-      x=30;
+      x=26;
       doc.font('Helvetica-Bold').fontSize(9).text((index+1), x,y,{ align: 'left' });
-      x+=150;
+      x+=30;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.code, x,y,{ align: 'left' });
-      x+=150;
+      x+=90;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.name.toUpperCase(), x,y,{ align: 'left' });
-      x+=150;
+      x+=330;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.amount, x,y,{ align: 'left' });
       x=30;
       y+=20;
       
+      if(y>540){
+        doc.addPage();
+        x=30;
+        y=30;
+        [x,y]=addContentPrevious(doc,x,y,header);
+        [x,y]=addContentFooter(doc,x,y,contentFooter);
+      }
     });
   }
   return [x,y];
