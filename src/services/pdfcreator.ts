@@ -343,6 +343,35 @@ export const generateFilePdf=(
 
 }
 
+export const generateFilePdfListArticles=(
+  res:Response,
+  nameFile:string | null | undefined,
+  headerPdf?:typeHeader | null,
+  titleAditional?:string | null,
+  contentBeforeBodyPdf?:typeContentBeforeBody | null,
+  bodyTablePdf?:any | null,
+  contentFooter?:typeContentFooter | null
+)=>{
+  const doc = new PDFDocument();
+  doc.pipe(res);
+
+doc.fillOpacity(0.8);
+let x = 30;
+let y = 30;
+
+[x,y]=addContentPrevious(doc,x,y,headerPdf);
+titleAditional !==null?  doc.fontSize(11).font('Helvetica').fillColor("black").text(titleAditional, 175 , y,{ align: 'center',width: 290}):"";
+titleAditional !==null? y+=60 :"";
+
+[x,y]=addContentBeforeBody(doc,x,y,headerPdf,contentBeforeBodyPdf);
+
+addContentFooter(doc,x,y,contentFooter);
+[x,y]=addContentTableListArticles(doc,x,y,bodyTablePdf);
+
+doc.end();
+
+}
+
 const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>{
   doc.fillOpacity(0.8);
   if(header){
@@ -386,7 +415,7 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
 
     }
 
-    y+=30;
+    y+=40;
     x=30;
   }else{
     y=30;
@@ -528,6 +557,46 @@ const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=
       doc.font('Helvetica-Bold').fontSize(9).text(data?.item?.value >0 ? `$ ${data?.item?.value}`: `$ ${0}`, x,y,{ align: 'left' });
       x=30;
       y+=13;
+      
+    });
+  }
+  return [x,y];
+}
+
+const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | null)=>{
+
+  if(itemsList){
+    doc.font('Helvetica-Bold').fontSize(10).text("Información de entrega:", x,y,{ align: 'left' });
+    y+=20;
+
+    doc.font('Helvetica-Bold').fontSize(10).text("#", x,y,{ align: 'left' });
+    x+=150;
+    doc.font('Helvetica-Bold').fontSize(10).text("Código", x,y,{ align: 'left' });
+    x+=150;
+    doc.font('Helvetica-Bold').fontSize(10).text("Nombre del artículo", x,y,{ align: 'left' });
+    x+=150;
+    doc.font('Helvetica-Bold').fontSize(10).text("Cantidad", x,y,{ align: 'left' });
+
+    y+=10;
+    x=30;
+    doc.lineWidth(.3)
+    .moveTo(x, y)
+    .lineTo(x + 550, y)  
+    .strokeColor('black')  
+    .stroke();
+
+    y+=12;
+    itemsList.map((data,index)=>{
+      x=30;
+      doc.font('Helvetica-Bold').fontSize(9).text((index+1), x,y,{ align: 'left' });
+      x+=150;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.code, x,y,{ align: 'left' });
+      x+=150;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.name.toUpperCase(), x,y,{ align: 'left' });
+      x+=150;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.amount, x,y,{ align: 'left' });
+      x=30;
+      y+=20;
       
     });
   }

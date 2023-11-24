@@ -11,6 +11,7 @@ router.post('/', auth.allowIfLoggedin, auth.grantAccess('create', resourceName),
 router.get("/", auth.allowIfLoggedin, controller.getAll)
 router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.get);
 router.get('/stats/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getStats);
+router.get('/pdf-items-delivered/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.pdfArticlesDeliveredEventById);
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName),controller.update);
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItem);
 
