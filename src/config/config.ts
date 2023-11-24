@@ -54,17 +54,21 @@ export const CONFIGS = {
             Y SUMINISTRO EN SALUD S.A.S
         `,
         titleSecundaryListWorkshops:"LISTA DE TALLERES REGISTRADOS",
+        titleSecundaryListArticles:"CONSOLIDADO DE ARTÍCULOS ENTREGADOS EN EL EVENTO - ",
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersTableAttendees: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
+        headersTableListArticles: ["#", "Nombre", "Cantidad"],
         headersTableListWorkshop: ["#", "Fecha" ,"Taller" ,"Actividad" ,"# Participantes"],
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
         headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","USUARIO:"],
+        headersContentBeforeTableListArticles: ["TOTAL ASISTENTES:", "TOTAL ENTREGAS:"],
         headersContentBeforeTableListWorkshops: ["DESDE:", "HASTA:","USUARIO:"],
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:", "USUARIO:"],
         propertiesListWorkshops: ["createdAt","name", "activity","participants"],
         propertiesAttendeesPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesRatingsPdf: ["identification", "first_name", "municipality", "association", "createdAt"],
         propertiesTableBeneficiaries: ["identification", "first_name", "municipality", "association", "activity", "createdAt"],
+        propertiesTableListArticles: ["name", "amount"],
 
         headerDocument:{
             titleMain:`

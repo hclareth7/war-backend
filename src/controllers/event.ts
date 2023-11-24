@@ -7,6 +7,7 @@ import Beneficiary from "../models/beneficiary";
 import Item from "../models/item";
 import mongoose from "mongoose";
 import Inventory from "../models/inventory";
+import * as pdf from "../services/pdfcreator";
 
 const modelName = Event.modelName;
 export const save = async (req, res, next) => {
@@ -196,6 +197,98 @@ export const deleteItem = async (req, res, next) => {
     next(error);
   }
 };
+
+export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
+  try{
+    const idEvent=req.params.id;
+    const eventFound=await Event.findOne({_id:idEvent});
+    if (!eventFound) {
+      return next(new Error("Event does not exist"));
+    }
+    const aggregateNdelivery = [
+      {
+        $match: {
+          event: eventFound._id,
+          $or: [
+            { status: 'enabled' }, // Incidencias con status 'enabled'
+            { status: { $exists: false } } // Incidencias sin la propiedad 'status'
+          ]
+        }
+      },
+      {
+        $unwind: "$itemList"
+      },
+      {
+        $lookup: {
+          from: "items", // Reemplaza "items" con el nombre real de tu colección de items
+          localField: "itemList.item",
+          foreignField: "_id",
+          as: "item"
+        }
+      },
+      {
+        $match: {
+          "item.isDefault": false
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          beneficiary: { $first: "$beneficiary" },
+          representant: { $first: "$representant" },
+          type: { $first: "$type" },
+          event: { $first: "$event" },
+          itemList: { $push: "$itemList" },
+          list:{ $push: "$item" },
+          author: { $first: "$author" },
+          status: { $first: "$status" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" }
+        }
+      }
+    ];
+    const numberOfDelivery = await (await Delivery.aggregate(aggregateNdelivery)).length;
+    const deliveredItems = await Delivery.aggregate(aggregateNdelivery);
+    const data:any[]=[];
+    deliveredItems.map((dataItem)=>{
+      const {list,itemList}=dataItem;
+      list.map((item:any,index:number)=>{
+        const indexItemFound=data.findIndex((i)=>i._id===itemList[index]?.item.toString());
+        if(indexItemFound!==-1){
+          data[indexItemFound].amount+=itemList[index]?.amount;
+        }else{
+          data.push({_id:itemList[index]?.item.toString(),name:item[0]?.name,amount:itemList[index]?.amount,code:item[0]?.code});
+        }
+      });
+    });
+    if(data.length> 0){
+      const configPdf=config.CONFIGS.configFilePdf;
+      const numberAttendees = eventFound?.attendees.length
+      pdf.generateFilePdfListArticles(res,null,
+        {
+          directionLogo: configPdf.logoPdfDirection,
+          titleMain: configPdf.headerDocument.titleMain,
+          titleSecundary:configPdf.titleSecundaryListArticles+eventFound.name.toUpperCase()
+        },
+        null,
+        {
+          headers:configPdf.headersContentBeforeTableListArticles,
+          values:[numberAttendees,numberOfDelivery]
+        },
+        data
+        ,
+        {
+          content: configPdf.infoContentFooterPdf.content,
+          titleInfo:configPdf.infoContentFooterPdf.titleInfo,
+        }
+      )
+    }else{
+      return next(new Error("Articles not found"));
+    }
+  }catch(error){
+    next(error);
+  }
+}
 
 export const getStats = async (req, res, next) => {
   // #swagger.tags = ['Events']
