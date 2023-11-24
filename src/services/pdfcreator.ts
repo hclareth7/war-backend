@@ -365,8 +365,8 @@ titleAditional !==null? y+=60 :"";
 
 [x,y]=addContentBeforeBody(doc,x,y,headerPdf,contentBeforeBodyPdf);
 
-addContentFooter(doc,x,y,contentFooter);
-[x,y]=addContentTableListArticles(doc,x,y,bodyTablePdf);
+[x,y]=addContentFooter(doc,x,y,contentFooter);
+[x,y]=addContentTableListArticles(doc,x,y,bodyTablePdf,headerPdf,contentFooter);
 
 doc.end();
 
@@ -563,7 +563,7 @@ const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=
   return [x,y];
 }
 
-const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | null)=>{
+const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | null,header?:typeHeader | null,contentFooter?:typeContentFooter | null)=>{
 
   if(itemsList){
     doc.font('Helvetica-Bold').fontSize(10).text("Información de entrega:", x,y,{ align: 'left' });
@@ -598,6 +598,13 @@ const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | nu
       x=30;
       y+=20;
       
+      if(y>540){
+        doc.addPage();
+        x=30;
+        y=30;
+        [x,y]=addContentPrevious(doc,x,y,header);
+        [x,y]=addContentFooter(doc,x,y,contentFooter);
+      }
     });
   }
   return [x,y];
