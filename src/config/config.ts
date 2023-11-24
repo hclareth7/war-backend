@@ -143,6 +143,6 @@ export const CONFIGS = {
             fosiga_url: 'Soporte EPS',
             sisben_url: 'Soporte SISBEN',
             registry_doc_url: 'Soporte Registraduria'
-        }
+        },
     },
 };

@@ -65,9 +65,7 @@ export const generateActaDelivery = async (req, res, next) => {
     beneficiary ? beneficiary["association"] = association : "";
     const itemsList :any[]=[];
     deliveriesFound.map((delivery)=>{
-      if(delivery.status===config.CONFIGS.statusDelivery || !delivery.status){
-        itemsList.push(...delivery.itemList);
-      }
+      itemsList.push(...delivery.itemList);
     });
 
     // Assuming that generateFilePdfDelivery is asynchronous and returns a Promise
@@ -189,7 +187,10 @@ export const getAllByType = async (req, res, next) => {
       },
       {
         $match: {
-          "item.isDefault": false
+          $or: [
+            {"item.isDefault": false},
+            {"item.isDefault": { $exists: false }}
+          ], 
         }
       },
       {
@@ -211,6 +212,7 @@ export const getAllByType = async (req, res, next) => {
       page: page || 1,
       limit: perPage || 10,
       sort: { updatedAt: -1 },
+      searchOptions
     };
 
     const aggregate = Delivery.aggregate(aggregateNdelivery);

@@ -218,6 +218,10 @@ export const getStats = async (req, res, next) => {
       {
         $match: {
           event: eventFound._id,
+          $or: [
+            { status: 'enabled' }, // Incidencias con status 'enabled'
+            { status: { $exists: false } } // Incidencias sin la propiedad 'status'
+          ]
         },
       },
       {
@@ -267,7 +271,10 @@ export const getStats = async (req, res, next) => {
       },
       {
         $match: {
-          "item.isDefault": false
+          $or: [
+            {"item.isDefault": false},
+            {"item.isDefault": { $exists: false }}
+          ], 
         }
       },
       {
