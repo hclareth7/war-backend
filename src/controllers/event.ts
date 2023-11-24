@@ -50,7 +50,6 @@ export const getAll = async (req, res, next) => {
       [
         "associated_winery",
         "participatingAssociations",
-        "attendees",
         { path: "participatingAssociations", populate: { path: "community" } },
         ],
       page,
