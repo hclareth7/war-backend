@@ -564,7 +564,6 @@ const addContentTableDelivery=(doc:any,x:number,y:number,itemsList?:any | null)=
 }
 
 const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | null,header?:typeHeader | null,contentFooter?:typeContentFooter | null)=>{
-  console.log(x,y)
   if(itemsList){
     doc.font('Helvetica-Bold').fontSize(10).text("Información de entrega:", x,y,{ align: 'left' });
     y+=20;
