@@ -205,7 +205,7 @@ export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
     if (!eventFound) {
       return next(new Error("Event does not exist"));
     }
-    const aggregateNdelivery = [
+    const aggregateNitems = [
       {
         $match: {
           event: eventFound._id,
@@ -242,8 +242,53 @@ export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
         }
       }
     ];
+
+    const aggregateNdelivery = [
+      {
+        $match: {
+          event: eventFound._id,
+          $or: [
+            { status: 'enabled' }, // Incidencias con status 'enabled'
+            { status: { $exists: false } } // Incidencias sin la propiedad 'status'
+          ]
+        }
+      },
+      {
+        $unwind: "$itemList"
+      },
+      {
+        $lookup: {
+          from: "items", // Reemplaza "items" con el nombre real de tu colección de items
+          localField: "itemList.item",
+          foreignField: "_id",
+          as: "item"
+        }
+      },
+      {
+        $match: {
+          $or: [
+            {"item.isDefault": false},
+            {"item.isDefault": { $exists: false }}
+          ], 
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          beneficiary: { $first: "$beneficiary" },
+          representant: { $first: "$representant" },
+          type: { $first: "$type" },
+          event: { $first: "$event" },
+          itemList: { $push: "$itemList" },
+          author: { $first: "$author" },
+          status: { $first: "$status" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" }
+        }
+      }
+    ];
     const numberOfDelivery = await (await Delivery.aggregate(aggregateNdelivery)).length;
-    const deliveredItems = await Delivery.aggregate(aggregateNdelivery);
+    const deliveredItems = await Delivery.aggregate(aggregateNitems);
     const data:any[]=[];
     deliveredItems.map((dataItem)=>{
       const {list,itemList}=dataItem;
