@@ -297,7 +297,7 @@ export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
         if(indexItemFound!==-1){
           data[indexItemFound].amount+=itemList[index]?.amount;
         }else{
-          data.push({_id:itemList[index]?.item.toString(),name:item[0]?.name,amount:itemList[index]?.amount,code:item[0]?.code});
+          data.push({_id:itemList[index]?.item.toString(),name:item[0]?.name,amount:itemList[index]?.amount,code:item[0]?.code,value:item[0]?.value});
         }
       });
     });

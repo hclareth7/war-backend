@@ -4,6 +4,7 @@ import * as config from "../config/config";
 import * as fs from "fs";
 import { typeContentBeforeBody, typeContentFooter, typeHeader, typeTable } from "../types/typesPdf";
 import { Response } from "express";
+import { formatCurrencyNummber } from "../helpers/helper";
 
 /* GET home page. */
 export const createPDf = async function (
@@ -571,10 +572,15 @@ const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | nu
     doc.font('Helvetica-Bold').fontSize(10).text("#", x,y,{ align: 'left' });
     x+=26;
     doc.font('Helvetica-Bold').fontSize(10).text("Código", x,y,{ align: 'left' });
-    x+=90;
+    x-=2;
+    x+=55;
     doc.font('Helvetica-Bold').fontSize(10).text("Nombre del artículo", x,y,{ align: 'left' });
-    x+=330;
+    x-=2;
+    x+=290;
     doc.font('Helvetica-Bold').fontSize(10).text("Cantidad", x,y,{ align: 'left' });
+    x-=2;
+    x+=65;
+    doc.font('Helvetica-Bold').fontSize(10).text("Total", x,y,{with:300});
 
     y+=10;
     x=30;
@@ -585,15 +591,24 @@ const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | nu
     .stroke();
 
     y+=12;
+    let grandTotal=0;
     itemsList.map((data,index)=>{
-      x=26;
+      x=29;
       doc.font('Helvetica-Bold').fontSize(9).text((index+1), x,y,{ align: 'left' });
+      x-=2;
       x+=30;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.code, x,y,{ align: 'left' });
-      x+=90;
+      x-=2;
+      x+=55;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.name.toUpperCase(), x,y,{ align: 'left' });
-      x+=330;
+      x-=2;
+      x+=290;
       doc.font('Helvetica-Bold').fontSize(9).text(data?.amount, x,y,{ align: 'left' });
+      x-=2;
+      x+=66;
+      const valueTotal=data.value*data.amount;
+      grandTotal+=valueTotal;
+      doc.font('Helvetica-Bold').fontSize(9).text(formatCurrencyNummber(valueTotal), x,y,{ with:300 });
       x=30;
       y+=20;
       
@@ -603,6 +618,14 @@ const addContentTableListArticles=(doc:any,x:number,y:number,itemsList?:any | nu
         y=30;
         [x,y]=addContentPrevious(doc,x,y,header);
         addContentFooter(doc,x,y,contentFooter);
+      }
+      if(itemsList.length-1 ===index){
+        x=460;
+        y+=20;
+        doc.font('Helvetica-Bold').fontSize(12).text("Grand total:", x,y);
+        y+=20
+        doc.font('Helvetica-Bold').fontSize(9).text(formatCurrencyNummber(grandTotal), x,y);
+
       }
     });
   }
