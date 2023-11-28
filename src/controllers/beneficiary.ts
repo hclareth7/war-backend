@@ -5,6 +5,7 @@ import * as mutil from '../helpers/modelUtilities';
 import * as config from '../config/config';
 import mongoose from 'mongoose';
 import { generateFilePdf } from '../services/pdfcreator';
+import { ObjectId } from 'mongodb';
 
 const modelName = Model.modelName;
 
@@ -255,3 +256,105 @@ export const getByActivity = async (req, res, next) => {
         next(error);
     }
 };
+
+export const userResume = async(req, res, next) => {
+    // #swagger.tags = ['Beneficiaries']
+    /*    
+    #swagger.security = [{
+               "apiKeyAuth": []
+    }]*/
+    try {
+        const userId = res.locals.loggedInUser._id;
+        const totalRecords = await Beneficiary.countDocuments({author: userId});
+
+        const today = new Date();
+        today.setDate(today.getDate() - 1);
+        today.setUTCHours(0, 0, 0, 0);
+        const currentFilter = {
+            author: userId,
+            createdAt: { $gte: today }
+        };
+        const currentRecords = await Beneficiary.countDocuments(currentFilter);
+
+        const activityAggregate = [
+            {
+              $match: {
+                author: userId,
+              },
+            },
+            {
+              $group: {
+                _id: "$activity",
+                count: { $sum: 1 },
+              },
+            },
+            {
+              $lookup: {
+                from: "activities",
+                localField: "_id",
+                foreignField: "_id",
+                as: "activityInfo",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                activity: '$_id',
+                count: 1,
+                activityInfo: { $arrayElemAt: ['$activityInfo', 0] }
+              }
+            },
+            {
+              $unset: 'activity'
+            }
+          ];
+        const activityRecords = await Beneficiary.aggregate(activityAggregate);
+
+        const associationAggregate = [
+            {
+              $match: {
+                author: userId,
+              },
+            },
+            {
+              $group: {
+                _id: "$association",
+                count: { $sum: 1 },
+              },
+            },
+            {
+              $lookup: {
+                from: "associations",
+                localField: "_id",
+                foreignField: "_id",
+                as: "associationInfo",
+              },
+            },
+            {
+              $project: {
+                _id: 0, // Opcional, para excluir el campo _id del resultado final
+                association: '$_id',
+                count: 1,
+                associationInfo: { $arrayElemAt: ['$associationInfo', 0] }
+              }
+            },
+            {
+              $unset: 'association'
+            },
+          ];
+        const associationRecords = await Beneficiary.aggregate(associationAggregate);
+
+        const result = {
+            totalRecords,
+            currentRecords,
+            activityRecords,
+            associationRecords,
+        };
+
+        res.status(200).json({
+            data: result,
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}

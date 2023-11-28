@@ -264,3 +264,44 @@ export const generatePdf = async (req, res, next) => {
     console.log(error);
   }
 };
+
+export const getGeneralPdfListWorkShops=async (req, res, next)=>{
+  try {
+      const data=req.body;
+      const configPdf=config.CONFIGS.configFilePdf;
+      const dataFilter={
+        createdAt: {
+            $gte: new Date(data.startDate),
+            $lte: new Date(data.endDate)
+        },
+        name:{ $regex: new RegExp(data.typeWorkShop, "i") },
+      }
+      const allWorkshops=await Model.find(dataFilter).populate(["activity","attendees","author",]);
+      if(allWorkshops.length >0){
+        const dataPdf=await jsonDataConvertToArray(allWorkshops,configPdf.propertiesListWorkshops);
+        pdf.generateFilePdf(res,null,
+          {
+            directionLogo: configPdf.logoPdfDirection,
+            titleMain: configPdf.headerDocument.titleMain,
+            titleSecundary:configPdf.titleSecundaryListWorkshops
+          },null,
+          {
+            headers:configPdf.headersContentBeforeTableListWorkshops,
+            values:[organizeDate(new Date(data.startDate),null) , organizeDate(new Date(data.endDate),null), data.length]
+          },
+          {
+            headersTable:configPdf.headersTableListWorkshop,
+            valuesTable:dataPdf
+          },
+          {
+            content: configPdf.infoContentFooterPdf.content,
+            titleInfo:configPdf.infoContentFooterPdf.titleInfo,
+          }
+        )
+      }else{
+        res.json({message:"Registers not found"})
+      }
+  } catch (error) {
+    next(error);
+  }
+} 

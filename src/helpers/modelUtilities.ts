@@ -81,6 +81,7 @@ export const jsonDataConvertToArray = async (
                 }`.toUpperCase()
             ),
           createdAt: () => organizeDate(item.createdAt, arrayItem),
+          author: () => arrayItem.push(item.author?.name || ""),
         };
         if (optionsValidation[`${property}`]) {
           await optionsValidation[`${property}`]();
@@ -333,8 +334,9 @@ export const filterByDateRangeAndString = (
         : {},
     // author: valueAuthor !== null ? valueAuthor :{},
   };
-  if (valueAuthor !== null) {
-    filter["author"] = valueAuthor;
+  console.log(valueAuthor);
+  if(valueAuthor!==null && valueAuthor !== undefined){
+    filter["author"]=valueAuthor;
   }
   return filter;
   // [fieldString]: { $regex: new RegExp(valueFieldString, 'i') }

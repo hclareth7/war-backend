@@ -13,5 +13,6 @@ router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItem);
 router.post("/pdf/:id",auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.generateFilePdf);
 router.post("/pdf",auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getPdfListWorkShops);
+router.post("/general/pdf",auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getGeneralPdfListWorkShops);
 
 export default router;

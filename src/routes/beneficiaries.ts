@@ -17,5 +17,6 @@ router.get('/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName),
 router.get('/activity/:activityId', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.getByActivity);
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName), controller.update);
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName), controller.deleteItem);
+router.get('/resume/user', auth.allowIfLoggedin, controller.userResume);
 
 export default router;

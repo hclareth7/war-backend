@@ -284,3 +284,77 @@ export const getByBeneficiaryId = async (req, res, next) => {
     next(error);
   }
 };
+
+export const generateGeneralPdf = async (req, res, next) => {
+  try {
+    const arrayData: any[] = [];
+    const { startDate, endDate, valueTypeRating } = req.body;
+    const filter =
+      startDate !== undefined && endDate !== undefined
+        ? filterByDateRangeAndString(
+            "createdAt",
+            startDate,
+            endDate,
+            "rating_type",
+            valueTypeRating,
+          )
+        : { _id: { $eq: req.query.queryString } };
+    console.log(filter);
+    const getAllModel = await Model.find(filter).populate([
+      "attendee",
+      "author",
+    ]);
+    console.log(getAllModel);
+    const { configFilePdf } = config.CONFIGS;
+    getAllModel.map((itemModel: any) => {
+      if (itemModel.attendee && itemModel?.author) {
+        arrayData.push({
+          ...itemModel.attendee._doc,
+          author: itemModel?.author,
+        });
+      }
+    });
+    const dataRaitingsPdf = await jsonDataConvertToArray(
+      arrayData,
+      configFilePdf.propertiesGeneralRatingsPdf
+    );
+    if (dataRaitingsPdf.length > 0) {
+      if (dataRaitingsPdf.length === 0) {
+        return next(new Error("There are no records"));
+      }
+      pdf.generateFilePdf(
+        res,
+        null,
+        {
+          directionLogo: configFilePdf.logoPdfDirection,
+          titleMain: configFilePdf.headerDocument.titleMain,
+          titleSecundary:`${
+            valueTypeRating !== "otros"
+              ? "LISTADO DE VALORACIONES DE " + valueTypeRating.toUpperCase()
+              : "LISTADO DE OTROS TIPOS DE VALORACIONES"
+          }`
+        },
+        null,
+        {
+          headers:
+            startDate && endDate
+              ? configFilePdf.headersContentBeforeTableGeneralRetings
+              : [],
+          values:
+            startDate && endDate
+              ? [startDate, endDate, dataRaitingsPdf.length]
+              : [],
+        },
+        {
+          headersTable: configFilePdf.headersTableGeneralRetings,
+          valuesTable: dataRaitingsPdf,
+        },
+        configFilePdf.infoContentFooterPdf
+      );
+    } else {
+      return next(new Error("There are no records"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
