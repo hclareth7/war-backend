@@ -268,6 +268,7 @@ export const userResume = async(req, res, next) => {
         const totalRecords = await Beneficiary.countDocuments({author: userId});
 
         const today = new Date();
+        today.setDate(today.getDate() - 1);
         today.setUTCHours(0, 0, 0, 0);
         const currentFilter = {
             author: userId,
