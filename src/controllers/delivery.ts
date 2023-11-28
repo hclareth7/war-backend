@@ -57,14 +57,19 @@ export const generateActaDelivery = async (req, res, next) => {
     const configPdf = config.CONFIGS.configFilePdf;
     const idEvent = req.params.idEvent;
     const idBen = req.params.idBeneficiarie;
-    const deliveriesFound = await Delivery.find({ event:idEvent,beneficiary:idBen }).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
+    const deliveriesFound = await Delivery.find({
+      event: idEvent, beneficiary: idBen,
+      $or: [
+        { status: { $regex: new RegExp("enabled", "i") } },
+        { status: { $exists: false } }]
+    }).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
     const beneficiary = deliveriesFound[0]?.beneficiary;
     const idAssociation = beneficiary?.toJSON()["association"].toString();
     const event = deliveriesFound[0]?.event;
     const association = await Association.findOne({ _id: idAssociation });
     beneficiary ? beneficiary["association"] = association : "";
-    const itemsList :any[]=[];
-    deliveriesFound.map((delivery)=>{
+    const itemsList: any[] = [];
+    deliveriesFound.map((delivery) => {
       itemsList.push(...delivery.itemList);
     });
 
@@ -83,11 +88,11 @@ export const generateActaDelivery = async (req, res, next) => {
       {
         nameAfterSignature: configPdf.infoContentFooterPdf.nameAfterSignature,
         representantLegal: configPdf.infoContentFooterPdf.representantLegal,
-        replegalprint:configPdf.replegalprint
+        replegalprint: configPdf.replegalprint
       },
       {
         content: configPdf.infoContentFooterPdf.content,
-        titleInfo:configPdf.infoContentFooterPdf.titleInfo,
+        titleInfo: configPdf.infoContentFooterPdf.titleInfo,
       }
     );
     // res.setHeader('Content-Type', 'application/pdf');
@@ -159,9 +164,9 @@ export const getAllByType = async (req, res, next) => {
         directCondition: directSearch
       };
     }
-    
-  const getAllModel = await mutil.getTunnedDocument2(Delivery, ['association', 'author', 'updatedBy','activity', 'community'], page, perPage, searchOptions)
-        
+
+    const getAllModel = await mutil.getTunnedDocument2(Delivery, ['association', 'author', 'updatedBy', 'activity', 'community'], page, perPage, searchOptions)
+
     res.status(200).json({
       data: getAllModel,
     });
