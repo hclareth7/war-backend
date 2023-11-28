@@ -5,7 +5,7 @@ import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
 import Inventory from "../models/inventory";
 import { generateFilePdfDelivery } from "../services/pdfcreator";
-import mongoose from "mongoose";
+import mongoose, { model } from "mongoose";
 
 export const save = async (req, res, next) => {
   // #swagger.tags = ['Delivery']
@@ -149,91 +149,21 @@ export const getAllByType = async (req, res, next) => {
     let directSearch: any[] = []
     if (type) {
       directSearch.push({ type: type });
-      searchOptions = { directSearch: directSearch }
+      searchOptions = { directCondition: directSearch }
     }
 
     if (req.query.queryString) {
       searchOptions = {
         queryString: req.query.queryString,
         searchableFields: config.CONFIGS.searchableFields.delivery,
-        directSearch: directSearch
+        directCondition: directSearch
       };
     }
     
-    const aggregateNdelivery =[
-      {
-        $match: {
-          type: type,
-          $and:[
-            {
-            $or: [
-              { status: { $regex: new RegExp("enabled", "i") } },
-              { status: { $exists: false } },
-            ], 
-          },
-          ]
-        }
-      },
-      {
-        $unwind: "$itemList"
-      },
-      {
-        $lookup: {
-          from: "items", // Reemplaza "items" con el nombre real de tu colección de items
-          localField: "itemList.item",
-          foreignField: "_id",
-          as: "item"
-        }
-      },
-      {
-        $match: {
-          $or: [
-            {"item.isDefault": false},
-            {"item.isDefault": { $exists: false }}
-          ], 
-        }
-      },
-      {
-        $group: {
-          _id: "$_id",
-          beneficiary: { $first: "$beneficiary" },
-          representant: { $first: "$representant" },
-          type: { $first: "$type" },
-          event: { $first: "$event" },
-          itemList: { $push: "$itemList" },
-          author: { $first: "$author" },
-          status: { $first: "$status" },
-          createdAt: { $first: "$createdAt" },
-          updatedAt: { $first: "$updatedAt" }
-        }
-      }
-    ];
-    const options = {
-      page: page || 1,
-      limit: perPage || 10,
-      sort: { updatedAt: -1 },
-      searchOptions
-    };
-
-    const aggregate = Delivery.aggregate(aggregateNdelivery);
-    const getAllModel = await Delivery.aggregatePaginate(aggregate, options);
-    const response = await Delivery.populate(getAllModel.docs, [
-      { path: "beneficiary" },
-      { path: "representant" },
-      { path: "event" },
-      { path: "itemList.item" },
-      { path: "author" },
-    ]);
-   
-    const result = {
-      currentPage: getAllModel.page,
-      itemsPerPage: getAllModel.limit,
-      totalItems: getAllModel.totalDocs,
-      totalPages: getAllModel.totalPages,
-      data: response
-    };
+  const getAllModel = await mutil.getTunnedDocument2(Delivery, ['association', 'author', 'updatedBy','activity', 'community'], page, perPage, searchOptions)
+        
     res.status(200).json({
-      data: result,
+      data: getAllModel,
     });
   } catch (error) {
     next(error);
