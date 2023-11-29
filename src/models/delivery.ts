@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getTunnedDocument, getTunnedDocument2 } from "../helpers/modelUtilities";
 const mongoosePaginate = require("mongoose-paginate-v2");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 

@@ -70,6 +70,30 @@ const generateReportWithoutSupports = async (_) => {
   return excel;
 }
 
+const generateReportActivityEvent = async (configObject) => {
+  const { act_id, event_id } = configObject; 
+  const assistList = await Beneficiary.find({ activity: new mongoose.Types.ObjectId(act_id) })
+    .populate(['community', 'association', 'activity', 'author']);
+  
+  const eventFound = await Event.findById(event_id).populate(
+    {
+      path: 'attendees', populate: [
+        { path: 'community', select: '-_id name' },
+        { path: 'association', select: '-_id name' },
+        { path: 'activity', select: '-_id name' },
+        { path: 'author', select: '-_id name' }],
+    }
+  );
+  const attendees = eventFound.toObject().attendees;
+  const differenceList = assistList.filter(item => !attendees.some(elemt => elemt._id.toString() === item._id.toString()));
+  const confiAssistance = config.CONFIGS.reportColumNames.beneficiary;
+  const listKey = Object.keys(confiAssistance);
+  const columNames = Object.values(confiAssistance);
+  const excel = await excelCreator.createExcel(columNames, listKey, differenceList);
+
+  return excel;
+}
+
 export const generateReports = async (req, res, next) => {
   // #swagger.tags = ['Reports']
   /*    
@@ -117,6 +141,13 @@ export enum REPORT_TYPE {
   ACTIVITY_ASSISTANCE_BY_ASSOCIATION = 'ACTIVITY_ASSISTANCE_BY_ASSOCIATION',
   BENEFICIARY_LIST = 'BENEFICIARY_LIST',
   WITHOUT_SUPPORTS = 'WITHOUT_SUPPORTS',
+  BENEFICIARY_SUMMARY = 'BENEFICIARY_SUMMARY',
+  RATINGS_SUMMARY = 'RATINGS_SUMMARY',
+  GENERAL_RATINGS_SUMMARY = 'GENERAL_RATINGS_SUMMARY',
+  WORKSHOPS_SUMMARY = 'WORKSHOPS_SUMMARY',
+  GENERAL_WORKSHOPS_SUMMARY = 'GENERAL_WORKSHOPS_SUMMARY',
+  EVENT_SUMMARY = 'EVENT_SUMMARY',
+  EVENT_ASSISTANCE_DIFF = 'EVENT_ASSISTANCE_DIFF'
 };
 
 export const CHART_FACTORY_DICTIONARY = {
@@ -124,4 +155,5 @@ export const CHART_FACTORY_DICTIONARY = {
   [REPORT_TYPE.ACTIVITY_ASSISTANCE]: generateReportActivityAssistance,
   [REPORT_TYPE.BENEFICIARY_LIST]: generateReportBeneficiaryList,
   [REPORT_TYPE.WITHOUT_SUPPORTS]: generateReportWithoutSupports,
+  [REPORT_TYPE.EVENT_ASSISTANCE_DIFF]: generateReportActivityEvent,
 };
