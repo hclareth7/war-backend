@@ -65,7 +65,7 @@ export const jsonDataConvertToArray = async (
           // "municipality":()=>handlerProperties(property,item,arrayItem,ModelMunicipality),
           association: () =>
             handlerProperties(property, item, arrayItem, ModelAssociation),
-            participants: () =>
+          participants: () =>
             arrayItem.push(item.attendees.length),
           activity: () =>
             arrayItem.push(item.activity?.name || ""),
@@ -86,7 +86,7 @@ export const jsonDataConvertToArray = async (
         if (optionsValidation[`${property}`]) {
           await optionsValidation[`${property}`]();
         } else {
-          arrayItem.push(item[`${property}`] ? item[`${property}`]: "");
+          arrayItem.push(item[`${property}`] ? item[`${property}`] : "");
         }
       }
       arrayParent.push(arrayItem);
@@ -111,10 +111,10 @@ export const getTunnedDocument = async (
     } else {
       conditions = getStatusOptions(searchOptions);
     }
-    if(searchOptions?.directSearch){
-      conditions['$and'] = [ ...searchOptions?.directSearch]
+    if (searchOptions?.directSearch) {
+      conditions['$and'] = [...searchOptions?.directSearch]
     }
-    
+
     const options = getPaginationOptions(populate, page, perPage);
     const response = await model.paginate(conditions, options);
 
@@ -167,14 +167,17 @@ const buildAggregate = (model, populate, searchOptions) => {
   let andArray: any = [];
   let addFieldObject = {};
   let ProjectObject = {};
-  
-    /// ['type', {attendee: [name, identification]}, {author: [name, user_name]}]
-    for (const localField of populate) {
-      console.log(localField);
-      
+
+  /// ['type', {attendee: [name, identification]}, {author: [name, user_name]}]
+  //for (const localField of populate) {
+  const schema = model.schema;
+  schema.eachPath((localField, schemaType) => {
+    if (schemaType.options.ref) {
+    console.log(localField);
+
       const fieldObject = {
         $lookup: {
-          from: mongoose.model(model.schema.path(localField).options.ref).collection.name,
+          from: mongoose.model(schemaType.options.ref).collection.name,
           localField: localField,
           foreignField: "_id",
           as: `${localField}Info`
@@ -185,22 +188,24 @@ const buildAggregate = (model, populate, searchOptions) => {
       ProjectObject[`${localField}Info`] = 0;
       lookupArray.push(fieldObject);
     }
-    searchOptions?.searchableFields?.forEach((field) => {
+
+  });
+  searchOptions?.searchableFields?.forEach((field) => {
     if (isObject(field)) {
       const localField = Object.keys(field)[0];
       for (const subfield of field[localField]) {
 
-        if(searchOptions.queryString){
-          const andObject ={
+        if (searchOptions.queryString) {
+          const andObject = {
             [`${localField}Info.${subfield}`]: { $regex: new RegExp(searchOptions.queryString, "i") }
           }
           orArray.push(andObject)
         }
-        
-       
+
+
       }
     } else {
-      if(searchOptions.queryString){
+      if (searchOptions.queryString) {
         const andObject = {
           [field]: { $regex: new RegExp(searchOptions.queryString, "i") }
         }
@@ -208,23 +213,24 @@ const buildAggregate = (model, populate, searchOptions) => {
       }
     }
 
-    
+
 
   });
-  aggregate.push(...lookupArray, 
-    {$match:
+  aggregate.push(...lookupArray,
     {
-      $and: [
-        {
-          $or: [
-            { status: { $regex: new RegExp("enabled", "i") } },
-            { status: { $exists: false } },
-          ],
-        }
-        
-      ]
+      $match:
+      {
+        $and: [
+          {
+            $or: [
+              { status: { $regex: new RegExp("enabled", "i") } },
+              { status: { $exists: false } },
+            ],
+          }
+
+        ]
+      }
     }
-  }
 
   );
 
@@ -243,17 +249,17 @@ const buildAggregate = (model, populate, searchOptions) => {
     });
   }
 
-    for (const itemAggregate of aggregate) {
-      if(itemAggregate['$match']){
-        if(orArray.length>0){
-          itemAggregate['$match']['$and'].push({ $or: orArray });
-        }
-        if(searchOptions.directCondition){
-          itemAggregate['$match']['$and'].push(...searchOptions.directCondition)
-        }
-        
+  for (const itemAggregate of aggregate) {
+    if (itemAggregate['$match']) {
+      if (orArray.length > 0) {
+        itemAggregate['$match']['$and'].push({ $or: orArray });
       }
+      if (searchOptions.directCondition) {
+        itemAggregate['$match']['$and'].push(...searchOptions.directCondition)
+      }
+
     }
+  }
   console.log(JSON.stringify(aggregate))
   return aggregate;
 }
@@ -317,7 +323,7 @@ export const filterByDateRangeAndString = (
   valueFieldString?: any,
   valueAuthor?: any
 ) => {
-  const filter={
+  const filter = {
     [fieldDate]: {
       $gte: parseDate(startDate),
       $lte: parseDate(endDate),

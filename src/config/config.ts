@@ -23,7 +23,7 @@ export const CONFIGS = {
         rating:['rating_type', {attendee: ['first_name', 'identification', 'first_last_name']}, {author: ['name', 'user_name']}],
         activity: ["name"],
         workshop: ["name"],
-        delivery: ['type', 'beneficiary.first_name', 'beneficiary.identification', 'representant.name', 'representant.identification']
+        delivery: [{beneficiary: ['first_name', 'last_name', 'identification']}, {representant: ['name', 'identification']},{author: ['name', 'user_name']} ]
         
     },
     filterType: ["dateRange", "dateSpecific", "number", "string"],
