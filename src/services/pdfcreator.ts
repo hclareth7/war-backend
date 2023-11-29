@@ -4,7 +4,7 @@ import * as config from "../config/config";
 import * as fs from "fs";
 import { typeContentBeforeBody, typeContentFooter, typeHeader, typeTable } from "../types/typesPdf";
 import { Response } from "express";
-import { formatCurrencyNummber } from "../helpers/helper";
+import { calculateAge, formatCurrencyNummber } from "../helpers/helper";
 
 /* GET home page. */
 export const createPDf = async function (
@@ -186,14 +186,24 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
 
 const addHeadersTable=(doc:any,x:number,y:number,headers?:string[] | null)=>{
   const headWidth = headers?.length === 5 ? 120 : 80;
-  const delta = headers?.length === 5 ? 120 : 97;
+  let delta = headers?.length === 5 ? 120 : 82;
+  if(headers && headers?.length>5){
+    x=15;
+  }
   headers?.map((header,index)=>{
-    if(index===1){
-      x=65;
-      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width: headWidth});
+  let widthHeader=0;
+    if(header===headers[3]){
+      widthHeader=50;
     }else{
-      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width: headWidth + 5});
+      widthHeader=headWidth;
     }
+    if(index===1){
+      x=46;
+      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width: widthHeader});
+    }else{
+      doc.fontSize(10).font('Helvetica-Bold').fillColor("black").text(header, x , y,{width: widthHeader + 5});
+    }
+    
     x+=delta;
   });
   x=30;
@@ -208,13 +218,17 @@ const addContentBody=(doc:any,x:number,y:number,headerPdf?:typeHeader | null,con
       let aux=0;
       let amountRegisterByPage=0;
       const headWidth = headersTable?.length === 5 ? 120 : 80;
-      const delta = headersTable?.length === 5 ? 120 : 97;
+      const delta = headersTable?.length === 5 ? 120 : 82;
       [x,y]=addHeadersTable(doc,x,y,headersTable);
+      
       valuesTable.map((item)=>{
         y+=45;
+        if(item?.length>5){
+          x=15;
+        }
         item.map((value,index)=>{
           if(index===1){
-            x=65;
+            x=46;
             doc.fontSize(8.5).font('Helvetica').fillColor("black").text(value, x , y,{width: headWidth});
           }else{
             if(index===item.length-1){
@@ -428,22 +442,6 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
 /**
  FILE PDF DELIVERY
  */
-
- function calculateAge(dateOfBirth) {
-  const today = new Date();
-  const birthDate = new Date(dateOfBirth);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  
-  // Adjust age if the birthday hasn't occurred this year yet
-  const currentMonth = today.getMonth() + 1;
-  const birthMonth = birthDate.getMonth() + 1;
-
-  if (birthMonth > currentMonth || (birthMonth === currentMonth && birthDate.getDate() > today.getDate())) {
-      age--;
-  }
-
-  return age;
-}
 
 const convertUrl=(url,fileName)=>{
   if(fileName){

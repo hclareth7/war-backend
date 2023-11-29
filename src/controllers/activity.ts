@@ -28,6 +28,41 @@ export const save = async (req, res, next) => {
     }
 };
 
+export const pdfActivityAssistance=async (req, res, next)=>{
+    try {
+        const act_id=req.params.id;
+        const activity=await Model.findOne({_id:act_id});
+        const assistList = await Beneficiary.find({ activity:act_id })
+        .populate(['community', 'association', 'activity']);
+        if(activity){
+            const totalAssistances=assistList.length;
+            const configFilePdf=config.CONFIGS.configFilePdf;
+            const data =await mutil.jsonDataConvertToArray(assistList,configFilePdf.propertiesAttendeesActivityPdf);
+            pdf.generateFilePdf(
+            res,
+            null,
+            {
+                directionLogo: configFilePdf.logoPdfDirection,
+                titleMain: configFilePdf.headerDocument.titleMain,
+                titleSecundary:configFilePdf.titleSecundaryListAssitanceActivity+activity?.name.toUpperCase()
+            },
+            null,
+            {
+                headers:configFilePdf.headersContentBeforeTableAttendeesActivity,
+                values:[activity?.name,mutil.organizeDate(activity?.execution_date,null),totalAssistances]
+            },
+            {
+                headersTable: configFilePdf.headersTableAssistanceActivity,
+                valuesTable: data,
+            },
+            configFilePdf.infoContentFooterPdf
+            );
+        }
+    } catch (error) {
+      next(error);
+    }
+  }
+
 export const getAll = async (req, res, next) => {
     // #swagger.tags = ['Activities']
     /*    

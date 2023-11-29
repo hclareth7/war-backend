@@ -1,6 +1,7 @@
 import * as config from "../config/config";
 import mongoose from 'mongoose';
 import ModelAssociation from "../models/references/association";
+import { calculateAge } from "./helper";
 
 const handlerProperties = async (
   property: string,
@@ -69,6 +70,8 @@ export const jsonDataConvertToArray = async (
             arrayItem.push(item.attendees.length),
           activity: () =>
             arrayItem.push(item.activity?.name || ""),
+          age: () =>
+            arrayItem.push(`${calculateAge(item?.birthday)} años`),
           first_name: () =>
             arrayItem.push(
               `${item[`${property}`] +
