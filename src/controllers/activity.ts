@@ -37,6 +37,7 @@ export const pdfActivityAssistance=async (req, res, next)=>{
         if(activity){
             const totalAssistances=assistList.length;
             const configFilePdf=config.CONFIGS.configFilePdf;
+            console.log(assistList[0]);
             const data =await mutil.jsonDataConvertToArray(assistList,configFilePdf.propertiesAttendeesActivityPdf);
             pdf.generateFilePdf(
             res,

@@ -446,38 +446,36 @@ export const getStats = async (req, res, next) => {
 export const pdfEventAssitance = async(req, res, next) => {
   try {
     const idEvent = req.params.id;
-    const configPdf=config.CONFIGS.configFilePdf;
+    const configPdf = config.CONFIGS.configFilePdf;
     const eventFound = await Event.findById(idEvent).populate(
       {
         path: 'attendees', populate: [
-          { path: 'community', select: '-_id name' },
-          { path: 'association', select: '-_id name' },
-          { path: 'activity', select: '-_id name' }],
+          { path: 'community' },
+          { path: 'association'},
+          { path: 'activity'}],
       }
     );
     const attendees = eventFound.toObject().attendees;
-    const dataTable = await mutil.jsonDataConvertToArray(attendees, configPdf.propertiesTableBeneficiaries);
+    console.log(attendees[0]);
+    const dataTable = await mutil.jsonDataConvertToArray(attendees, configPdf.propertiesAttendeesActivityPdf);
     pdf.generateFilePdf(
       res,
       null,
       {
-          directionLogo:configPdf.logoPdfDirection,
-          titleMain:configPdf.titleUped,
-          titleSecundary:configPdf.titleSecundadyListBeneficiarie
+          directionLogo: configPdf.logoPdfDirection,
+          titleMain: configPdf.titleUped,
+          titleSecundary: configPdf.titleSecundadyListBeneficiarie
       },
       null,
       {
-          headers:configPdf.headerContentEventAssistance,
-          values:[eventFound.name, eventFound.execution_date, attendees.length]
+          headers: configPdf.headerContentEventAssistance,
+          values: [eventFound.name, mutil.organizeDate(eventFound?.execution_date,null), attendees.length]
       },
       {
-          headersTable:configPdf.headersTablebeneficiarie,
-          valuesTable:dataTable
+          headersTable: configPdf.headersTableAssistanceActivity,
+          valuesTable: dataTable
       },
-      {
-          content: configPdf.infoContentFooterPdf.content,
-          titleInfo:configPdf.infoContentFooterPdf.titleInfo,
-      }
+      configPdf.infoContentFooterPdf
   );
   } catch (error) {
     next(error);
