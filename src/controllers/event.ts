@@ -442,3 +442,44 @@ export const getStats = async (req, res, next) => {
     next(error);
   }
 };
+
+export const pdfEventAssitance = async(req, res, next) => {
+  try {
+    const idEvent = req.params.id;
+    const configPdf=config.CONFIGS.configFilePdf;
+    const eventFound = await Event.findById(idEvent).populate(
+      {
+        path: 'attendees', populate: [
+          { path: 'community', select: '-_id name' },
+          { path: 'association', select: '-_id name' },
+          { path: 'activity', select: '-_id name' }],
+      }
+    );
+    const attendees = eventFound.toObject().attendees;
+    const dataTable = await mutil.jsonDataConvertToArray(attendees, configPdf.propertiesTableBeneficiaries);
+    pdf.generateFilePdf(
+      res,
+      null,
+      {
+          directionLogo:configPdf.logoPdfDirection,
+          titleMain:configPdf.titleUped,
+          titleSecundary:configPdf.titleSecundadyListBeneficiarie
+      },
+      null,
+      {
+          headers:configPdf.headerContentEventAssistance,
+          values:[eventFound.name, eventFound.execution_date, attendees.length]
+      },
+      {
+          headersTable:configPdf.headersTablebeneficiarie,
+          valuesTable:dataTable
+      },
+      {
+          content: configPdf.infoContentFooterPdf.content,
+          titleInfo:configPdf.infoContentFooterPdf.titleInfo,
+      }
+  );
+  } catch (error) {
+    next(error);
+  }
+}

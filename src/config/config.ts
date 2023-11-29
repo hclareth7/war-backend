@@ -62,6 +62,7 @@ export const CONFIGS = {
         headersTableListWorkshop: ["#", "Fecha" ,"Taller" ,"Actividad" ,"# Participantes", "Usuario"],
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
         headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","USUARIO:"],
+        headerContentEventAssistance: ["EVENTO:", "FECHA:", "TOTAL:"],
         headersContentBeforeTableListArticles: ["TOTAL ASISTENTES:", "TOTAL ENTREGAS:"],
         headersContentBeforeTableListWorkshops: ["DESDE:", "HASTA:", "TOTAL:"],
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:", "USUARIO:"],
