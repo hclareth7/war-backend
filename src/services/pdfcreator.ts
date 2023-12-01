@@ -186,7 +186,16 @@ const addContent=(doc:any,x:number,y:number,headers?:string [] | null ,values?:s
 
 const addHeadersTable=(doc:any,x:number,y:number,headers?:string[] | null)=>{
   const headWidth = headers?.length === 5 ? 120 : 80;
-  let delta = headers?.length === 5 ? 120 : 82;
+  let delta=0;
+  if(headers){
+    if(headers?.length === 5){
+      delta=120;
+    }else if(headers?.length === 6){
+      delta =120;
+    }else if(headers?.length >= 6 && headers?.length <=8){
+      delta =82;
+    }
+  }
   if(headers && headers?.length>5){
     x=15;
   }
@@ -218,7 +227,14 @@ const addContentBody=(doc:any,x:number,y:number,headerPdf?:typeHeader | null,con
       let aux=0;
       let amountRegisterByPage=0;
       const headWidth = headersTable?.length === 5 ? 120 : 80;
-      const delta = headersTable?.length === 5 ? 120 : 82;
+      let delta = 0;
+      if(headersTable?.length === 5){
+        delta=120;
+      }else if(headersTable?.length === 6){
+        delta =120;
+      }else if(headersTable?.length >= 6 && headersTable?.length <=8){
+        delta =82;
+      }
       [x,y]=addHeadersTable(doc,x,y,headersTable);
       
       valuesTable.map((item)=>{
@@ -444,11 +460,15 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
  */
 
 const convertUrl=(url,fileName)=>{
+  let stringFile="";
   if(fileName){
-    return `${process.env.LS_STATIC_PATH}/${fileName}`;
-  } 
-  const parts=url.split("/");
-  return `${process.env.LS_STATIC_PATH}/${parts[parts.length-1]}`;
+    stringFile= `${process.env.LS_STATIC_PATH}/${fileName}`;
+  }
+  if(url){
+    const parts=url.split("/");
+    stringFile=`${process.env.LS_STATIC_PATH}/${parts[parts.length-1]}`;
+  }
+  return stringFile;
 }
 
 const getImageBase64=(directionImagen:string)=>{
