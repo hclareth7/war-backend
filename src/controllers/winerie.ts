@@ -1,7 +1,7 @@
 // winerieController.js
 import Winerie from "../models/winerie";
 import Inventory from "../models/inventory";
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 import * as config from "../config/config";
 import * as mutil from "../helpers/modelUtilities";
@@ -155,8 +155,7 @@ export const getAll = async (req, res, next) => {
     result.itemsPerPage = wineries.itemsPerPage;
     result.totalItems = wineries.totalItems;
     result.totalPages = wineries.totalPages;
-    console.log(wineries);
-    
+
     for (const winerie of wineries.data) {
       const relatedInventory = await Inventory.find({
         winerie: winerie._id,
@@ -227,112 +226,114 @@ export const update = async (req, res, next) => {
       "associated_winery",
     ]);
 
+    //if is main winierie
     if (data.type == wineries.types[0]) {
-      const idsToDelete = data.winerie.inventory.map((item) => item._id);
-      if (idsToDelete.length > 0) {
+      const idsToDelete = data.inventory.map((item) => typeof item.item === 'string' ? new mongoose.Types.ObjectId(item.item) : new mongoose.Types.ObjectId(item.item._id));
+
+      const removetItems = await Inventory.find({
+        item: { $nin: idsToDelete },
+        winerie: data._id,
+      });
+
+      if (removetItems.length > 0) {
         return res
           .status(400)
           .json({ mensaje: "You can not remove items from the main winierie" });
       }
       for (const product of data.inventory) {
-        const inventory = await Inventory.findOne({
+        const mainInventory = await Inventory.findOne({
           winerie: winerie._id,
           item: product.item,
         });
-        if (inventory) {
-          inventory.amount < product.amount
-            ? ((inventory.amount = product.amount), await inventory.save())
-            : res.status(400).json({ mensaje: "Invalid amount." });
+        if (mainInventory) {
+          if (mainInventory.amount <= product.amount) {
+            mainInventory.amount = product.amount;
+            await mainInventory.save()
+          } else {
+            return res.status(400).json({ mensaje: "Invalid amount, you can't add a values less than current" });
+          }
+
         } else {
           product.winerie = winerie._id;
           const newInventory = new Inventory(product);
           await newInventory.save();
         }
       }
-
       return res.status(201).json({
         message: "Winerie main updated successfully.",
         data: winerie,
       });
     }
 
-    const idsToDelete = data.winerie.inventory.map((item) => item._id);
+    //if secondary inventory request to remove items
+    const idsToDelete = data.winerie.inventory.map((item) => typeof item.item === 'string' ? new mongoose.Types.ObjectId(item.item) : new mongoose.Types.ObjectId(item.item._id));
+    const listOfItems = data.winerie.inventory.map((item) => typeof item.item === 'string' ? {...item, item: new mongoose.Types.ObjectId(item.item)} : {...item, item: new mongoose.Types.ObjectId(item.item._id)});
 
-    if (idsToDelete.length > 0) {
-      const removetItems = await Inventory.find({
-        _id: { $nin: idsToDelete },
-        winerie: data.winerie._id,
-      });
-      for (const productToRemove of removetItems) {
-        const mainInventory = await Inventory.findOne({
-          winerie: data.winerie.associated_winery._id,
-          item: productToRemove.item,
-        });
-        if (mainInventory) {
-          const newAmount = mainInventory.amount + productToRemove.amount;
-          mainInventory.amount = newAmount;
-          await mainInventory.save();
-        }
-      }
-      await Inventory.deleteMany({
-        _id: { $nin: idsToDelete },
-        winerie: data.winerie._id,
-      });
-    }
+    const removetItems = await Inventory.find({
+      item: { $nin: idsToDelete },
+      winerie: data.winerie._id,
+    });
 
-    for (const currentProduct of data.winerie.inventory) {
+    for (const productToRemove of removetItems) {
       const mainInventory = await Inventory.findOne({
         winerie: data.winerie.associated_winery._id,
-        item: currentProduct.item._id
+        item: productToRemove.item,
       });
+      //sum removed items to primary inventory
+      if (mainInventory) {
+        const newAmount = mainInventory.amount + productToRemove.amount;
+        mainInventory.amount = newAmount;
+        await mainInventory.save();
+      }
+    }
+    //Remove items from secundary Inventory
+    await Inventory.deleteMany({
+      item: { $nin: idsToDelete },
+      winerie: data.winerie._id,
+    });
 
-      console.log(currentProduct);
-
-      console.log("ID_ITEM: ", currentProduct._id);
-
-
-      console.log("MAIN", mainInventory);
+    // update secundary inventory
+    for (const currentProduct of listOfItems) {
+      
+      const mainInventory = await Inventory.findOne({
+        winerie: data.winerie.associated_winery._id,
+        item: currentProduct.item
+      });
 
       const SecondOldProduct = await Inventory.findOne({
         winerie: data.winerie._id,
-        item: currentProduct.item._id
+        item: currentProduct.item
       });
 
-      console.log("SECOND", SecondOldProduct);
-      /*
       if (mainInventory) {
-        if (mainInventory.total >= currentProduct.amount) {
-          if (SecondOldProduct) {
-            if (SecondOldProduct.amount > currentProduct.amount) {
-              //bodInit + (bodSecOld - bodSecNew)
-              console.log(mainInventory.amount);
-              console.log(SecondOldProduct.amount);
-              console.log(currentProduct.amount);
-
-              
-              let newAmount = mainInventory.amount + (SecondOldProduct.amount - currentProduct.amount);
-              mainInventory.amount = newAmount;
-              await mainInventory.save();
-            } else if (SecondOldProduct.amount < currentProduct.amount) {
-              console.log(mainInventory.amount);
-              console.log(SecondOldProduct.amount);
-              console.log(currentProduct.amount);
-              //bodInit - (bodSecNew - bodSecOld) 
-              let newAmount = mainInventory.amount - (currentProduct.amount - SecondOldProduct.amount ); //50 + (- 50) 
-              mainInventory.amount = newAmount;
-              await mainInventory.save();
-            }
-            SecondOldProduct.amount = currentProduct.amount;
-            await SecondOldProduct.save();
-          }else {
-            currentProduct.winerie = winerie._id;
-            const newInventory = new Inventory(currentProduct);
-            await newInventory.save();
+        if (SecondOldProduct) {
+          //if main inventory has enought amount of target product
+          if ((mainInventory.amount + SecondOldProduct.amount) >= currentProduct.amount) {
+              if (SecondOldProduct.amount >= currentProduct.amount) {
+                let newAmount = mainInventory.amount + (SecondOldProduct.amount - currentProduct.amount);
+                mainInventory.amount = newAmount;
+                await mainInventory.save();
+              } else if (SecondOldProduct.amount < currentProduct.amount) {
+                let newAmount = mainInventory.amount - (currentProduct.amount - SecondOldProduct.amount); //50 + (- 50) 
+                mainInventory.amount = newAmount;
+                await mainInventory.save();
+              }
+              SecondOldProduct.amount = currentProduct.amount;
+              await SecondOldProduct.save();
+            
           }
-        } 
-      } 
-      */
+      } else {
+
+        let newAmount = mainInventory.amount - currentProduct.amount;
+        mainInventory.amount = newAmount;
+        await mainInventory.save();
+        currentProduct.winerie = winerie._id;
+        const newInventory = new Inventory(currentProduct);
+        await newInventory.save();
+      }
     }
+  }
+    
     return res.status(201).json({
       message: "Winerie secundary updated successfully.",
       data: winerie,
@@ -381,7 +382,7 @@ export const deleteItem = async (req, res, next) => {
 
 
 export const close = async (req, res, next) => {
-   // #swagger.tags = ['Wineries']
+  // #swagger.tags = ['Wineries']
   /*    
     #swagger.security = [{
         "apiKeyAuth": []
@@ -417,7 +418,7 @@ export const close = async (req, res, next) => {
 
   winerie.status = "disabled";
   winerie.save();
-  
+
   return res.status(201).json({
     message: "Winerie closed successfully.",
     data: winerie,

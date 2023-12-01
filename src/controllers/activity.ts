@@ -80,7 +80,7 @@ export const getAll = async (req, res, next) => {
                 searchableFields: config.CONFIGS.searchableFields.activity
             };
         };
-        const activities: any = await mutil.getTunnedDocument(Model, ['participatingAssociations.association'], page, perPage, searchOptions);
+        const activities: any = await mutil.getTunnedDocument(Model, ['participatingAssociations'], page, perPage, searchOptions);
         const actData = activities.data.map(activity => activity.toObject()); // Convertir a objeto plano
         for (let i = 0; i < activities.data.length; i++) {
             const response = await Beneficiary.find({ activity: activities.data[i]._id });
