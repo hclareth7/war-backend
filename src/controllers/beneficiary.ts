@@ -5,7 +5,6 @@ import * as mutil from '../helpers/modelUtilities';
 import * as config from '../config/config';
 import mongoose from 'mongoose';
 import { generateFilePdf } from '../services/pdfcreator';
-import { ObjectId } from 'mongodb';
 
 const modelName = Model.modelName;
 
@@ -65,10 +64,11 @@ export const filter = async (req, res, next) => {
 export const getPdfListBeneficiarie=async(req, res, next)=>{
     try {
         const userLogged = res.locals.loggedInUser;
-        const configPdf=config.CONFIGS.configFilePdf;
+        const configPdf = config.CONFIGS.configFilePdf;
         const data = req.body;
-        const idAuthor=userLogged._id.toString();
-        const dataFilter={
+        const idAuthor = data.userId ? data.userId : userLogged._id.toString();
+        console.log(idAuthor);
+        const dataFilter = {
             createdAt: {
                 $gte: new Date(data.startDate),
                 $lte: new Date(data.endDate)
