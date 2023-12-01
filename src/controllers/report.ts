@@ -4,6 +4,7 @@ import Beneficiary from "../models/beneficiary";
 import * as excelCreator from "../services/xlsxCreator"
 import * as config from '../config/config';
 import mongoose from "mongoose";
+import Activity from "../models/activity";
 
 
 const generateReportEventAssistance = async (configObject) => {
@@ -94,6 +95,28 @@ const generateReportActivityEvent = async (configObject) => {
   return excel;
 }
 
+const generateReportActivities = async(configObject) => {
+  const { startDate, endDate } = configObject;
+  const dataFilter = {
+    execution_date: {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate)
+    },
+  }
+  const activities = await Activity.find(dataFilter);
+  const actData = activities;
+  for (let i = 0; i < activities.length; i++) {
+    const response = await Beneficiary.find({ activity: activities[i]._id });
+    actData[i].attending_beneficiary = response.length;
+  }
+  const configActivities = config.CONFIGS.reportColumNames.activities;
+  const listKey = Object.keys(configActivities);
+  const columNames = Object.values(configActivities);
+  const excel = await excelCreator.createExcel(columNames, listKey, actData);
+
+  return excel;
+}
+
 export const generateReports = async (req, res, next) => {
   // #swagger.tags = ['Reports']
   /*    
@@ -127,7 +150,7 @@ export const generateReports = async (req, res, next) => {
 }
 
 
-export enum REPORT_TYPE {
+export const enum REPORT_TYPE {
   EVENT_ASSISTANCE = 'EVENT_ASSISTANCE',
   DELIVERY_ACT = 'DELIVERY_ACT',
   ACTIVITY_ASSISTANCE = 'ACTIVITY_ASSISTANCE',
@@ -147,8 +170,10 @@ export enum REPORT_TYPE {
   WORKSHOPS_SUMMARY = 'WORKSHOPS_SUMMARY',
   GENERAL_WORKSHOPS_SUMMARY = 'GENERAL_WORKSHOPS_SUMMARY',
   EVENT_SUMMARY = 'EVENT_SUMMARY',
-  EVENT_ASSISTANCE_DIFF = 'EVENT_ASSISTANCE_DIFF'
-};
+  EVENT_ASSISTANCE_DIFF = 'EVENT_ASSISTANCE_DIFF',
+  BENEFICIARIES_BY_USER = "BENEFICIARIES_BY_USER",
+  ACTIVITIES_LIST = "ACTIVITIES_LIST",
+}
 
 export const CHART_FACTORY_DICTIONARY = {
   [REPORT_TYPE.EVENT_ASSISTANCE]: generateReportEventAssistance,
@@ -156,4 +181,5 @@ export const CHART_FACTORY_DICTIONARY = {
   [REPORT_TYPE.BENEFICIARY_LIST]: generateReportBeneficiaryList,
   [REPORT_TYPE.WITHOUT_SUPPORTS]: generateReportWithoutSupports,
   [REPORT_TYPE.EVENT_ASSISTANCE_DIFF]: generateReportActivityEvent,
+  [REPORT_TYPE.ACTIVITIES_LIST]: generateReportActivities,
 };

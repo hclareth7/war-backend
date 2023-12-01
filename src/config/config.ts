@@ -157,5 +157,12 @@ export const CONFIGS = {
             sisben_url: 'Soporte SISBEN',
             registry_doc_url: 'Soporte Registraduria'
         },
+        activities: {
+            name: "Actividad",
+            execution_date: "Fecha",
+            description: "Descripción",
+            estimate_attendance: "Asistencia estimada",
+            attending_beneficiary: "Asistencia confirmada"
+        }
     },
 };
