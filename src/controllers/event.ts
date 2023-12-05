@@ -75,9 +75,9 @@ export const get = async (req, res, next) => {
   try {
     const id = req.params.id;
     const eventFound = await Event.findById(id).populate([
-      "associated_winery",
-      "participatingAssociations",
-      { path: "participatingAssociations", populate: { path: "community" } },
+      "attendees",
+      { path: "attendees", populate: { path: "community" } },
+      { path: "attendees", populate: { path: "association" } },
     ]);
     if (!eventFound) {
       return res.status(400).json({ mensaje: "Event not found" });
