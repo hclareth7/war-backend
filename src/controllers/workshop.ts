@@ -22,7 +22,6 @@ export const getPdfListWorkShops=async (req, res, next)=>{
             $gte: new Date(data.startDate),
             $lte: new Date(data.endDate)
         },
-        name:{ $regex: new RegExp(data.typeWorkShop, "i") },
         author: idAuthor
       }
       const allWorkshops=await Model.find(dataFilter).populate(["activity","attendees","author",]);
