@@ -456,6 +456,12 @@ export const pdfEventAssitance = async(req, res, next) => {
       }
     );
     const attendees = eventFound.toObject().attendees;
+    attendees.sort((a, b) => {
+      const identificationA = a.identification;
+      const identificationB = b.identification;
+    
+      return identificationA.localeCompare(identificationB);
+    });
     const dataTable = await mutil.jsonDataConvertToArray(attendees, configPdf.propertiesAttendeesActivityPdf);
     pdf.generateFilePdf(
       res,
