@@ -76,7 +76,7 @@ const generateReportEventAssistance = async (configObject) => {
   const newKeys = allItems.map(item => item._id.toString());
   const finalAttends = attendees.map(attend => {
     newInfo = {};
-    const attendDevs: any = eventDeliveries.filter(dev => dev.beneficiary,toString() === attend._id.toString());
+    const attendDevs: any = eventDeliveries.filter(dev => dev.beneficiary.toString() === attend._id.toString());
     let attendItems: any = [];
     if ( attendDevs && attendDevs.length > 0) {
       attendDevs.forEach(aDev => {
@@ -89,7 +89,7 @@ const generateReportEventAssistance = async (configObject) => {
         ...newInfo,
         [item._id]: attendItems.includes(item._id.toString()) ? "ENTREGADO" : "NO ENTREGADO" 
       }
-    })
+    });
     return {...attend, ...newInfo};
   });
 
