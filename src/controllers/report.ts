@@ -5,6 +5,8 @@ import * as excelCreator from "../services/xlsxCreator"
 import * as config from '../config/config';
 import mongoose from "mongoose";
 import Activity from "../models/activity";
+import Delivery from "../models/delivery";
+import Item from "../models/item";
 
 
 const generateReportEventAssistance = async (configObject) => {
@@ -19,11 +21,82 @@ const generateReportEventAssistance = async (configObject) => {
     }
   );
 
-  const confiAssistance = config.CONFIGS.reportColumNames.beneficiary;
+  const aggregateNdelivery = [
+    {
+      $match: {
+        event: eventFound._id,
+        $or: [
+          { status: 'enabled' },
+          { status: { $exists: false } }
+        ]
+      }
+    },
+    {
+      $unwind: "$itemList"
+    },
+    {
+      $lookup: {
+        from: "items",
+        localField: "itemList.item",
+        foreignField: "_id",
+        as: "item"
+      }
+    },
+    {
+      $unwind: "$item"
+    },
+    {
+      $group: {
+        _id: "$_id",
+        beneficiary: { $first: "$beneficiary" },
+        representant: { $first: "$representant" },
+        type: { $first: "$type" },
+        event: { $first: "$event" },
+        itemList: { $push: "$itemList" },
+        author: { $first: "$author" },
+        status: { $first: "$status" },
+        createdAt: { $first: "$createdAt" },
+        updatedAt: { $first: "$updatedAt" },
+        beneficiaryDetails: { $first: "$beneficiaryDetails" }, // Puedes agregar más campos si es necesario
+        itemListDetails: { $push: "$item" } // Puedes agregar más campos si es necesario
+      }
+    }
+  ];
+
+  const allItems = await Item.find({
+    $or: [
+      { associationItem: false },
+      { associationItem: { $exists: false } }
+    ]
+  });
+  const eventDeliveries = await Delivery.aggregate(aggregateNdelivery);
   const attendees = eventFound.toObject().attendees;
+  let newInfo: any = {};
+  const newHeads = allItems.map(item => item.name);
+  const newKeys = allItems.map(item => item._id.toString());
+  const finalAttends = attendees.map(attend => {
+    newInfo = {};
+    const attendDevs: any = eventDeliveries.filter(dev => dev.beneficiary,toString() === attend._id.toString());
+    let attendItems: any = [];
+    if ( attendDevs && attendDevs.length > 0) {
+      attendDevs.forEach(aDev => {
+        const devItems: any = aDev.itemList.map(item => item.item.toString());
+        attendItems = [...attendItems, ...devItems];
+      });
+    }
+    allItems.forEach(item => {
+      newInfo = {
+        ...newInfo,
+        [item._id]: attendItems.includes(item._id.toString()) ? "ENTREGADO" : "NO ENTREGADO" 
+      }
+    })
+    return {...attend, ...newInfo};
+  });
+
+  const confiAssistance = config.CONFIGS.reportColumNames.beneficiary;
   const listKey = Object.keys(confiAssistance);
   const columNames = Object.values(confiAssistance);
-  const excel = await excelCreator.createExcel(columNames, listKey, attendees);
+  const excel = await excelCreator.createExcel([...columNames, ...newHeads], [...listKey, ...newKeys], finalAttends);
 
   return excel;
 }
