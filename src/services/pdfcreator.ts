@@ -456,7 +456,7 @@ const addContentPrevious=(doc:any,x:number,y:number,header?:typeHeader | null)=>
 }
 
 /**
- FILE PDF DELIVERY
+ FILE PDF DELIVERY BENEFICIARI
  */
 
 const convertUrl=(url,fileName)=>{
@@ -696,7 +696,7 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
   return [x,y];
 }
 
- export const generateFilePdfDelivery=(
+export const generateFilePdfDelivery=(
   res:any,
   headerPdf?:typeHeader | null,
   beneficiary?:any | null,
@@ -764,3 +764,205 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
   doc.end();
 
 }
+
+
+/*
+ FILE PDF DELIVERY REPRESENTANT
+*/
+const addContentTableDeliveryRepresentant=(doc:any,x:number,y:number,itemsList?:any | null,headerPdf?:typeHeader | null)=>{
+
+  if(itemsList){
+    y+=10;
+    doc.font('Helvetica-Bold').fontSize(10).text("Información de entrega:", x,y,{ align: 'left' });
+    y+=30;
+
+    doc.font('Helvetica-Bold').fontSize(10).text("#", x,y,{ align: 'left' });
+    x+=30;
+    doc.font('Helvetica-Bold').fontSize(10).text("Nombre del artículo", x,y,{ align: 'left' });
+    x+=330;
+    doc.font('Helvetica-Bold').fontSize(10).text("Cantidad", x,y,{ align: 'left' });
+    x+=80;
+    doc.font('Helvetica-Bold').fontSize(10).text("Valor total", x,y,{ align: 'left' });
+
+    y+=10;
+    x=30;
+    doc.lineWidth(.3)
+    .moveTo(x, y)
+    .lineTo(x + 550, y)  
+    .strokeColor('black')  
+    .stroke();
+
+    y+=12;
+    itemsList.map((data,index)=>{
+      x=30;
+      doc.font('Helvetica-Bold').fontSize(9).text((index+1), x,y,{ align: 'left' });
+      x+=30;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.name.toUpperCase(), x,y,{ align: 'left' });
+      x+=330;
+      doc.font('Helvetica-Bold').fontSize(9).text(data?.amount, x,y,{ align: 'left' });
+      x+=80;
+      doc.font('Helvetica-Bold').fontSize(9).text(`$ ${data.value && (data.value*data.amount)}`, x,y,{ align: 'left' });
+      x=30;
+      y+=13;
+      
+    });
+  }
+ 
+  return [x,y];
+}
+
+const addContentBeforeFooterPdfRepresentant=(doc:any,x:number,y:number,dataBeforeFooter?:any | null, representant?:any | null, textDataBeforeFooter?:string)=>{
+  x=90;
+  y=550;
+  doc.font('Helvetica').fontSize(8.8).text(textDataBeforeFooter, x,y,{ align: 'center',with:600 });
+
+  y=580;
+  x=30;
+  doc.image(getImageBase64(convertUrl(null,dataBeforeFooter.replegalprint)),x,y, {width:100, height:60});
+  y+=80
+  doc.lineWidth(.3)
+    .moveTo(x, y)
+    .lineTo(x + 150, y)  
+    .strokeColor('black')  
+    .opacity(0.5)   
+    .stroke();
+
+    doc.opacity(1); 
+    y+=5; 
+    doc.font('Helvetica-Bold').fontSize(8).text(dataBeforeFooter.nameAfterSignature, x,y,{ align: 'left' });
+    doc.opacity(.5); 
+    y+=10; 
+
+    x=50;
+    doc.font('Helvetica').fontSize(8).text("Representante legal", x,y,{ align: 'left' });
+    y+=10;
+    x=30;
+    doc.font('Helvetica').fontSize(7).text(dataBeforeFooter.representantLegal, x,y,{ align: 'left',width:140 });
+
+   
+
+    y=580;
+    x=400;
+    //FIRMA DEL REPRESENTANTE DE LA ENTREGA
+    doc.image(getImageBase64(convertUrl(null,config.CONFIGS.configFilePdf.replegalprint)),x,y, {width:75, height:75});
+    y+=78;
+    doc.lineWidth(.3)
+    .moveTo(x, y)
+    .lineTo(x + 150, y)  
+    .strokeColor('black')  
+    .opacity(0.5)   
+    .stroke();
+    doc.opacity(1); 
+    y+=5;
+    doc.font('Helvetica-Bold').fontSize(8.3).text(`${representant?.name}`.toUpperCase(), x,y,{ align: 'left',width:200 });
+
+
+    x=30;
+    y=30;
+    
+
+  return [x,y];
+}
+
+const addContentInfoRepresentant=(doc:any,x:number,y:number,representant?:any | null, event?:any | null)=>{
+  if(representant){
+    doc.font('Helvetica-Bold').fontSize(13).text("Acta de entrega - ", x,y,{ align: 'left' });
+    y+=2;
+    doc.font('Helvetica-Bold').fontSize(9).text(event?.name, 144,y,{ align: 'left' });
+
+    y+=20;
+    doc.font('Helvetica-Bold').fontSize(10).text("Información del representante:", x,y,{ align: 'left' });
+    y+=28;
+    
+    x=60;
+    doc.font('Helvetica-Bold').fontSize(10).text("Nombre:", x,y,{ align: 'left'});
+    x+=50;
+    doc.font('Helvetica').fontSize(10).text(`${representant?.name}`.toUpperCase(), x,y,{ align: 'left',width:200 });
+    y+=20;
+
+    x=60;
+    doc.font('Helvetica-Bold').fontSize(10).text("Cédula:", x,y,{ align: 'left'});
+    x=100;
+    doc.font('Helvetica').fontSize(10).text(representant?.identification, x,y,{ align: 'left' });
+    y+=20;
+
+    x=60;
+    doc.font('Helvetica-Bold').fontSize(10).text("Dirección:", x,y,{ align: 'left'});
+    x=110;
+    doc.font('Helvetica').fontSize(10).text(representant?.address, x,y,{ align: 'left' });
+    y+=20;
+
+    x=60;
+    doc.font('Helvetica-Bold').fontSize(10).text("Teléfono:", x,y,{ align: 'left'});
+    x=110;
+    doc.font('Helvetica').fontSize(10).text(representant?.phone, x,y,{ align: 'left' });
+    y+=20;
+
+    //OTRA COLUMNA 
+    x=340;
+    y=230;
+    doc.font('Helvetica-Bold').fontSize(10).text("Municipio:", x,y,{ align: 'left'});
+    x+=60;
+    doc.font('Helvetica').fontSize(10).text(representant?.association?.municipality, x,y,{ align: 'left' });
+    y+=20;
+
+    x=340;
+    doc.font('Helvetica-Bold').fontSize(10).text("Comuna:", x,y,{ align: 'left'});
+    x+=50;
+    doc.font('Helvetica').fontSize(10).text(representant?.association?.community?.name, x,y,{ align: 'left' });
+    y+=20;
+
+    x=340;
+    doc.font('Helvetica-Bold').fontSize(10).text("Asociación:", x,y,{ align: 'left'});
+    x+=60;
+    doc.font('Helvetica').fontSize(10).text(representant?.association.name, x,y,{ align: 'left' });
+    y+=20;
+
+
+    x=340;
+    doc.font('Helvetica-Bold').fontSize(10).text("Fecha del evento:", x,y,{ align: 'left'});
+    x+=88;
+    doc.font('Helvetica').fontSize(10).text(event?.execution_date.toISOString().substring(0, 10), x,y,{ align: 'left' });
+    y+=10;
+
+    x=30;
+    y+=5;
+
+  }
+  return [x,y];
+}
+
+export const generateFilePdfDeliveryRepresentant=(
+  res:any,
+  headerPdf?:typeHeader | null,
+  representant?:any | null,
+  event?:any | null,
+  itemsList?:any | null,
+  textDataBeforeFooter?:string | null,
+  dataBeforeFooter?:any | null,
+  dataFooter?:typeContentFooter | null
+)=>{
+  const doc = new PDFDocument({
+    margin: {
+      top: 50, 
+      bottom: 50,
+      left: 50,
+      right: 50,
+    },
+  });
+  doc.pipe(res);
+
+  doc.fillOpacity(0.8);
+  let x = 30;
+  let y = 30;
+
+  [x,y]=addContentPrevious(doc,x,y,headerPdf);
+  [x,y]=addContentInfoRepresentant(doc,x,y,representant,event);
+  [x,y]=addContentTableDeliveryRepresentant(doc,x,y,itemsList,headerPdf);
+  [x,y]=addContentBeforeFooterPdfRepresentant(doc,x,y,dataBeforeFooter, representant,textDataBeforeFooter as string);
+  [x,y]=addContentFooter(doc,x,y,dataFooter);
+
+  doc.end();
+
+}
+
