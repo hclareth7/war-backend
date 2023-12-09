@@ -460,7 +460,7 @@ export const pdfEventAssitance = async(req, res, next) => {
       const identificationA = a.identification;
       const identificationB = b.identification;
     
-      return identificationA.localeCompare(identificationB);
+      return identificationA - identificationB;
     });
     const dataTable = await mutil.jsonDataConvertToArray(attendees, configPdf.propertiesAttendeesActivityPdf);
     pdf.generateFilePdf(
