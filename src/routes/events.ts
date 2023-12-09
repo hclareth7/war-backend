@@ -14,6 +14,7 @@ router.get('/stats/:id', auth.allowIfLoggedin, auth.grantAccess('read', resource
 router.get('/pdf-items-delivered/:id', auth.allowIfLoggedin, auth.grantAccess('read', resourceName), controller.pdfArticlesDeliveredEventById);
 router.get('/pdf-assistance/:id', auth.allowIfLoggedin, controller.pdfEventAssitance);
 router.put('/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName),controller.update);
+router.put('/remove/:id', auth.allowIfLoggedin, auth.grantAccess('update', resourceName),controller.removeAssistance);
 router.delete('/:id', auth.allowIfLoggedin, auth.grantAccess('delete', resourceName),controller.deleteItem);
 
 

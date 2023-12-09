@@ -486,3 +486,33 @@ export const pdfEventAssitance = async(req, res, next) => {
     next(error);
   }
 }
+
+export const removeAssistance = async (req, res, next) => {
+  // #swagger.tags = ['Events']
+  /*    
+    #swagger.security = [{
+        "apiKeyAuth": []
+    }]
+     */
+  try {
+    const update = req.body;
+    const id = req.params.id;
+    const event: any = await Event.findById(id);
+    const beneficiary : any = await Beneficiary.findOne({ _id: new mongoose.Types.ObjectId(update?.attendees[0]) });
+    if(!beneficiary){
+      return res
+      .status(400)
+      .json({ mensaje: "Beneficiary no found" });
+    }
+    event.attendees = event.attendees.filter(attend => attend.toString() !== beneficiary._id.toString());
+    event.save();
+    beneficiary.isAttendee = false;
+    beneficiary.save();
+    res.status(200).json({
+      data: event,
+      message: "Event has been updated",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
