@@ -34,6 +34,9 @@ export const pdfActivityAssistance=async (req, res, next)=>{
         const activity=await Model.findOne({_id:act_id});
         const assistList = await Beneficiary.find({ activity:act_id })
         .populate(['community', 'association', 'activity']);
+        assistList.sort((a, b) => {
+            return a.identification.localeCompare(b.identification);
+        });
         if(activity){
             const totalAssistances=assistList.length;
             const configFilePdf=config.CONFIGS.configFilePdf;
