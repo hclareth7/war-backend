@@ -303,7 +303,23 @@ export const getGeneralPdfListWorkShops=async (req, res, next)=>{
         },
         name:{ $regex: new RegExp(data.typeWorkShop, "i") },
       }
-      const allWorkshops=await Model.find(dataFilter).populate(["activity","attendees","author", ]);
+      const allWorkshops=await Model.find(dataFilter).populate([
+        {
+          path:"activity",
+          populate:[
+            {
+              path:"participatingAssociations",
+              populate:[{path:"community"}]
+            }
+          ]
+        },
+        {
+          path:"attendees"
+        },
+        {
+          path:"author"
+        }
+      ]);
       if(allWorkshops.length >0){
         const dataPdf=await jsonDataConvertToArray(allWorkshops,configPdf.propertiesListWorkshops);
         pdf.generateFilePdf(res,null,
