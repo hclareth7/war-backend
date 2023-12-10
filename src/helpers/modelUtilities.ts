@@ -85,6 +85,7 @@ export const jsonDataConvertToArray = async (
             ),
           createdAt: () => organizeDate(item.createdAt, arrayItem),
           author: () => arrayItem.push(item.author?.name || ""),
+          community: () => arrayItem.push(item?.activity?.participatingAssociations[0]?.community?.name || ""),
         };
         if (optionsValidation[`${property}`]) {
           await optionsValidation[`${property}`]();
