@@ -212,9 +212,21 @@ export const generateFilePdf = async (req, res, next) => {
     const idWorkShop = req.params.id;
     const { configFilePdf } = config.CONFIGS;
     const getModel = await Model.findById(idWorkShop).populate([
-      "activity",
-      "attendees",
-      "author",
+      {
+        path:"activity",
+        populate:[
+          {
+            path:"participatingAssociations",
+            populate:[{path:"community"}]
+          }
+        ]
+      },
+      {
+        path:"attendees"
+      },
+      {
+        path:"author"
+      }
     ]);
     const act = getModel?.activity;
     const dataTablePdf = await jsonDataConvertToArray(
@@ -291,7 +303,7 @@ export const getGeneralPdfListWorkShops=async (req, res, next)=>{
         },
         name:{ $regex: new RegExp(data.typeWorkShop, "i") },
       }
-      const allWorkshops=await Model.find(dataFilter).populate(["activity","attendees","author",]);
+      const allWorkshops=await Model.find(dataFilter).populate(["activity","attendees","author", ]);
       if(allWorkshops.length >0){
         const dataPdf=await jsonDataConvertToArray(allWorkshops,configPdf.propertiesListWorkshops);
         pdf.generateFilePdf(res,null,

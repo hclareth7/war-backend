@@ -111,7 +111,7 @@ export const get = async (req, res, next) => {
     }]*/
     try {
         const id = req.params.id;
-        const getModel = await Model.findById(id).populate(['participatingAssociations']);
+        const getModel = await Model.findById(id).populate([{ path: "participatingAssociations", populate: { path: "community" } }]);
         if (!getModel) {
             return next(new Error(`${modelName} does not exist`));
         }
