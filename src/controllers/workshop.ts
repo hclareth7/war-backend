@@ -24,7 +24,23 @@ export const getPdfListWorkShops=async (req, res, next)=>{
         },
         author: idAuthor
       }
-      const allWorkshops=await Model.find(dataFilter).populate(["activity","attendees","author",]);
+      const allWorkshops=await Model.find(dataFilter).populate([
+        {
+          path:"activity",
+          populate:[
+            {
+              path:"participatingAssociations",
+              populate:[{path:"community"}]
+            }
+          ]
+        },
+        {
+          path:"attendees"
+        },
+        {
+          path:"author"
+        }
+      ]);
       if(allWorkshops.length >0){
         const author=allWorkshops[0].author;
         const dataPdf=await jsonDataConvertToArray(allWorkshops,configPdf.propertiesListWorkshops);
