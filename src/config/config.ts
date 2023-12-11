@@ -56,7 +56,7 @@ export const CONFIGS = {
         titleSecundaryListWorkshops:"LISTA DE TALLERES REGISTRADOS",
         titleSecundaryListArticles:"CONSOLIDADO DE EVENTO - ",
         titleSecundaryListAssitanceActivity:"ASISTENTES A LA ACTIVIDAD - ",
-        headersTableAssistanceActivity: ["#","Nombre","Identificación", "Nivel de SISBEN",  "Edad" , "Regimen de salud", "Comuna", "AsociaciÓn"],
+        headersTableAssistanceActivity: ["#","Nombre","Identificación", "Nivel de SISBEN",  "Edad" , "Regimen de salud", "Comuna", "Asociación"],
         propertiesAttendeesActivityPdf: ["first_name","identification", "sisben_score", "age","health_regimen", "community", "association"],
         headersContentBeforeTableAttendeesActivity: ["MUNICIPIO", "FECHA:", "TOTAL:"],
 
