@@ -58,7 +58,7 @@ export const CONFIGS = {
         titleSecundaryListAssitanceActivity:"ASISTENTES A LA ACTIVIDAD - ",
         headersTableAssistanceActivity: ["#","Nombre","Identificación", "Nivel de SISBEN",  "Edad" , "Regimen de salud", "Comuna", "AsociaciÓn"],
         propertiesAttendeesActivityPdf: ["first_name","identification", "sisben_score", "age","health_regimen", "community", "association"],
-        headersContentBeforeTableAttendeesActivity: ["MUNICIPIO", "ACTIVIDAD:", "FECHA:", "TOTAL:"],
+        headersContentBeforeTableAttendeesActivity: ["MUNICIPIO", "FECHA:", "TOTAL:"],
 
         headersTableRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Fecha"],
         headersTableGeneralRetings: ["#", "Documento", "Nombre", "Municipio", "Asociación", "Usuario", "Fecha"],

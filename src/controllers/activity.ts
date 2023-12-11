@@ -52,7 +52,7 @@ export const pdfActivityAssistance=async (req, res, next)=>{
             null,
             {
                 headers:configFilePdf.headersContentBeforeTableAttendeesActivity,
-                values:[assistList[0]?.municipality, activity?.name, mutil.organizeDate(activity?.execution_date,null), totalAssistances]
+                values:[assistList[0]?.municipality, mutil.organizeDate(activity?.execution_date,null), totalAssistances]
             },
             {
                 headersTable: configFilePdf.headersTableAssistanceActivity,
