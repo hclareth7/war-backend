@@ -68,7 +68,7 @@ export const CONFIGS = {
         headersContentBeforeTableAttendees: ["ACTIVIDAD:", "FECHA TALLER:", "TOTAL:"],
         headersContentBeforeTableBeneficiare: ["DESDE:", "HASTA:", "TOTAL:","USUARIO:"],
         headerContentEventAssistance: ["EVENTO:", "FECHA:", "TOTAL:"],
-        headersContentBeforeTableListArticles: ["TOTAL ASISTENTES:", "TOTAL ENTREGAS:"],
+        headersContentBeforeTableListArticles: ["TOTAL ASISTENTES:", "ARTICULOS ENTREGADOS:"],
         headersContentBeforeTableListWorkshops: ["DESDE:", "HASTA:", "TOTAL:"],
         headersContentBeforeTableRetings: ["DESDE:", "HASTA:", "TOTAL:", "USUARIO:"],
         headersContentBeforeTableGeneralRetings: ["DESDE:", "HASTA:", "TOTAL:"],

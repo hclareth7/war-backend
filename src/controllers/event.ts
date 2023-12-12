@@ -301,6 +301,7 @@ export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
         }
       });
     });
+    const numberOfArticles = data.reduce((acum, current) => acum + current.amount, 0);
     if(data.length> 0){
       const configPdf=config.CONFIGS.configFilePdf;
       const numberAttendees = eventFound?.attendees.length
@@ -313,7 +314,7 @@ export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
         null,
         {
           headers:configPdf.headersContentBeforeTableListArticles,
-          values:[numberAttendees,numberOfDelivery]
+          values:[numberAttendees, numberOfArticles]
         },
         data
         ,
