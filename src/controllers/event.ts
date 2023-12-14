@@ -78,6 +78,7 @@ export const get = async (req, res, next) => {
       "attendees",
       { path: "attendees", populate: { path: "community" } },
       { path: "attendees", populate: { path: "association" } },
+      "participatingAssociations"
     ]);
     if (!eventFound) {
       return res.status(400).json({ mensaje: "Event not found" });
