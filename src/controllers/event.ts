@@ -79,6 +79,7 @@ export const get = async (req, res, next) => {
       { path: "attendees", populate: { path: "community" } },
       { path: "attendees", populate: { path: "association" } },
       "participatingAssociations",
+      { path: "participatingAssociations", populate: { path: "community" } },
       "associated_winery"
     ]);
     if (!eventFound) {
