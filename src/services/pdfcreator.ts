@@ -518,13 +518,13 @@ const addContentInfoBeneficiarie=(doc:any,x:number,y:number,beneficiary?:any | n
     x=310;
     doc.font('Helvetica-Bold').fontSize(10).text("Asociación:", x,y,{ align: 'left'});
     x=370;
-    doc.font('Helvetica').fontSize(10).text(beneficiary?.association.name, x,y,{ align: 'left' });
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.association?.name || "N/A", x,y,{ align: 'left' });
     y+=20;
 
     x=310;
     doc.font('Helvetica-Bold').fontSize(10).text("SISBEN:", x,y,{ align: 'left'});
     x=360;
-    doc.font('Helvetica').fontSize(10).text(beneficiary?.sisben_score, x,y,{ align: 'left' });
+    doc.font('Helvetica').fontSize(10).text(beneficiary?.sisben_score || "N/A", x,y,{ align: 'left' });
     y+=20;
 
     x=310;
