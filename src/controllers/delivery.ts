@@ -64,7 +64,7 @@ export const generateActaDelivery = async (req, res, next) => {
         { status: { $exists: false } }]
     }).populate(["beneficiary", "representant", "event", "itemList.item", "author"])
     const beneficiary = deliveriesFound[0]?.beneficiary;
-    const idAssociation = beneficiary?.toJSON()["association"].toString();
+    const idAssociation = beneficiary?.association ? beneficiary?.toJSON()["association"].toString() : null;
     const event = deliveriesFound[0]?.event;
     const association = await Association.findOne({ _id: idAssociation });
     beneficiary ? beneficiary["association"] = association : "";
@@ -72,7 +72,6 @@ export const generateActaDelivery = async (req, res, next) => {
     deliveriesFound.map((delivery) => {
       itemsList.push(...delivery.itemList);
     });
-
     // Assuming that generateFilePdfDelivery is asynchronous and returns a Promise
     generateFilePdfDelivery(res,
       {

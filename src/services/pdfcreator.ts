@@ -682,7 +682,7 @@ const addContentBeforeFooter=(doc:any,x:number,y:number,dataBeforeFooter?:any | 
 
     y=580;
     x=400;
-    doc.image(getImageBase64(convertUrl(beneficiary?.footprint_url,null)),x,y, {width:75, height:75});
+    beneficiary?.footprint_url ? doc.image(getImageBase64(convertUrl(beneficiary?.footprint_url,null)),x,y, {width:75, height:75}) : doc.font('Helvetica').fontSize(8).text("", x,y,{ align: 'left' });;
     y+=78;
     doc.font('Helvetica-Bold').fontSize(8.3).text(`${beneficiary?.first_name ? beneficiary?.first_name: ""} ${beneficiary?.second_name ? beneficiary?.second_name: ""} ${beneficiary?.first_last_name ? beneficiary?.first_last_name: ""}  ${beneficiary?.second_last_name ? beneficiary?.second_last_name: ""}`.toUpperCase(), x,y,{ align: 'left',width:200 });
     y+=13
