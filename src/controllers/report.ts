@@ -190,6 +190,90 @@ const generateReportActivities = async(configObject) => {
   return excel;
 }
 
+export const differenEventeDeliveriesc= async(configObject) => {
+  const { event_id } = configObject; 
+  const eventFound = await Event.findById(event_id).populate(
+    {
+      path: 'attendees', populate: [
+        { path: 'community', select: '-_id name' },
+        { path: 'association', select: '-_id name' },
+        { path: 'activity', select: '-_id name' },
+        { path: 'author', select: '-_id name' }],
+    }
+  );
+  const attendees = eventFound.toObject().attendees;
+
+  const aggregateNdelivery = [
+    {
+      $match: {
+        event: eventFound._id,
+        $or: [
+          { status: 'enabled' },
+          { status: { $exists: false } }
+        ]
+      }
+    },
+    {
+      $unwind: "$itemList"
+    },
+    {
+      $lookup: {
+        from: "items",
+        localField: "itemList.item",
+        foreignField: "_id",
+        as: "item"
+      }
+    },
+    {
+      $unwind: "$item"
+    },
+    {
+      $match: {
+        $or: [
+          {"item.isDefault": true},
+        ], 
+      }
+    },
+    {
+      $lookup: {
+          from: "beneficiaries", // Reemplaza "beneficiaries" con el nombre de tu colección de beneficiarios
+          localField: "beneficiary", // Campo ObjectID en la colección actual
+          foreignField: "_id", // Campo ObjectID en la colección de beneficiarios
+          as: "beneficiaryDetails" // Nuevo campo poblado
+      }
+    },
+    {
+      $unwind: "$beneficiaryDetails" // Deshace el array creado por $lookup
+    },
+    {
+      $group: {
+        _id: "$_id",
+        beneficiary: { $first: "$beneficiary" },
+        representant: { $first: "$representant" },
+        type: { $first: "$type" },
+        event: { $first: "$event" },
+        itemList: { $push: "$itemList" },
+        author: { $first: "$author" },
+        status: { $first: "$status" },
+        createdAt: { $first: "$createdAt" },
+        updatedAt: { $first: "$updatedAt" },
+        beneficiaryDetails: { $first: "$beneficiaryDetails" }, // Puedes agregar más campos si es necesario
+      }
+    }
+  ];
+  const eventDeliveries = await Delivery.aggregate(aggregateNdelivery);
+  const assistList = eventDeliveries.map(dev => dev.beneficiaryDetails);
+  const differenceList = attendees
+                .filter(objA => !assistList.some(objB => objB._id.toString() === objA._id.toString()))
+                .concat(assistList.filter(objB => !attendees.some(objA => objA._id.toString() === objB._id.toString())));
+  const confiAssistance = config.CONFIGS.reportColumNames.beneficiary;
+  const listKey = Object.keys(confiAssistance);
+  const columNames = Object.values(confiAssistance);
+  const excel = await excelCreator.createExcel(columNames, listKey, differenceList);
+
+  return excel;
+}
+
 export const generateReports = async (req, res, next) => {
   // #swagger.tags = ['Reports']
   /*    
@@ -246,6 +330,7 @@ export const enum REPORT_TYPE {
   EVENT_ASSISTANCE_DIFF = 'EVENT_ASSISTANCE_DIFF',
   BENEFICIARIES_BY_USER = "BENEFICIARIES_BY_USER",
   ACTIVITIES_LIST = "ACTIVITIES_LIST",
+  EVENT_DELIVERIES = "EVENT_DELIVERIES"
 }
 
 export const CHART_FACTORY_DICTIONARY = {
@@ -255,4 +340,5 @@ export const CHART_FACTORY_DICTIONARY = {
   [REPORT_TYPE.WITHOUT_SUPPORTS]: generateReportWithoutSupports,
   [REPORT_TYPE.EVENT_ASSISTANCE_DIFF]: generateReportActivityEvent,
   [REPORT_TYPE.ACTIVITIES_LIST]: generateReportActivities,
+  [REPORT_TYPE.EVENT_DELIVERIES]: differenEventeDeliveriesc
 };

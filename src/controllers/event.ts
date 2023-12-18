@@ -290,7 +290,7 @@ export const pdfArticlesDeliveredEventById=async(req, res, next)=>{
         }
       }
     ];
-    const numberOfDelivery = await (await Delivery.aggregate(aggregateNdelivery)).length;
+    //const numberOfDelivery = await (await Delivery.aggregate(aggregateNdelivery)).length;
     const deliveredItems = await Delivery.aggregate(aggregateNitems);
     const data:any[]=[];
     deliveredItems.map((dataItem)=>{
