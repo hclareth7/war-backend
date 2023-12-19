@@ -161,14 +161,14 @@ export const update = async (req, res, next) => {
       author: res.locals.loggedInUser._id,
     };
     const generatedDefaultDelivery = new Delivery(dataDefaultDelivery);
-    generatedDefaultDelivery.save();
+    await generatedDefaultDelivery.save();
 
       update.attendees = [...event.attendees, ...update.attendees];
     await Event.findByIdAndUpdate(id, update);
     const eventUpdated = await Event.findById(id);
 
     beneficiary.isAttendee = true;
-    beneficiary.save();
+    await beneficiary.save();
     res.status(200).json({
       data: eventUpdated,
       message: "Event has been updated",
