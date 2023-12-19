@@ -113,8 +113,21 @@ const generateReportActivityAssistance = async (configObject) => {
   return excel;
 }
 
-const generateReportBeneficiaryList = async (_) => {
-  const benList = await Beneficiary.find().populate(['community', 'association', 'activity', 'author']);
+const generateReportBeneficiaryList = async (configObject) => {
+  const { startDate, endDate } = configObject;
+  const initDate = new Date(startDate);
+  initDate.setDate(initDate.getDate() - 1);
+  initDate.setUTCHours(0, 0, 0, 0);
+  const finishDate = new Date(endDate);
+  finishDate.setDate(finishDate.getDate() - 1);
+  finishDate.setUTCHours(0, 0, 0, 0);
+  const dataFilter = {
+    createdAt: {
+        $gte: initDate,
+        $lte: finishDate
+    },
+  }
+  const benList = await Beneficiary.find(dataFilter).populate(['community', 'association', 'activity', 'author']);
   const beneficiaryConfig = config.CONFIGS.reportColumNames.beneficiary;
   const listKey = Object.keys(beneficiaryConfig);
   const columNames = Object.values(beneficiaryConfig);
@@ -170,10 +183,16 @@ const generateReportActivityEvent = async (configObject) => {
 
 const generateReportActivities = async(configObject) => {
   const { startDate, endDate } = configObject;
+  const initDate = new Date(startDate);
+  initDate.setDate(initDate.getDate() - 1);
+  initDate.setUTCHours(0, 0, 0, 0);
+  const finishDate = new Date(endDate);
+  finishDate.setDate(finishDate.getDate() - 1);
+  finishDate.setUTCHours(0, 0, 0, 0);
   const dataFilter = {
     execution_date: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate)
+        $gte: initDate,
+        $lte: finishDate
     },
   }
   const activities = await Activity.find(dataFilter);
