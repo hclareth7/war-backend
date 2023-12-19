@@ -509,9 +509,9 @@ export const removeAssistance = async (req, res, next) => {
       .json({ mensaje: "Beneficiary no found" });
     }
     event.attendees = event.attendees.filter(attend => attend.toString() !== beneficiary._id.toString());
-    event.save();
+    await event.save();
     beneficiary.isAttendee = false;
-    beneficiary.save();
+    await beneficiary.save();
     res.status(200).json({
       data: event,
       message: "Event has been updated",
