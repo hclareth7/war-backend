@@ -132,7 +132,8 @@ export const CONFIGS = {
             activity: "Actividad",
             author: 'Usuario',
             createdAt: "Fecha de creación",
-            updatedAt: "Fecha de actualización"
+            updatedAt: "Fecha de actualización",
+            isAttendee: "Asistió a evento?"
         },
         benWithSupports: {
             first_name: "Primer Nombre",
