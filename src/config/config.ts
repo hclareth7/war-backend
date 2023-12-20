@@ -130,7 +130,9 @@ export const CONFIGS = {
             address: "Dirección",
             phones: "Teléfonos",
             activity: "Actividad",
-            author: 'Usuario'
+            author: 'Usuario',
+            createdAt: "Fecha de creación",
+            updatedAt: "Fecha de actualización"
         },
         benWithSupports: {
             first_name: "Primer Nombre",
