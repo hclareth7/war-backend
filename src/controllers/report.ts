@@ -293,6 +293,93 @@ export const differenEventeDeliveriesc= async(configObject) => {
   return excel;
 }
 
+export const generateItemDelivered = async(configObject) => {
+  const { item_id } = configObject;
+
+  const aggregateNdelivery = [
+    {
+      $match: {
+        $or: [
+          { status: 'enabled' },
+          { status: { $exists: false } }
+        ]
+      }
+    },
+    {
+      $unwind: "$itemList"
+    },
+    {
+      $lookup: {
+        from: "items",
+        localField: "itemList.item",
+        foreignField: "_id",
+        as: "item"
+      }
+    },
+    {
+      $unwind: "$item"
+    },
+    {
+      $match: {
+        $or: [
+          {"item._id": new mongoose.Types.ObjectId(item_id)},
+        ], 
+      }
+    },
+    {
+      $lookup: {
+          from: "beneficiaries", // Reemplaza "beneficiaries" con el nombre de tu colección de beneficiarios
+          localField: "beneficiary", // Campo ObjectID en la colección actual
+          foreignField: "_id", // Campo ObjectID en la colección de beneficiarios
+          as: "beneficiaryDetails" // Nuevo campo poblado
+      }
+    },
+    {
+      $unwind: "$beneficiaryDetails" // Deshace el array creado por $lookup
+    },
+    {
+      $lookup: {
+          from: "events", // Reemplaza "beneficiaries" con el nombre de tu colección de beneficiarios
+          localField: "event", // Campo ObjectID en la colección actual
+          foreignField: "_id", // Campo ObjectID en la colección de beneficiarios
+          as: "eventDetail" // Nuevo campo poblado
+      }
+    },
+    {
+      $unwind: "$eventDetail" // Deshace el array creado por $lookup
+    },
+    {
+      $group: {
+        _id: "$_id",
+        beneficiary: { $first: "$beneficiary" },
+        representant: { $first: "$representant" },
+        type: { $first: "$type" },
+        event: { $first: "$event" },
+        itemList: { $push: "$itemList" },
+        author: { $first: "$author" },
+        status: { $first: "$status" },
+        createdAt: { $first: "$createdAt" },
+        updatedAt: { $first: "$updatedAt" },
+        beneficiaryDetails: { $first: "$beneficiaryDetails" },
+        eventDetail: { $first: "$eventDetail" },
+      }
+    }
+  ];
+  const deliveredItem = await Delivery.aggregate(aggregateNdelivery);
+  const differenceList = deliveredItem.map(dev =>  {
+    return {
+      ...dev.beneficiaryDetails,
+      event: dev?.eventDetail?.name || ""
+    }
+  });
+  const confiAssistance = config.CONFIGS.reportColumNames.benWithArt;
+  const listKey = Object.keys(confiAssistance);
+  const columNames = Object.values(confiAssistance);
+  const excel = await excelCreator.createExcel(columNames, listKey, differenceList);
+
+  return excel;
+}
+
 export const generateReports = async (req, res, next) => {
   // #swagger.tags = ['Reports']
   /*    
@@ -349,7 +436,8 @@ export const enum REPORT_TYPE {
   EVENT_ASSISTANCE_DIFF = 'EVENT_ASSISTANCE_DIFF',
   BENEFICIARIES_BY_USER = "BENEFICIARIES_BY_USER",
   ACTIVITIES_LIST = "ACTIVITIES_LIST",
-  EVENT_DELIVERIES = "EVENT_DELIVERIES"
+  EVENT_DELIVERIES = "EVENT_DELIVERIES",
+  ITEM_DELIVERED = "ITEM_DELIVERED"
 }
 
 export const CHART_FACTORY_DICTIONARY = {
@@ -359,5 +447,6 @@ export const CHART_FACTORY_DICTIONARY = {
   [REPORT_TYPE.WITHOUT_SUPPORTS]: generateReportWithoutSupports,
   [REPORT_TYPE.EVENT_ASSISTANCE_DIFF]: generateReportActivityEvent,
   [REPORT_TYPE.ACTIVITIES_LIST]: generateReportActivities,
-  [REPORT_TYPE.EVENT_DELIVERIES]: differenEventeDeliveriesc
+  [REPORT_TYPE.EVENT_DELIVERIES]: differenEventeDeliveriesc,
+  [REPORT_TYPE.ITEM_DELIVERED]: generateItemDelivered
 };

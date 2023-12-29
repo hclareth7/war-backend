@@ -166,6 +166,28 @@ export const CONFIGS = {
             description: "Descripción",
             estimate_attendance: "Asistencia estimada",
             attending_beneficiary: "Asistencia confirmada"
-        }
+        },
+        benWithArt: {
+            first_name: "Primer Nombre",
+            second_name: "Segundo Nombre",
+            first_last_name: "Primer Apellido",
+            second_last_name: "Segundo Apellido",
+            identification_type: "Tipo de Identificación",
+            identification: "Identificación",
+            eps: "EPS",
+            sisben_score: "Puntaje Sisbén",
+            birthday: "Fecha de Nacimiento",
+            gender: "Género",
+            sex: "Sexo",
+            health_regimen: "Régimen de Salud",
+            residence_department: "Departamento de Residencia",
+            sisben_department: "Departamento Sisbén",
+            address: "Dirección",
+            phones: "Teléfonos",
+            createdAt: "Fecha de creación",
+            updatedAt: "Fecha de actualización",
+            isAttendee: "Asistió a evento?",
+            event: "Evento"
+        },
     },
 };
