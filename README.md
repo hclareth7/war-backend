@@ -50,4 +50,4 @@ follow this link: http://localhost:3000/doc
 Make sure that to run this command you are in the main branch updated.
 `git checkout -b TaskID-Task title`
 
-example: `git checkout -b OjTlw6W9-arreglar-readme-backend`
+example: `git checkout -b OjTlw6W9-arregclar-readme-backend`
