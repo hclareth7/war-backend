@@ -3,6 +3,7 @@ services:
   api:
     container_name: qualty_api
     image: hclareth7/qualty-backend:latest
+    restart: always
     networks:
       qualty:
         ipv4_address: 10.0.0.10
